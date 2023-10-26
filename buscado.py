@@ -10,7 +10,7 @@ Auteur: danie(danie.pro@gmail.com)
 buscado.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  mercredi 25 octobre 2023 à 20:46:11 
-Dernière modification : mercredi 25 octobre 2023 à 22:19:15
+Dernière modification : mercredi 25 octobre 2023 à 22:25:35
 """
 
 import sys
@@ -88,9 +88,9 @@ class BuscadorDatosCausaApp(QMainWindow):
         try:
             connection = mysql.connector.connect(
                 host='localhost',  # Cambia esto a la dirección de tu servidor MySQL
-                user='tu_usuario',  # Cambia esto a tu nombre de usuario de MySQL
-                password='tu_contraseña',  # Cambia esto a tu contraseña de MySQL
-                database='tu_basedatos'  # Cambia esto al nombre de tu base de datos
+                user='root',  # Cambia esto a tu nombre de usuario de MySQL
+                password='',  # Cambia esto a tu contraseña de MySQL
+                database='mi_causa'  # Cambia esto al nombre de tu base de datos
             )
 
             cursor = connection.cursor()
