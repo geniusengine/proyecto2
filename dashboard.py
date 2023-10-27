@@ -5,9 +5,9 @@ import mysql.connector
 from PyQt6.QtGui import QColor
 
 
-class DashboardApp(QMainWindow):
+class Dashboard(QMainWindow):
     def __init__(self):
-        super().__init()
+        super().__init__()
         self.initUI()
 
     def initUI(self):
