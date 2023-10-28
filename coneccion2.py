@@ -7,22 +7,21 @@
 |_|   |_|_|   |_(___/   \__)_|\____|_____)  |______/|_|   |_\_____|_| |_|\____|
     
 Auteur: danie(danie.pro@gmail.com) 
-coneccion.py(Ɔ) 2023
+coneccion2.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
-Créé le :  samedi 28 octobre 2023 à 14:40:33 
-Dernière modification : samedi 28 octobre 2023 à 18:06:12
+Créé le :  samedi 28 octobre 2023 à 18:13:56 
+Dernière modification : samedi 28 octobre 2023 à 18:14:40
 """
+
 import sys
-import pyodbc
+import pymssql
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget
 
 class DatabaseApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
-
-        # Realiza la conexión a la base de datos en el constructor
-        self.connect_to_database()
+        self.initDatabaseConnection()
 
     def initUI(self):
         self.setWindowTitle('Aplicación de Base de Datos SQL Server')
@@ -37,24 +36,25 @@ class DatabaseApp(QMainWindow):
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
 
-    def connect_to_database(self):
+    def initDatabaseConnection(self):
         try:
             # Configura la cadena de conexión a tu base de datos SQL Server en la nube
-            conn_str = (
-                r'DRIVER={ODBC Driver 18 for SQL Server};'
-                r'SERVER=vps-3697915-x.dattaweb.com;'
-                r'DATABASE= micau5a;'
-                r'UID=daniel;'
-                r'PWD=LOLxdsas--;'
-                r'Encrypt=yes;'
-                r'TrustServerCertificate=yes;'
-                r'Connection Timeout=10;'
+            connection = pymssql.connect(
+                server='vps-3697915-x.dattaweb.com',
+                user='daniel',
+                password='LOLxdsas--',
+                database='micau5a'
             )
-            connection = pyodbc.connect(conn_str)
-            
-            self.status_label.setText('Conexión exitosa a la base de datos en la nube (SQL Server).')
+
+            cursor = connection.cursor()
+            cursor.execute('SELECT @@version')
+            row = cursor.fetchone()
+            self.status_label.setText(f'Conexión exitosa a la base de datos en la nube (SQL Server): {row[0]}')
+
             # Aquí puedes realizar operaciones en la base de datos según tus necesidades
-        except pyodbc.Error as e:
+
+            connection.close()
+        except pymssql.DatabaseError as e:
             self.status_label.setText(f'Error de conexión a la base de datos en la nube: {str(e)}')
 
 def main():
