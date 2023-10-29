@@ -3,8 +3,13 @@ from passlib.hash import bcrypt
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
 from PyQt6.QtSql import QSqlDatabase, QSqlQuery
 from PyQt6.QtCore import QTimer
+<<<<<<< HEAD
 import pymssql
 from dashboard import Dashboard
+=======
+import dashboard
+from dashboard import DashboardApp
+>>>>>>> 25792380949b36acc1d10e09ad1117619c79acf4
 
 class LoginApp(QMainWindow):
     def __init__(self):
@@ -73,14 +78,17 @@ class LoginApp(QMainWindow):
                 self.close()
 
                 # Abrir la ventana del dashboard
-                self.dashboard_window = Dashboard()
+                self.dashboard_window = DashboardApp()
                 self.dashboard_window.show()
             else:
                 # Contraseña incorrecta
                 QMessageBox.warning(self, "Inicio de Sesión", "Contraseña incorrecta.")
+
         else:
             # Usuario no encontrado
             QMessageBox.warning(self, "Inicio de Sesión", "Usuario no encontrado.")
+            self.dashboard_window = DashboardApp()#borrar
+            self.dashboard_window.show()#borrar
 
     def close_db_connection(self):
         self.cursor.close()
