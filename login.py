@@ -1,11 +1,15 @@
 import sys
-import mysql.connector
 from passlib.hash import bcrypt
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
 from PyQt6.QtSql import QSqlDatabase, QSqlQuery
 from PyQt6.QtCore import QTimer
+<<<<<<< HEAD
+import pymssql
+from dashboard import Dashboard
+=======
 import dashboard
 from dashboard import DashboardApp
+>>>>>>> 25792380949b36acc1d10e09ad1117619c79acf4
 
 class LoginApp(QMainWindow):
     def __init__(self):
@@ -40,14 +44,14 @@ class LoginApp(QMainWindow):
         self.central_widget.setLayout(self.layout)
 
     def init_db(self):
-        self.db = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="mi_causa"
-        )
+        self.db = pymssql.connect(
+                server='vps-3697915-x.dattaweb.com',
+                user='daniel',
+                password='LOLxdsas--',
+                database='micau5a'
+            )
 
-        if not self.db.is_connected():
+        if not self.db:
             print("Error al conectar a la base de datos MySQL.")
             sys.exit(1)
 
