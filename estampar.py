@@ -56,7 +56,7 @@ class WordFileApp(QMainWindow):
             self.contentLabel.setText(content)
 
             # Agregar el estampado (imagen PNG) en la parte inferior derecha
-            stamp = QPixmap("recursos\perra.png")
+            stamp = QPixmap("recursos\todasmienten.png")
             self.stampLabel.setPixmap(stamp)
             self.stampLabel.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom)
 
