@@ -2,7 +2,7 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, QTableWidgetItem, QFileDialog, QMessageBox
 import pandas as pd
 import mysql.connector
-import estampado
+import estampar
 from PyQt6.QtGui import QColor
 
 

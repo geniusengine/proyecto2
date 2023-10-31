@@ -1,67 +1,84 @@
 import sys
-import os
-from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QPushButton, QVBoxLayout, QWidget
-from PyQt6.QtGui import QPixmap
-from PyQt6.QtCore import Qt
-import docx
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QFileDialog
+import PyPDF2
 
-class WordFileApp(QMainWindow):
+class PdfSigner(QMainWindow):
     def __init__(self):
         super().__init__()
-
-        self.setWindowTitle("Aplicación para Archivos de Word")
-        self.setGeometry(100, 100, 800, 600)
-
         self.initUI()
 
     def initUI(self):
-        self.central_widget = QWidget()
-        self.setCentralWidget(self.central_widget)
+        self.setWindowTitle('PDF Signer')
+        self.setGeometry(100, 100, 400, 200)
+
+        self.centralWidget = QWidget()
+        self.setCentralWidget(self.centralWidget)
 
         self.layout = QVBoxLayout()
 
-        self.loadButton = QPushButton("Cargar Archivo Word")
-        self.loadButton.clicked.connect(self.loadWordFile)
-        self.layout.addWidget(self.loadButton)
+        self.selectMainPdfButton = QPushButton('Seleccionar firma')
+        self.selectMainPdfButton.clicked.connect(self.selectMainPdf)
+        self.layout.addWidget(self.selectMainPdfButton)
 
-        self.fileInfoLabel = QLabel()
-        self.layout.addWidget(self.fileInfoLabel)
+        self.selectSignatureButton = QPushButton('Seleccionar documento a firmar')
+        self.selectSignatureButton.clicked.connect(self.selectSignaturePdf)
+        self.layout.addWidget(self.selectSignatureButton)
 
-        self.contentLabel = QLabel()
-        self.layout.addWidget(self.contentLabel)
-        self.contentLabel.setFixedHeight(400)
+        self.signPdfButton = QPushButton('Firmar PDF')
+        self.signPdfButton.clicked.connect(self.signPdf)
+        self.layout.addWidget(self.signPdfButton)
 
+        self.centralWidget.setLayout(self.layout)
 
-        self.stampLabel = QLabel()
-        self.layout.addWidget(self.stampLabel)
+        self.mainPdfPath = None
+        self.signaturePdfPath = None
 
-        self.central_widget.setLayout(self.layout)
+    def selectMainPdf(self):
+        filePath, _ = QFileDialog.getOpenFileName(self, "Selecciona un archivo PDF", "", "PDF Files (*.pdf);;All Files (*)")
+        if filePath:
+            self.mainPdfPath = filePath
 
-        self.file_path = None
+    def selectSignaturePdf(self):
+        filePath, _ = QFileDialog.getOpenFileName(self, "Selecciona un archivo PDF para la firma", "", "PDF Files (*.pdf);;All Files (*)")
+        if filePath:
+            self.signaturePdfPath = filePath
 
-    def loadWordFile(self):
+    def signPdf(self):
+        if self.mainPdfPath and self.signaturePdfPath:
+            # Abrir el archivo PDF principal
+            with open(self.mainPdfPath, 'rb') as mainPdfFile:
+                mainPdfReader = PyPDF2.PdfFileReader(mainPdfFile)
+                mainPdfWriter = PyPDF2.PdfFileWriter()
 
-        file_path, _ = QFileDialog.getOpenFileName(self, "Abrir archivo de Word", "", "Archivos de Word (*.docx *.doc)")
+                # Agregar páginas del PDF principal al nuevo PDF
+                for pageNum in range(mainPdfReader.numPages):
+                    pageObj = mainPdfReader.getPage(pageNum)
+                    mainPdfWriter.addPage(pageObj)
 
-        if file_path:
-            self.file_path = file_path
-            self.fileInfoLabel.setText(f"Archivo seleccionado: {os.path.basename(file_path)}")
+                # Abrir el archivo PDF de la firma
+                with open(self.signaturePdfPath, 'rb') as signaturePdfFile:
+                    signaturePdfReader = PyPDF2.PdfFileReader(signaturePdfFile)
+                    signaturePage = signaturePdfReader.getPage(0)
 
-            # Extraer el contenido del archivo Word
-            doc = docx.Document(file_path)
-            content = ""
-            for paragraph in doc.paragraphs:
-                content += paragraph.text + "\n"
+                    # Agregar la firma al primer documento PDF
+                    firstPage = mainPdfWriter.getPage(0)
+                    firstPage.mergePage(signaturePage)
 
-            self.contentLabel.setText(content)
+                # Guardar el PDF con la firma en un nuevo archivo
+                outputFilePath, _ = QFileDialog.getSaveFileName(self, "Guardar PDF Firmado", "", "PDF Files (*.pdf);;All Files (*)")
+                if outputFilePath:
+                    with open(outputFilePath, 'wb') as outputPdfFile:
+                        mainPdfWriter.write(outputPdfFile)
 
-            # Agregar el estampado (imagen PNG) en la parte inferior derecha
-            stamp = QPixmap("recursos\todasmienten.png")
-            self.stampLabel.setPixmap(stamp)
-            self.stampLabel.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom)
+                    print(f'PDF firmado correctamente y guardado como {outputFilePath}')
+        else:
+            print('Por favor, selecciona un archivo PDF principal y un archivo PDF para la firma.')
 
-if __name__ == '__main__':
+def main():
     app = QApplication(sys.argv)
-    window = WordFileApp()
+    window = PdfSigner()
     window.show()
     sys.exit(app.exec())
+
+if __name__ == '__main__':
+    main()
