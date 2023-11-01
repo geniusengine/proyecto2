@@ -38,9 +38,8 @@ class DashboardApp(QMainWindow):
         pass
     
     def buscar_clicked(self):
-        # Manejar la lógica cuando se hace clic en el botón de buscar
-        #llama a la ventana de busqueda de causas
-        
+        import subprocess
+        subprocess.Popen(['python', 'buscado.py'])
 
         pass
 
