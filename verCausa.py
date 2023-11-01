@@ -47,23 +47,8 @@ class VerCausaApp(QMainWindow):
 if __name__ == '__main__':
     app = QApplication([])
 
-    # Supongamos que tienes una causa para mostrar y editar
-    causa_ejemplo = {
-        "Fecha": "2023-10-31",
-        "Rut Demandado": "12345678-9",
-        "Rut Mandante": "98765432-1",
-        "Rol Causa": "C-12345-2023",
-        "Tribunal": "Tribunal de Prueba",
-        "Notificada": "Sí",
-        "Estampada": True,
-    }
-
-    ventana_detalle_causa = VerCausaApp(causa_ejemplo)
-    ventana_detalle_causa.show()
-
     app.exec()
 
-    app.exec()
 def main():
     app = QApplication(sys.argv)
     window = VerCausaApp()
