@@ -3,7 +3,10 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout,
 import pandas as pd
 import mysql.connector
 import estampar
+import pymssql
+from coneccion2 import DatabaseApp
 from PyQt6.QtGui import QColor
+from verCausa import VerCausaApp
 
 
 class DashboardApp(QMainWindow):
@@ -34,13 +37,6 @@ class DashboardApp(QMainWindow):
 
         self.central_widget.setLayout(self.layout)
 
-        # Lista ficticia de elementos
-        self.elementos = [
-        #   {"Id":"1","Nombew Juicio":"P-412-2020","Afp":"HABITAT","Nombre": "SOCIEDAD EDUCACIONAL HELLEN KELLER LIMITADA, IVONNE YANETT GUTIERREZ POZO","Domicilio":"AVENIDA SAN RAMON 595, La Serena" ,"Notficada":True,"Estampada":False,"Rol":"Notificar demanda","Tipo":"NEGATIVA","Pagar":"12000"},
-        #  {"Id":"2","Nombew Juicio":"P-412-2020","Afp":"HABITAT","Nombre": "SOCIEDAD EDUCACIONAL HELLEN KELLER LIMITADA, IVONNE YANETT GUTIERREZ POZO","Domicilio":"AVENIDA SAN RAMON 595, La Serena" ,"Notficada":False,"Estampada":True,"Rol":"Notificar demanda","Tipo":"NEGATIVA","Pagar":"12000"},
-        # {"Id":"3","Nombew Juicio":"P-412-2020","Afp":"HABITAT","Nombre": "SOCIEDAD EDUCACIONAL HELLEN KELLER LIMITADA, IVONNE YANETT GUTIERREZ POZO","Domicilio":"AVENIDA SAN RAMON 595, La Serena" ,"Notficada":True,"Estampada":True,"Rol":"Notificar demanda","Tipo":"NEGATIVA","Pagar":"12000"},
-        #{"Id":"4","Nombew Juicio":"P-412-2020","Afp":"HABITAT","Nombre": "SOCIEDAD EDUCACIONAL HELLEN KELLER LIMITADA, IVONNE YANETT GUTIERREZ POZO","Domicilio":"AVENIDA SAN RAMON 595, La Serena" ,"Notficada":False,"Estampada":False,"Rol":"Notificar demanda","Tipo":"NEGATIVA","Pagar":"12000"}
-        ]
     def estampar_clicked(self):
         # Manejar la lógica cuando se hace clic en el botón de estampado
         button = self.sender()  # Obtener el botón que emitió la señal
@@ -49,21 +45,31 @@ class DashboardApp(QMainWindow):
         #llama a la ventana estampado
         self.estampado_app = estampado.EstampadoApp()
         self.estampado_app.show()
-        
+
+    def verCausa_clicked(self):
+        # Manejar la lógica cuando se hace clic en el botón de VerCausa
+        button = self.sender()  # Obtener el botón que emitió la señal
+        index = self.table.indexAt(button.pos())  # Obtener la posición del botón en la tabla
+        row, col = index.row(), index.column()
+        #llama a la ventana verCausa
+        self.vercausa_app = VerCausaApp()
+        self.vercausa_app.show()   
+
     def ingresar_clicked(self):
         # Conectar a la base de datos MySQL
-        conn = mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password='',
-            database='mi_causa'
+        conn = pymssql.connect(
+                server='vps-3697915-x.dattaweb.com',
+                user='daniel',
+                password='LOLxdsas--',
+                database='micau5a'
         )
-
+        
         # Crear un cursor
         cursor = conn.cursor()
 
         # Ejecutar una consulta SELECT
-        query = "SELECT Id, Numerojuicio, AFP, Nombre, Domicilio, RolCausa, TipoCausa, Pagar FROM datoscausas"
+
+        query = "SELECT fechaNotificacion,rutDemandado,rutMandante,rolCausa,nombTribunal,notificacion FROM notificacion"
         cursor.execute(query)
 
         # Obtener todos los resultados
@@ -72,20 +78,20 @@ class DashboardApp(QMainWindow):
         # Lista que contendrá los diccionarios
         self.elementos = []
 
+
         # Iterar sobre los resultados y agregarlos al diccionario
+
         for fila in resultados:
             # Crear un diccionario para cada fila
             elemento = {
-                "Id": fila[0],
-                "Nombew_Juicio": fila[1],
-                "Afp": fila[2],
-                "Nombre": fila[3],
-                "Domicilio": fila[4],
-                "Rol": fila[5],
-                "Tipo": fila[6],
-                "Pagar": fila[7],
-                "Notificada": True,#Se necesita cambiar esto segun de donde3 vengan estos datos de la bd
+                "Fecha": fila[0],
+                "Rut Demandado": fila[1],
+                "Rut Mandante": fila[2],
+                "Rol Causa": fila[3],
+                "Tribunal": fila[4],
+                "Notificada": fila[5],
                 "Estampada": True,#Se necesita cambiar esto segun de donde3 vengan estos datos de la bd
+                "VerCausa": True,#Se necesita cambiar esto segun de donde3 vengan estos datos de la bd
             }
             self.elementos.append(elemento)
 
@@ -97,8 +103,8 @@ class DashboardApp(QMainWindow):
         cursor.close()
         conn.close()
     def mostrar_clicked(self):
-        self.table.setColumnCount(10)  # Número de columnas
-        self.table.setHorizontalHeaderLabels(['Id', 'Numero de Juicio', 'AFP', 'Nombre','Domicilio','Rol Causa','Tipo Causa','Pagar','Notificada','Estampada'])  # Etiquetas de las columnas
+        self.table.setColumnCount(8)  # Número de columnas
+        self.table.setHorizontalHeaderLabels(['Fecha','Rut demandado','Rut mandante','Rol Causa','Tribunal','notificada','Estampada','Ver Causa'])  # Etiquetas de las columnas
         
         #
         for row_index, elemento in enumerate(self.elementos):#row_index es el indice de la fila y segun los elementos que haya en la lista elementos se crean las filas
@@ -112,6 +118,11 @@ class DashboardApp(QMainWindow):
                     button = QPushButton("Estampar", self)
                     button.clicked.connect(self.estampar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
+                #establecer un boton en la celda de ver causa
+                if key == "VerCausa":
+                    button = QPushButton("Ver Causa", self)
+                    button.clicked.connect(self.verCausa_clicked)
+                    self.table.setCellWidget(row_index, col_index, button)  
 #------------------------------------------------------------------------------------
                 if estampada == True and notificada == True:
                     item.setBackground(QColor(0, 255, 0))#establece el color de fondo de la celda en verde
@@ -126,8 +137,12 @@ class DashboardApp(QMainWindow):
                     item.setBackground(QColor(255, 0, 0))#establece el color de fondo de la celda en rojo
                     self.table.setVerticalHeaderLabels(['Rojo'])
                  
-                self.table.setItem(row_index, col_index, item)#establece el item en la celda correspondiente         
-               
+                self.table.setItem(row_index, col_index, item)#establece el item en la celda correspondiente 
+
+
+
+        
+
 def main():
     app = QApplication(sys.argv)
     window = DashboardApp()
