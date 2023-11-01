@@ -10,7 +10,7 @@ Auteur: danie(mitchel.dmch@gmail.com)
 registro.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 26 août 2023 à 18:37:13 
-Dernière modification : samedi 28 octobre 2023 à 19:59:11
+Dernière modification : mercredi 1 novembre 2023 à 14:04:31
 """
 import sys
 import pymssql
@@ -41,8 +41,6 @@ class RegisterApp(QMainWindow):
         self.name_input = QLineEdit()
         self.apellido_label = QLabel("Apellido:")
         self.apellido_input = QLineEdit()
-        self.email_label = QLabel("Correo Electrónico:")
-        self.email_input = QLineEdit()
         self.username_label = QLabel("Usuario:")
         self.username_input = QLineEdit()
         self.password_label = QLabel("Contraseña:")
@@ -57,8 +55,6 @@ class RegisterApp(QMainWindow):
         self.layout.addWidget(self.name_input)
         self.layout.addWidget(self.apellido_label)
         self.layout.addWidget(self.apellido_input)
-        self.layout.addWidget(self.email_label)
-        self.layout.addWidget(self.email_input)
         self.layout.addWidget(self.username_label)
         self.layout.addWidget(self.username_input)
         self.layout.addWidget(self.password_label)
@@ -84,12 +80,11 @@ class RegisterApp(QMainWindow):
         rut = self.rut_input.text()
         name = self.name_input.text()
         apellido = self.apellido_input.text()
-        email = self.email_input.text()
         username = self.username_input.text()
         password = self.password_input.text()
 
     # Verificar que los campos no estén vacíos
-        if not name or not email or not username or not password:
+        if not name  or not username or not password:
             QMessageBox.warning(self, "Campos Vacíos", "Por favor, complete todos los campos.")
             return
 
@@ -97,8 +92,8 @@ class RegisterApp(QMainWindow):
         hashed_password = bcrypt.hash(password)
 
     # Insertar el nuevo usuario en la base de datos MySQL
-        sql = "INSERT INTO usuarios (rut,nombreusuario,apellidousuario,email, username, password) VALUES (%s,%s,%s, %s, %s, %s)"
-        values = (rut,name,apellido, email, username, hashed_password)
+        sql = "INSERT INTO usuarios (rut,nombreusuario,apellidousuario, username, password) VALUES (%s,%s, %s, %s, %s)"
+        values = (rut,name,apellido,  username, hashed_password)
 
         try:
             self.cursor.execute(sql, values)
@@ -107,7 +102,6 @@ class RegisterApp(QMainWindow):
             self.rut_input.clear()
             self.name_input.clear()
             self.apellido_input.clear()
-            self.email_input.clear()
             self.username_input.clear()
             self.password_input.clear()
         except Exception as e:
