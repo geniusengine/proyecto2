@@ -1,13 +1,8 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, QTableWidgetItem, QFileDialog, QMessageBox
-import pandas as pd
-import mysql.connector
-import estampar
-import pymssql
-from coneccion2 import DatabaseApp
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, QTableWidgetItem
 from PyQt6.QtGui import QColor
+import pymssql
 from verCausa import VerCausaApp
-
 
 class DashboardApp(QMainWindow):
     def __init__(self):
@@ -16,73 +11,63 @@ class DashboardApp(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle('Dashboard App')
-        self.setGeometry(100, 100, 1050, 600)
+        self.setGeometry(100, 100, 860, 600)
 
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
 
-        self.layout = QVBoxLayout()#crea un layout vertical para los botones y la tabla
+        self.layout = QVBoxLayout()
 
-        self.btn_ingresar = QPushButton('Ingresar', self)
-        self.btn_ingresar.clicked.connect(self.ingresar_clicked)
-
-        self.btn_mostrar = QPushButton('Mostrar', self)
-        self.btn_mostrar.clicked.connect(self.mostrar_clicked)
-
-        self.table = QTableWidget()#crea una tabla vacia para mostrar los datos
-
-        self.layout.addWidget(self.btn_ingresar)
-        self.layout.addWidget(self.btn_mostrar)
+        self.table = QTableWidget()
         self.layout.addWidget(self.table)
 
         self.central_widget.setLayout(self.layout)
 
+        # Llama automáticamente a acceder_base_de_datos y mostrar_clicked al iniciar la aplicación
+        self.acceder_base_de_datos()
+        self.mostrar_clicked()
+
     def estampar_clicked(self):
         # Manejar la lógica cuando se hace clic en el botón de estampado
-        button = self.sender()  # Obtener el botón que emitió la señal
-        index = self.table.indexAt(button.pos())  # Obtener la posición del botón en la tabla
-        row, col = index.row(), index.column()
-        #llama a la ventana estampado
-        self.estampado_app = estampado.EstampadoApp()
-        self.estampado_app.show()
+        pass
 
     def verCausa_clicked(self):
         # Manejar la lógica cuando se hace clic en el botón de VerCausa
-        button = self.sender()  # Obtener el botón que emitió la señal
-        index = self.table.indexAt(button.pos())  # Obtener la posición del botón en la tabla
+        button = self.sender()
+        index = self.table.indexAt(button.pos())
         row, col = index.row(), index.column()
-        #llama a la ventana verCausa
-        self.vercausa_app = VerCausaApp()
-        self.vercausa_app.show()   
+        # Obtener la causa correspondiente a la fila
+        causa = self.elementos[row]
+        # Llama a la ventana VerCausa
+        self.vercausa_app = VerCausaApp(causa)
+        self.vercausa_app.show()
 
-    def ingresar_clicked(self):
+    def acceder_base_de_datos(self):
         # Conectar a la base de datos MySQL
         conn = pymssql.connect(
-                server='vps-3697915-x.dattaweb.com',
-                user='daniel',
-                password='LOLxdsas--',
-                database='micau5a'
+            server='vps-3697915-x.dattaweb.com',
+            user='daniel',
+            password='LOLxdsas--',
+            database='micau5a'
         )
-        
+
         # Crear un cursor
         cursor = conn.cursor()
 
         # Ejecutar una consulta SELECT
-
-        query = "SELECT fechaNotificacion,rutDemandado,rutMandante,rolCausa,nombTribunal,notificacion FROM notificacion"
+        query = "SELECT fechaNotificacion, rutDemandado, rutMandante, rolCausa, nombTribunal, notificacion FROM notificacion"
         cursor.execute(query)
 
         # Obtener todos los resultados
         resultados = cursor.fetchall()
 
-        # Lista que contendrá los diccionarios
+        # Cerrar el cursor y la conexión
+        cursor.close()
+        conn.close()
+
         self.elementos = []
 
-
-        # Iterar sobre los resultados y agregarlos al diccionario
-
         for fila in resultados:
-            # Crear un diccionario para cada fila
             elemento = {
                 "Fecha": fila[0],
                 "Rut Demandado": fila[1],
@@ -90,58 +75,53 @@ class DashboardApp(QMainWindow):
                 "Rol Causa": fila[3],
                 "Tribunal": fila[4],
                 "Notificada": fila[5],
-                "Estampada": True,#Se necesita cambiar esto segun de donde3 vengan estos datos de la bd
-                "VerCausa": True,#Se necesita cambiar esto segun de donde3 vengan estos datos de la bd
+                "Estampada": True,
+                "VerCausa": True,
             }
             self.elementos.append(elemento)
 
-        # Mostrar los diccionarios
-        for elemento in self.elementos:
-            print(elemento)
-
-        # Cerrar el cursor y la conexión
-        cursor.close()
-        conn.close()
     def mostrar_clicked(self):
         self.table.setColumnCount(8)  # Número de columnas
-        self.table.setHorizontalHeaderLabels(['Fecha','Rut demandado','Rut mandante','Rol Causa','Tribunal','notificada','Estampada','Ver Causa'])  # Etiquetas de las columnas
-        
-        #
-        for row_index, elemento in enumerate(self.elementos):#row_index es el indice de la fila y segun los elementos que haya en la lista elementos se crean las filas
-            self.table.insertRow(row_index)#inserta al final de la tabla una fila
-            notificada = elemento["Notificada"]#obtiene el valor de la llave notificada
-            estampada = elemento["Estampada"]#obtiene el valor de la llave estampada
-            for col_index, (key, value) in enumerate(elemento.items()):#col_index es el indice de la columna
-                item = QTableWidgetItem(str(value))#crea un item con el valor de la celda
-                #establecer un boton en la celda de estampado
+        self.table.setHorizontalHeaderLabels(['Fecha', 'Rut demandado', 'Rut mandante', 'Rol Causa', 'Tribunal', 'notificada', 'Estampada', 'Ver Causa'])  # Etiquetas de las columnas
+
+        for row_index, elemento in enumerate(self.elementos):
+            self.table.insertRow(row_index)
+            notificada = elemento["Notificada"]
+            estampada = elemento["Estampada"]
+            for col_index, (key, value) in enumerate(elemento.items()):
+                item = QTableWidgetItem(str(value))
+                # Establecer un botón en la celda de estampado
                 if key == "Estampada":
                     button = QPushButton("Estampar", self)
                     button.clicked.connect(self.estampar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
-                #establecer un boton en la celda de ver causa
-                if key == "VerCausa":
+                # Establecer un botón en la celda de ver causa
+                elif key == "VerCausa":
                     button = QPushButton("Ver Causa", self)
                     button.clicked.connect(self.verCausa_clicked)
-                    self.table.setCellWidget(row_index, col_index, button)  
-#------------------------------------------------------------------------------------
-                if estampada == True and notificada == True:
-                    item.setBackground(QColor(0, 255, 0))#establece el color de fondo de la celda en verde
-                    self.table.setVerticalHeaderLabels(['Verde'])
-                if  estampada == True and notificada == False:
-                    item.setBackground(QColor(255, 255, 0))#establece el color de fondo de la celda en amarillo
-                    self.table.setVerticalHeaderLabels(['Amarillo'])
-                if estampada == False and notificada == True:
-                    item.setBackground(QColor(0, 0, 255))#establece el color de fondo de la celda en azul
-                    self.table.setVerticalHeaderLabels(['Azul'])
-                if estampada == False and notificada == False:
-                    item.setBackground(QColor(255, 0, 0))#establece el color de fondo de la celda en rojo
-                    self.table.setVerticalHeaderLabels(['Rojo'])
-                 
-                self.table.setItem(row_index, col_index, item)#establece el item en la celda correspondiente 
+                    self.table.setCellWidget(row_index, col_index, button)
 
+                self.color_y_etiqueta_celda(item, estampada, notificada)
+                self.table.setItem(row_index, col_index, item)
 
+    def color_y_etiqueta_celda(self, item, estampada, notificada):
+        color = QColor()
 
-        
+        if estampada and notificada:
+            color = QColor(0, 255, 0)  # Verde
+            etiqueta = 'Verde'
+        elif estampada and not notificada:
+            color = QColor(255, 255, 0)  # Amarillo
+            etiqueta = 'Amarillo'
+        elif not estampada and notificada:
+            color = QColor(0, 0, 255)  # Azul
+            etiqueta = 'Azul'
+        else:
+            color = QColor(255, 0, 0)  # Rojo
+            etiqueta = 'Rojo'
+
+        item.setBackground(color)
+        self.table.setVerticalHeaderLabels([etiqueta])
 
 def main():
     app = QApplication(sys.argv)
