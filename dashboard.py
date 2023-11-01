@@ -21,6 +21,12 @@ class DashboardApp(QMainWindow):
         self.table = QTableWidget()
         self.layout.addWidget(self.table)
 
+        #crea un boton para buscar
+        self.btn_buscar = QPushButton('Buscar', self)
+        self.btn_buscar.clicked.connect(self.buscar_clicked)
+        self.layout.addWidget(self.btn_buscar)
+         
+
         self.central_widget.setLayout(self.layout)
 
         # Llama automáticamente a acceder_base_de_datos y mostrar_clicked al iniciar la aplicación
@@ -30,6 +36,13 @@ class DashboardApp(QMainWindow):
     def estampar_clicked(self):
         # Manejar la lógica cuando se hace clic en el botón de estampado
         pass
+    
+    def buscar_clicked(self):
+        # Manejar la lógica cuando se hace clic en el botón de buscar
+        #llama a la ventana de busqueda de causas
+        
+
+        pass
 
     def verCausa_clicked(self):
         # Manejar la lógica cuando se hace clic en el botón de VerCausa
@@ -37,7 +50,7 @@ class DashboardApp(QMainWindow):
         index = self.table.indexAt(button.pos())
         row, col = index.row(), index.column()
         # Obtener la causa correspondiente a la fila
-        causa = self.elementos[row]
+        causa = self.causas[row]
         # Llama a la ventana VerCausa
         self.vercausa_app = VerCausaApp(causa)
         self.vercausa_app.show()
@@ -65,10 +78,10 @@ class DashboardApp(QMainWindow):
         cursor.close()
         conn.close()
 
-        self.elementos = []
+        self.causas = []
 
         for fila in resultados:
-            elemento = {
+            causa = {
                 "Fecha": fila[0],
                 "Rut Demandado": fila[1],
                 "Rut Mandante": fila[2],
@@ -78,17 +91,17 @@ class DashboardApp(QMainWindow):
                 "Estampada": True,
                 "VerCausa": True,
             }
-            self.elementos.append(elemento)
+            self.causas.append(causa)
 
     def mostrar_clicked(self):
         self.table.setColumnCount(8)  # Número de columnas
         self.table.setHorizontalHeaderLabels(['Fecha', 'Rut demandado', 'Rut mandante', 'Rol Causa', 'Tribunal', 'notificada', 'Estampada', 'Ver Causa'])  # Etiquetas de las columnas
 
-        for row_index, elemento in enumerate(self.elementos):
+        for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
-            notificada = elemento["Notificada"]
-            estampada = elemento["Estampada"]
-            for col_index, (key, value) in enumerate(elemento.items()):
+            notificada = causa["Notificada"]
+            estampada = causa["Estampada"]
+            for col_index, (key, value) in enumerate(causa.items()):
                 item = QTableWidgetItem(str(value))
                 # Establecer un botón en la celda de estampado
                 if key == "Estampada":
