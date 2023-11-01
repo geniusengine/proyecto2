@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout,
 from PyQt6.QtGui import QColor
 import pymssql
 from verCausa import VerCausaApp
+from buscado import BuscadorDatosCausaApp
 
 class DashboardApp(QMainWindow):
     def __init__(self):
@@ -40,7 +41,8 @@ class DashboardApp(QMainWindow):
     def buscar_clicked(self):
         # Manejar la lógica cuando se hace clic en el botón de buscar
         #llama a la ventana de busqueda de causas
-        
+        self.buscar_app = BuscadorDatosCausaApp()
+        self.buscar_app.show()
 
         pass
 
