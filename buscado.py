@@ -72,7 +72,7 @@ class BuscadorDatosCausaApp(QMainWindow):
             return
 
         try:
-            connection = pymssql.conecct (
+            connection = pymssql.connect (
                 server='vps-3697915-x.dattaweb.com',
                 user='daniel',
                 password='LOLxdsas--',
@@ -85,7 +85,7 @@ class BuscadorDatosCausaApp(QMainWindow):
                 query = """
                 SELECT d.rol_causa, t.nombtribunal
                 FROM demanda AS d
-                JOIN tribunal AS t ON d.id_tribunal = t.id_tribunal
+                JOIN tribunal AS t ON d.id = t.id_tribunal
                 WHERE d.rol_causa = %s
                 """
                 cursor.execute(query, (rol_causa,))
@@ -93,7 +93,7 @@ class BuscadorDatosCausaApp(QMainWindow):
                 query = """
                 SELECT d.rol_causa, t.nombtribunal
                 FROM demanda AS d
-                JOIN tribunal AS t ON d.id_tribunal = t.id_tribunal
+                JOIN tribunal AS t ON d.id = t.id_tribunal
                 WHERE t.nombtribunal = %s
                 """
                 cursor.execute(query, (tribunal,))
@@ -101,7 +101,7 @@ class BuscadorDatosCausaApp(QMainWindow):
                 query = """
                 SELECT d.rol_causa, t.nombtribunal
                 FROM demanda AS d
-                JOIN tribunal AS t ON d.id_tribunal = t.id_tribunal
+                JOIN tribunal AS t ON d.id = t.id_tribunal
                 WHERE d.rol_causa = %s AND t.nombtribunal = %s
                 """
                 cursor.execute(query, (rol_causa, tribunal))
