@@ -72,7 +72,7 @@ class BuscadorDatosCausaApp(QMainWindow):
             return
 
         try:
-            connection = pymssql.conecct (
+            connection = pymssql.connect (
                 server='vps-3697915-x.dattaweb.com',
                 user='daniel',
                 password='LOLxdsas--',
