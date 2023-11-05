@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 insertar.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 16:15:10 
-Dernière modification : samedi 4 novembre 2023 à 17:32:25
+Dernière modification : samedi 4 novembre 2023 à 22:30:52
 """
 
 import sys
@@ -90,7 +90,6 @@ class ExcelToDatabaseApp(QMainWindow):
             domicilio = self.data_table.item(row_idx, 3).text()
             rolcausa = self.data_table.item(row_idx, 4).text()
             arancel_item = self.data_table.item(row_idx, 5)
-        arancel = 0  # Valor predeterminado si no se ingresa nada
         if arancel_item and isinstance(arancel_item, QLineEdit):
             arancel_text = arancel_item.text()
             try:
