@@ -12,15 +12,14 @@ class DashboardApp(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle('Dashboard App')
-        self.setGeometry(100, 100, 860, 600)
+        self.setGeometry(100, 100, 1020, 600)
 
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
 
         self.layout = QVBoxLayout()
 
-        self.table = QTableWidget()
-        self.layout.addWidget(self.table)
+   
 
         #crea un boton para buscar
         self.btn_buscar = QPushButton('Buscar', self)
@@ -34,7 +33,9 @@ class DashboardApp(QMainWindow):
         self.btn_Insertar_manual = QPushButton('Insertar Manual', self)
         self.btn_Insertar_manual.clicked.connect(self.Insertar_manual_clicked)
         self.layout.addWidget(self.btn_Insertar_manual)
-         
+         #creat una tabla
+        self.table = QTableWidget()
+        self.layout.addWidget(self.table)
 
         self.central_widget.setLayout(self.layout)
 
