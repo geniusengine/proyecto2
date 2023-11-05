@@ -1,10 +1,11 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, QTableWidgetItem
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, QTableWidgetItem, QHeaderView, QCheckBox
 from PyQt6.QtGui import QColor
 import pymssql
 from verCausa import VerCausaApp
 from buscado import BuscadorDatosCausaApp
-
+from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import Qt
 class DashboardApp(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -20,40 +21,50 @@ class DashboardApp(QMainWindow):
         self.layout = QVBoxLayout()
 
    
-
-        #crea un boton para buscar
+#crea un boton para buscar
         self.btn_buscar = QPushButton('Buscar', self)
         self.btn_buscar.clicked.connect(self.buscar_clicked)
         self.layout.addWidget(self.btn_buscar)
-               #crea un boton para insertar excel
+#crea un boton para insertar excel
         self.btn_Insertar_excel = QPushButton('Insertar Excel', self)
         self.btn_Insertar_excel.clicked.connect(self.Insertar_excel_clicked)
         self.layout.addWidget(self.btn_Insertar_excel)
-               #crea un boton para insertar manual
+#crea un boton para insertar manual
         self.btn_Insertar_manual = QPushButton('Insertar Manual', self)
         self.btn_Insertar_manual.clicked.connect(self.Insertar_manual_clicked)
         self.layout.addWidget(self.btn_Insertar_manual)
-         #creat una tabla
+
+#creat una tabla
         self.table = QTableWidget()
         self.layout.addWidget(self.table)
-
+#crea un boton para Guardar los datos de la tabla
+        self.btn_Guardar = QPushButton('Guardar', self)
+        self.btn_Guardar.clicked.connect(self.Guardar_clicked)
+        self.layout.addWidget(self.btn_Guardar)
+        
         self.central_widget.setLayout(self.layout)
 
         # Llama automáticamente a acceder_base_de_datos y mostrar_clicked al iniciar la aplicación
         self.acceder_base_de_datos()
         self.mostrar_clicked()
+
+        # Ajustar el tamaño de la ventana
+        self.ajustar_tamanio()
+
+    def Guardar_clicked(self):
+        # Manejar la lógica cuando se hace clic en el botón de guardar
+        pass
     def Insertar_excel_clicked(self):
-        # Manejar la lógica cuando se hace clic en el botón de estampado
+        # Manejar la lógica cuando se hace clic en el botón de insertar excel
         pass
     def Insertar_manual_clicked(self):
-        # Manejar la lógica cuando se hace clic en el botón de estampado
+        # Manejar la lógica cuando se hace clic en el botón de insertar manual
         pass
     def estampar_clicked(self):
         # Manejar la lógica cuando se hace clic en el botón de estampado
         pass
     
     def buscar_clicked(self):
-
         import subprocess
         subprocess.Popen(['python', 'buscado.py'])
 
@@ -84,9 +95,9 @@ class DashboardApp(QMainWindow):
 
         # Ejecutar una consulta SELECT
         
-        query = "SELECT fechaNotificacion, numjui, nombmandante, rolCausa, nombTribunal, estadoCausa FROM notificacion"
+        #query = "SELECT fechaNotificacion, numjui, nombmandante, rolCausa, nombTribunal, estadoCausa FROM notificacion"
         #query = "SELECT * FROM usuarios"
-        #query = "select * from demanda"
+        query = "select * from demanda"
         cursor.execute(query)
 
         # Obtener todos los resultados
@@ -109,14 +120,14 @@ class DashboardApp(QMainWindow):
                 "Estado causa": fila[5],
                 "Notificada": True,
                 "Estampada": True,
-                "Busqueda": "Positiva",
-                "Guardar": "Guardar",
+                "Busqueda positiva": "1",
+                "Busqueda negativa": "0",
             }
             self.causas.append(causa)
 
     def mostrar_clicked(self):
         self.table.setColumnCount(10)  # Número de columnas
-        self.table.setHorizontalHeaderLabels(['Fecha', 'Número juicio', 'Nombre mandante', 'Rol Causa', 'Tribunal', 'Estado causa', 'Estampada', 'Ver Causa','Busqueda','Guardar'])  # Etiquetas de las columnas
+        self.table.setHorizontalHeaderLabels(['Fecha', 'Número juicio', 'Nombre mandante', 'Rol Causa', 'Tribunal', 'Estado causa', 'Estampada', 'Ver Causa','Busqueda Positiva','Busqueda Negativa'])  # Etiquetas de las columnas
 
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
@@ -134,12 +145,37 @@ class DashboardApp(QMainWindow):
                     button = QPushButton("Ver Causa", self)
                     button.clicked.connect(self.verCausa_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
-                elif key == "Guardar":
-                    button = QPushButton("Busqueda", self)
-                    button.clicked.connect(self.buscar_clicked)
-                    self.table.setCellWidget(row_index, col_index, button)
+                elif key == "Busqueda positiva":
+                    checkbox = QCheckBox("Si", self)
+                    checkbox.setChecked(True)
+                    self.table.setCellWidget(row_index, col_index, checkbox)
+                elif key == "Busqueda negativa":
+                    checkbox = QCheckBox("No", self)
+                    checkbox.setChecked(False)
+                    self.table.setCellWidget(row_index, col_index, checkbox)
                 self.color_y_etiqueta_celda(item, estampada, notificada)
                 self.table.setItem(row_index, col_index, item)
+
+        # Mover estas líneas fuera del bucle para ajustar el tamaño después de agregar todas las filas
+        
+
+    def ajustar_tamanio(self):
+        # Ajustar automáticamente el tamaño de las columnas
+        self.table.resizeColumnsToContents()
+        
+        # Calcular el ancho total de las columnas
+        total_width = sum(self.table.columnWidth(col) for col in range(self.table.columnCount()))
+        
+        # Establecer el ancho mínimo de la ventana para evitar achicarse demasiado
+        min_width = max(self.width(), total_width)
+        
+        # Ajustar el tamaño de la ventana al tamaño máximo necesario
+        self.setMinimumWidth(min_width)
+        #self.resize(total_width, self.height())  # Opcional: Ajustar también el ancho actual de la ventana
+        
+        # Ajustar automáticamente el tamaño de la ventana
+        #self.adjustSize()
+
 
     def color_y_etiqueta_celda(self, item, estampada, notificada):
         color = QColor()
