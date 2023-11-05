@@ -26,6 +26,14 @@ class DashboardApp(QMainWindow):
         self.btn_buscar = QPushButton('Buscar', self)
         self.btn_buscar.clicked.connect(self.buscar_clicked)
         self.layout.addWidget(self.btn_buscar)
+               #crea un boton para insertar excel
+        self.btn_Insertar_excel = QPushButton('Insertar Excel', self)
+        self.btn_Insertar_excel.clicked.connect(self.Insertar_excel_clicked)
+        self.layout.addWidget(self.btn_Insertar_excel)
+               #crea un boton para insertar manual
+        self.btn_Insertar_manual = QPushButton('Insertar Manual', self)
+        self.btn_Insertar_manual.clicked.connect(self.Insertar_manual_clicked)
+        self.layout.addWidget(self.btn_Insertar_manual)
          
 
         self.central_widget.setLayout(self.layout)
@@ -33,7 +41,12 @@ class DashboardApp(QMainWindow):
         # Llama automáticamente a acceder_base_de_datos y mostrar_clicked al iniciar la aplicación
         self.acceder_base_de_datos()
         self.mostrar_clicked()
-
+    def Insertar_excel_clicked(self):
+        # Manejar la lógica cuando se hace clic en el botón de estampado
+        pass
+    def Insertar_manual_clicked(self):
+        # Manejar la lógica cuando se hace clic en el botón de estampado
+        pass
     def estampar_clicked(self):
         # Manejar la lógica cuando se hace clic en el botón de estampado
         pass
@@ -69,7 +82,10 @@ class DashboardApp(QMainWindow):
         cursor = conn.cursor()
 
         # Ejecutar una consulta SELECT
-        query = "SELECT fechaNotificacion, rutDemandado, rutMandante, rolCausa, nombTribunal, notificacion FROM notificacion"
+        
+        query = "SELECT fechaNotificacion, numjui, nombmandante, rolCausa, nombTribunal, estadoCausa FROM notificacion"
+        #query = "SELECT * FROM usuarios"
+        #query = "select * from demanda"
         cursor.execute(query)
 
         # Obtener todos los resultados
@@ -77,26 +93,29 @@ class DashboardApp(QMainWindow):
 
         # Cerrar el cursor y la conexión
         cursor.close()
+        conn.commit() 
         conn.close()
 
         self.causas = []
 
         for fila in resultados:
             causa = {
-                "Fecha": fila[0],
-                "Rut Demandado": fila[1],
-                "Rut Mandante": fila[2],
+                "Fecha notificacion": fila[0],
+                "Numero juicio": fila[1],
+                "Nombre Mandante": fila[2],
                 "Rol Causa": fila[3],
                 "Tribunal": fila[4],
-                "Notificada": fila[5],
+                "Estado causa": fila[5],
+                "Notificada": True,
                 "Estampada": True,
-                "VerCausa": True,
+                "Busqueda": "Positiva",
+                "Guardar": "Guardar",
             }
             self.causas.append(causa)
 
     def mostrar_clicked(self):
-        self.table.setColumnCount(8)  # Número de columnas
-        self.table.setHorizontalHeaderLabels(['Fecha', 'Rut demandado', 'Rut mandante', 'Rol Causa', 'Tribunal', 'notificada', 'Estampada', 'Ver Causa'])  # Etiquetas de las columnas
+        self.table.setColumnCount(10)  # Número de columnas
+        self.table.setHorizontalHeaderLabels(['Fecha', 'Número juicio', 'Nombre mandante', 'Rol Causa', 'Tribunal', 'Estado causa', 'Estampada', 'Ver Causa','Busqueda','Guardar'])  # Etiquetas de las columnas
 
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
@@ -114,7 +133,10 @@ class DashboardApp(QMainWindow):
                     button = QPushButton("Ver Causa", self)
                     button.clicked.connect(self.verCausa_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
-
+                elif key == "Guardar":
+                    button = QPushButton("Busqueda", self)
+                    button.clicked.connect(self.buscar_clicked)
+                    self.table.setCellWidget(row_index, col_index, button)
                 self.color_y_etiqueta_celda(item, estampada, notificada)
                 self.table.setItem(row_index, col_index, item)
 
