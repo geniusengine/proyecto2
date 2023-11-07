@@ -41,8 +41,7 @@ class DashboardApp(QMainWindow):
         self.btn_Guardar = QPushButton('Guardar', self)
         self.btn_Guardar.clicked.connect(self.Guardar_clicked)
         self.layout.addWidget(self.btn_Guardar)
-        self.btn_Guardar.clicked.connect(self.Guardar_clicked)
-        
+       # self.btn_Guardar.clicked.connect(self.Guardar_clicked)
         self.central_widget.setLayout(self.layout)
 
         # Llama automáticamente a acceder_base_de_datos y mostrar_clicked al iniciar la aplicación
@@ -75,7 +74,6 @@ class DashboardApp(QMainWindow):
         import subprocess
         subprocess.Popen(['python', 'estampar.py'])
         # Manejar la lógica cuando se hace clic en el botón de estampado
-        pass
     
     def buscar_clicked(self):
         import subprocess
