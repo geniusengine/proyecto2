@@ -41,6 +41,7 @@ class DashboardApp(QMainWindow):
         self.btn_Guardar = QPushButton('Guardar', self)
         self.btn_Guardar.clicked.connect(self.Guardar_clicked)
         self.layout.addWidget(self.btn_Guardar)
+        self.btn_Guardar.clicked.connect(self.Guardar_clicked)
         
         self.central_widget.setLayout(self.layout)
 
@@ -52,8 +53,18 @@ class DashboardApp(QMainWindow):
         self.ajustar_tamanio()
 
     def Guardar_clicked(self):
-        # Manejar la lógica cuando se hace clic en el botón de guardar
-        pass
+   # Manejar la lógica cuando se hace clic en el botón de guardar
+        for row_index, causa in enumerate(self.causas):
+            # Obtener el estado del QCheckBox de "Busqueda positiva"
+            checkbox_positiva = self.table.cellWidget(row_index, 9)
+            causa["Busqueda positiva"] = "1" if checkbox_positiva.isChecked() else "0"
+
+            # Obtener el estado del QCheckBox de "Busqueda negativa"
+            checkbox_negativa = self.table.cellWidget(row_index, 10)
+            causa["Busqueda negativa"] = "1" if checkbox_negativa.isChecked() else "0"
+
+            # Actualizar estos cambios en la base de datos
+            self.actualizar_base_de_datos(causa)
     def Insertar_excel_clicked(self):
         # Manejar la lógica cuando se hace clic en el botón de insertar excel
         pass
@@ -61,6 +72,8 @@ class DashboardApp(QMainWindow):
         # Manejar la lógica cuando se hace clic en el botón de insertar manual
         pass
     def estampar_clicked(self):
+        import subprocess
+        subprocess.Popen(['python', 'estampar.py'])
         # Manejar la lógica cuando se hace clic en el botón de estampado
         pass
     
@@ -81,6 +94,27 @@ class DashboardApp(QMainWindow):
         self.vercausa_app = VerCausaApp(causa)
         self.vercausa_app.show()
 
+    def actualizar_base_de_datos(self, causa):
+            # Conectar a la base de datos
+            conn = pymssql.connect(
+                server='vps-3697915-x.dattaweb.com',
+                user='daniel',
+                password='LOLxdsas--',
+                database='micau5a'
+            )
+
+            # Crear un cursor
+            cursor = conn.cursor()
+
+            # Actualizar la base de datos con los nuevos valores de "Busqueda positiva" y "Busqueda negativa"
+            query = f"UPDATE notificacion SET [Busqueda positiva] = '{causa['Busqueda positiva']}', " \
+                    f"[Busqueda negativa] = '{causa['Busqueda negativa']}' WHERE rolCausa = '{causa['Rol Causa']}'"
+            cursor.execute(query)
+
+            # Confirmar y cerrar la conexión
+            conn.commit()
+            cursor.close()
+            conn.close()
     def acceder_base_de_datos(self):
         # Conectar a la base de datos MySQL
         conn = pymssql.connect(
@@ -95,13 +129,28 @@ class DashboardApp(QMainWindow):
 
         # Ejecutar una consulta SELECT
         
-        #query = "SELECT fechaNotificacion, numjui, nombmandante, rolCausa, nombTribunal, estadoCausa FROM notificacion"
-        #query = "SELECT * FROM usuarios"
-        query = "select * from demanda"
-        cursor.execute(query)
 
+
+        """query = "insert into demanda (numjui,rolCausa,nombTribunal,nombmandante,domicilio,nombDemandado,arancel) values ('1','rol1','tribunal1','mandante1','domicilio1','demandado1','12000')"
+        cursor.execute(query)
+        query = "insert into demanda (numjui,rolCausa,nombTribunal,nombmandante,domicilio,nombDemandado,arancel) values ('2','rol2','tribunal2','mandante2','domicilio2','demandado2','14000')"
+        cursor.execute(query)
+        query = "insert into tribunal(numjui,nombTribunal) values ('1','tribunal1')"
+        cursor.execute(query)
+        query = "insert into tribunal(numjui,nombTribunal) values ('2','tribunal2')"
+        cursor.execute(query)
+        query ="insert into notificacion(fechaNotificacion,numjui,nombMandante,rolCausa,nombTribunal,estadoCausa) values ('2021-10-10','1','mandante1','rol1','tribunal1','1')"#1Pendiente (por ejemplo, 1): La causa ha sido notificada, pero aún no ha sido procesada o resuelta por el tribunal.
+        cursor.execute(query)
+        query ="insert into notificacion(fechaNotificacion,numjui,nombMandante,rolCausa,nombTribunal,estadoCausa) values ('2022-11-13','2','mandante2','rol2','tribunal2','2')"#2En Proceso (por ejemplo, 2): La causa ha sido notificada y está siendo procesada o resuelta por el tribunal.
+        cursor.execute(query)"""
+
+
+        query = "SELECT fechaNotificacion, numjui, nombmandante, rolCausa, nombTribunal, estadoCausa FROM notificacion"
+        cursor.execute(query)
         # Obtener todos los resultados
         resultados = cursor.fetchall()
+
+        
 
         # Cerrar el cursor y la conexión
         cursor.close()
@@ -118,16 +167,17 @@ class DashboardApp(QMainWindow):
                 "Rol Causa": fila[3],
                 "Tribunal": fila[4],
                 "Estado causa": fila[5],
-                "Notificada": True,
+                "Notificada": False,
                 "Estampada": True,
-                "Busqueda positiva": "1",
+                "VerCausa": "Ver Causa",
+                "Busqueda positiva": "0",
                 "Busqueda negativa": "0",
             }
             self.causas.append(causa)
 
     def mostrar_clicked(self):
-        self.table.setColumnCount(10)  # Número de columnas
-        self.table.setHorizontalHeaderLabels(['Fecha', 'Número juicio', 'Nombre mandante', 'Rol Causa', 'Tribunal', 'Estado causa', 'Estampada', 'Ver Causa','Busqueda Positiva','Busqueda Negativa'])  # Etiquetas de las columnas
+        self.table.setColumnCount(11)  # Número de columnas
+        self.table.setHorizontalHeaderLabels(['Fecha', 'Número juicio', 'Nombre mandante', 'Rol Causa', 'Tribunal', 'Estado causa','Notificada','Estampada', 'Ver Causa','Busqueda Positiva','Busqueda Negativa'])  # Etiquetas de las columnas
 
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
@@ -147,12 +197,18 @@ class DashboardApp(QMainWindow):
                     self.table.setCellWidget(row_index, col_index, button)
                 elif key == "Busqueda positiva":
                     checkbox = QCheckBox("Si", self)
-                    checkbox.setChecked(True)
+                    if value == "1":
+                        checkbox.setChecked(True)
+                    else:
+                        checkbox.setChecked(False)
                     self.table.setCellWidget(row_index, col_index, checkbox)
                 elif key == "Busqueda negativa":
                     checkbox = QCheckBox("No", self)
-                    checkbox.setChecked(False)
-                    self.table.setCellWidget(row_index, col_index, checkbox)
+                    if value == "1":
+                        checkbox.setChecked(True)
+                    else:
+                        checkbox.setChecked(False)
+                    self.table.setCellWidget(row_index, col_index, checkbox) 
                 self.color_y_etiqueta_celda(item, estampada, notificada)
                 self.table.setItem(row_index, col_index, item)
 
