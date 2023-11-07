@@ -56,9 +56,14 @@ class DashboardApp(QMainWindow):
         pass
     def Insertar_excel_clicked(self):
         # Manejar la lógica cuando se hace clic en el botón de insertar excel
+        import subprocess
+        subprocess.Popen(['python', 'insertar.py'])
+        
         pass
     def Insertar_manual_clicked(self):
         # Manejar la lógica cuando se hace clic en el botón de insertar manual
+        import subprocess
+        subprocess.Popen(['python', 'manualapajas.py'])
         pass
     def estampar_clicked(self):
         # Manejar la lógica cuando se hace clic en el botón de estampado
