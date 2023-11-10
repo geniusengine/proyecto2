@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, QTableWidgetItem, QHeaderView, QCheckBox
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout
 from PyQt6.QtGui import QColor
 import pymssql
 from verCausa import VerCausaApp
@@ -17,32 +17,33 @@ class DashboardApp(QMainWindow):
 
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
-
-        self.layout = QVBoxLayout()
+        self.layout_vertical = QVBoxLayout()#crea un layout vertical
+        self.layout_horizontal = QHBoxLayout()#crea un layout horizontal
 
    
 #crea un boton para buscar
         self.btn_buscar = QPushButton('Buscar', self)
         self.btn_buscar.clicked.connect(self.buscar_clicked)
-        self.layout.addWidget(self.btn_buscar)
+        self.layout_horizontal.addWidget(self.btn_buscar)
 #crea un boton para insertar excel
         self.btn_Insertar_excel = QPushButton('Insertar Excel', self)
         self.btn_Insertar_excel.clicked.connect(self.Insertar_excel_clicked)
-        self.layout.addWidget(self.btn_Insertar_excel)
+        self.layout_horizontal.addWidget(self.btn_Insertar_excel)
 #crea un boton para insertar manual
         self.btn_Insertar_manual = QPushButton('Insertar Manual', self)
         self.btn_Insertar_manual.clicked.connect(self.Insertar_manual_clicked)
-        self.layout.addWidget(self.btn_Insertar_manual)
-
+        self.layout_horizontal.addWidget(self.btn_Insertar_manual)
+#anida los botones en el layout horizontal con el vertical
+        self.layout_vertical.addLayout(self.layout_horizontal)
 #creat una tabla
         self.table = QTableWidget()
-        self.layout.addWidget(self.table)
+        self.layout_vertical.addWidget(self.table)
 #crea un boton para Guardar los datos de la tabla
         self.btn_Guardar = QPushButton('Guardar', self)
         self.btn_Guardar.clicked.connect(self.Guardar_clicked)
-        self.layout.addWidget(self.btn_Guardar)
+        self.layout_vertical.addWidget(self.btn_Guardar)
        # self.btn_Guardar.clicked.connect(self.Guardar_clicked)
-        self.central_widget.setLayout(self.layout)
+        self.central_widget.setLayout(self.layout_vertical)
 
         # Llama automáticamente a acceder_base_de_datos y mostrar_clicked al iniciar la aplicación
         self.acceder_base_de_datos()
@@ -238,22 +239,15 @@ class DashboardApp(QMainWindow):
 
     def color_y_etiqueta_celda(self, item, estampada, notificada):
         color = QColor()
-
         if estampada and notificada:
             color = QColor(0, 255, 0)  # Verde
-            etiqueta = 'Verde'
         elif estampada and not notificada:
             color = QColor(255, 255, 0)  # Amarillo
-            etiqueta = 'Amarillo'
         elif not estampada and notificada:
             color = QColor(0, 0, 255)  # Azul
-            etiqueta = 'Azul'
         else:
             color = QColor(255, 0, 0)  # Rojo
-            etiqueta = 'Rojo'
-
         item.setBackground(color)
-        self.table.setVerticalHeaderLabels([etiqueta])
 
 def main():
     app = QApplication(sys.argv)
