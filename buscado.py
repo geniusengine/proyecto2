@@ -1,6 +1,5 @@
 import pymssql
 import sys
-import mysql.connector
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, QVBoxLayout, QHBoxLayout, QWidget, QCheckBox, QListWidget, QListWidgetItem
 
 class BuscadorDatosCausaApp(QMainWindow):
@@ -18,19 +17,12 @@ class BuscadorDatosCausaApp(QMainWindow):
         # Parte superior (en una sola fila)
         search_layout = QHBoxLayout()
 
-        self.check_rol_causa = QCheckBox("Buscar por Rol de Causa")
-        self.rol_causa_label = QLabel("Rol de Causa:")
-        self.rol_causa_input = QLineEdit(self)
-        search_layout.addWidget(self.check_rol_causa)
-        search_layout.addWidget(self.rol_causa_label)
-        search_layout.addWidget(self.rol_causa_input)
-
-        self.check_tribunal = QCheckBox("Buscar por Tribunal")
-        self.tribunal_label = QLabel("Tribunal:")
-        self.tribunal_input = QLineEdit(self)
-        search_layout.addWidget(self.check_tribunal)
-        search_layout.addWidget(self.tribunal_label)
-        search_layout.addWidget(self.tribunal_input)
+        self.check_numjui = QCheckBox("Buscar por Número de Juicio")
+        self.numjui_label = QLabel("Número de Juicio:")
+        self.numjui_input = QLineEdit(self)
+        search_layout.addWidget(self.check_numjui)
+        search_layout.addWidget(self.numjui_label)
+        search_layout.addWidget(self.numjui_input)
 
         self.button_search = QPushButton("Buscar", self)
         self.button_search.clicked.connect(self.search_data)
@@ -60,19 +52,17 @@ class BuscadorDatosCausaApp(QMainWindow):
         self.setCentralWidget(container)
 
     def search_data(self):
-        search_by_rol_causa = self.check_rol_causa.isChecked()
-        search_by_tribunal = self.check_tribunal.isChecked()
-        rol_causa = self.rol_causa_input.text()
-        tribunal = self.tribunal_input.text()
+        search_by_numjui = self.check_numjui.isChecked()
+        numjui = self.numjui_input.text()
 
-        if not search_by_rol_causa and not search_by_tribunal:
+        if not search_by_numjui:
             self.result_list.clear()
             item = QListWidgetItem("Por favor, seleccione al menos un criterio de búsqueda.")
             self.result_list.addItem(item)
             return
 
         try:
-            connection = pymssql.connect (
+            connection = pymssql.connect(
                 server='vps-3697915-x.dattaweb.com',
                 user='daniel',
                 password='LOLxdsas--',
@@ -81,30 +71,12 @@ class BuscadorDatosCausaApp(QMainWindow):
 
             cursor = connection.cursor()
 
-            if search_by_rol_causa and not search_by_tribunal:
-                query = """
-                SELECT d.rol_causa, t.nombtribunal
-                FROM demanda AS d
-                JOIN tribunal AS t ON d.id_tribunal = t.id_tribunal
-                WHERE d.rol_causa = %s
-                """
-                cursor.execute(query, (rol_causa,))
-            elif not search_by_rol_causa and search_by_tribunal:
-                query = """
-                SELECT d.rol_causa, t.nombtribunal
-                FROM demanda AS d
-                JOIN tribunal AS t ON d.id_tribunal = t.id_tribunal
-                WHERE t.nombtribunal = %s
-                """
-                cursor.execute(query, (tribunal,))
-            else:
-                query = """
-                SELECT d.rol_causa, t.nombtribunal
-                FROM demanda AS d
-                JOIN tribunal AS t ON d.id_tribunal = t.id_tribunal
-                WHERE d.rol_causa = %s AND t.nombtribunal = %s
-                """
-                cursor.execute(query, (rol_causa, tribunal))
+            query = """
+            SELECT numjui, nombtribunal
+            FROM demanda
+            WHERE numjui = %s
+            """
+            cursor.execute(query, (numjui,))
 
             data = cursor.fetchall()
             connection.close()
@@ -114,7 +86,7 @@ class BuscadorDatosCausaApp(QMainWindow):
 
             if data:
                 for row in data:
-                    result = f"Rol de Causa: {row[0]}, Tribunal: {row[1]}"
+                    result = f"Número de Juicio: {row[0]}, Tribunal: {row[1]}"
                     item = QListWidgetItem(result)
                     checkbox = QCheckBox()
                     self.result_list.addItem(item)
@@ -124,7 +96,7 @@ class BuscadorDatosCausaApp(QMainWindow):
                 item = QListWidgetItem("No se encontraron datos para la búsqueda especificada.")
                 self.result_list.addItem(item)
 
-        except mysql.connector.Error as err:
+        except pymssql.Error as err:
             self.result_list.clear()
             item = QListWidgetItem(f"Error: {err}")
             self.result_list.addItem(item)
@@ -149,4 +121,3 @@ if __name__ == "__main__":
     window = BuscadorDatosCausaApp()
     window.show()
     sys.exit(app.exec())
-
