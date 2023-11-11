@@ -1,4 +1,3 @@
-
 from msilib.schema import CheckBox
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QTextEdit, QFileDialog, QLabel,QCheckBox

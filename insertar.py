@@ -15,7 +15,7 @@ Dernière modification : samedi 4 novembre 2023 à 22:30:52
 
 import sys
 import pymssql
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog, QTableWidget, QTableWidgetItem, QLineEdit, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog, QTableWidget, QTableWidgetItem, QLineEdit, QVBoxLayout, QWidget, QMessageBox
 import openpyxl
 
 class ExcelToDatabaseApp(QMainWindow):
@@ -81,41 +81,40 @@ class ExcelToDatabaseApp(QMainWindow):
                 password='LOLxdsas--',
                 database='micau5a'
         )
-        cursor = db_connection.cursor()
+        try:
+            cursor = db_connection.cursor()
 
-        for row_idx in range(self.data_table.rowCount()):
-            numjui = self.data_table.item(row_idx, 0).text()
-            nombmandante = self.data_table.item(row_idx, 1).text()
-            nombdemandado = self.data_table.item(row_idx, 2).text()
-            domicilio = self.data_table.item(row_idx, 3).text()
-            rolcausa = self.data_table.item(row_idx, 4).text()
-            arancel_item = self.data_table.item(row_idx, 5)
-        if arancel_item and isinstance(arancel_item, QLineEdit):
-            arancel_text = arancel_item.text()
-            try:
-                arancel = float(arancel_text)
-            except ValueError:
-                arancel = 0  # Valor predeterminado si la conversión falla
-        tribunal_item = self.data_table.item(row_idx, 6)
-        tribunal = ""
-        if tribunal_item:
-            tribunal = tribunal_item.text()
+            for row_idx in range(self.data_table.rowCount()):
+                numjui = self.data_table.item(row_idx, 0).text()
+                nombmandante = self.data_table.item(row_idx, 1).text()
+                nombdemandado = self.data_table.item(row_idx, 2).text()
+                domicilio = self.data_table.item(row_idx, 3).text()
+                rolcausa = self.data_table.item(row_idx, 4).text()
+                arancel_item = self.data_table.item(row_idx, 5)
+            if arancel_item and isinstance(arancel_item, QLineEdit):
+                arancel_text = arancel_item.text()
+                try:
+                    arancel = float(arancel_text)
+                except ValueError:
+                    arancel = 0  # Valor predeterminado si la conversión falla
+            tribunal_item = self.data_table.item(row_idx, 6)
+            tribunal = ""
+            if tribunal_item:
+                tribunal = tribunal_item.text()
 
-        # Verificar si tribunal es nulo o vacío
-        if not tribunal:
-            tribunal = "Tribunal Desconocido"  # O utiliza otro valor predeterminado si es apropiado
+            # Verificar si tribunal es nulo o vacío
+            if not tribunal:
+                tribunal = "Tribunal Desconocido"  # O utiliza otro valor predeterminado si es apropiado
 
-        # Insertar datos de la demanda en la tabla "demanda"
-        insert_query = "INSERT INTO demanda (numjui, nombmandante, nombdemandado, domicilio, rolcausa, nombTribunal,arancel) VALUES (%s, %s, %s, %s, %s, %s,%s)"
-        cursor.execute(insert_query, (numjui, nombmandante, nombdemandado, domicilio, rolcausa, tribunal,arancel))
-
-
-        
-
-       
-        db_connection.commit()
-        db_connection.close()
-
+            # Insertar datos de la demanda en la tabla "demanda"
+            insert_query = "INSERT INTO demanda (numjui, nombmandante, nombdemandado, domicilio, rolcausa, nombTribunal,arancel) VALUES (%s, %s, %s, %s, %s, %s,%s)"
+            cursor.execute(insert_query, (numjui, nombmandante, nombdemandado, domicilio, rolcausa, tribunal,arancel))
+            db_connection.commit()
+            db_connection.close()
+        except Exception as e:
+            print(e)
+            QMessageBox.critical(self, "Error", "Error al guardar los datos")
+            db_connection.rollback()
         # Proporciona retroalimentación al usuario
 
 if __name__ == "__main__":

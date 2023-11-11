@@ -13,7 +13,7 @@ class DashboardApp(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle('Dashboard App')
-        self.setGeometry(100, 100, 1020, 600)
+        self.setGeometry(100, 100, 830, 600)
 
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
@@ -127,14 +127,9 @@ class DashboardApp(QMainWindow):
             password='LOLxdsas--',
             database='micau5a'
         )
-
         # Crear un cursor
         cursor = conn.cursor()
-
         # Ejecutar una consulta SELECT
-        
-
-
         """query = "insert into demanda (numjui,rolCausa,nombTribunal,nombmandante,domicilio,nombDemandado,arancel) values ('1','rol1','tribunal1','mandante1','domicilio1','demandado1','12000')"
         cursor.execute(query)
         query = "insert into demanda (numjui,rolCausa,nombTribunal,nombmandante,domicilio,nombDemandado,arancel) values ('2','rol2','tribunal2','mandante2','domicilio2','demandado2','14000')"
@@ -148,40 +143,34 @@ class DashboardApp(QMainWindow):
         query ="insert into notificacion(fechaNotificacion,numjui,nombMandante,rolCausa,nombTribunal,estadoCausa) values ('2022-11-13','2','mandante2','rol2','tribunal2','2')"#2En Proceso (por ejemplo, 2): La causa ha sido notificada y está siendo procesada o resuelta por el tribunal.
         cursor.execute(query)"""
 
-
         query = "SELECT fechaNotificacion, numjui, nombmandante, rolCausa, nombTribunal, estadoCausa FROM notificacion"
         cursor.execute(query)
         # Obtener todos los resultados
         resultados = cursor.fetchall()
-
-        
-
         # Cerrar el cursor y la conexión
         cursor.close()
         conn.commit() 
         conn.close()
-
         self.causas = []
 
         for fila in resultados:
             causa = {
                 "Fecha notificacion": fila[0],
-                "Numero juicio": fila[1],
+               # "Numero juicio": fila[1],
                 "Nombre Mandante": fila[2],
                 "Rol Causa": fila[3],
                 "Tribunal": fila[4],
-                "Estado causa": fila[5],
-                "Notificada": False,
+                "Notificada": True,
                 "Estampada": True,
                 "VerCausa": "Ver Causa",
-                "Busqueda positiva": "0",
-                "Busqueda negativa": "0",
+                "Busqueda positiva": fila[5],
+                "Busqueda negativa": fila[5],
             }
             self.causas.append(causa)
 
     def mostrar_clicked(self):
-        self.table.setColumnCount(11)  # Número de columnas
-        self.table.setHorizontalHeaderLabels(['Fecha', 'Número juicio', 'Nombre mandante', 'Rol Causa', 'Tribunal', 'Estado causa','Notificada','Estampada', 'Ver Causa','Busqueda Positiva','Busqueda Negativa'])  # Etiquetas de las columnas
+        self.table.setColumnCount(9)  # Número de columnas
+        self.table.setHorizontalHeaderLabels(['Fecha','Nombre mandante', 'Rol Causa', 'Tribunal','Notificada','Estampada', 'Ver Causa','Busqueda Positiva','Busqueda Negativa'])  # Etiquetas de las columnas
 
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
@@ -201,14 +190,14 @@ class DashboardApp(QMainWindow):
                     self.table.setCellWidget(row_index, col_index, button)
                 elif key == "Busqueda positiva":
                     checkbox = QCheckBox("Si", self)
-                    if value == "1":
+                    if value == 1:
                         checkbox.setChecked(True)
                     else:
                         checkbox.setChecked(False)
                     self.table.setCellWidget(row_index, col_index, checkbox)
                 elif key == "Busqueda negativa":
                     checkbox = QCheckBox("No", self)
-                    if value == "1":
+                    if value == 2:
                         checkbox.setChecked(True)
                     else:
                         checkbox.setChecked(False)
