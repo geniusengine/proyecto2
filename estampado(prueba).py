@@ -1,10 +1,7 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QTextEdit, QFileDialog
-from PyQt6.QtGui import QTextDocument, QImage, QPainter
-from PyQt6.QtPrintSupport import QPrinter
 from docx import Document
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+from docx2pdf import convert
 
 class EstampadoApp(QMainWindow):
     def __init__(self):
@@ -23,15 +20,14 @@ class EstampadoApp(QMainWindow):
         self.text_edit = QTextEdit(self)
         self.layout.addWidget(self.text_edit)
 
-        self.btn_open = QPushButton('Abrir Documento', self)
+        self.btn_open = QPushButton('Abrir Documento Word', self)
         self.btn_open.clicked.connect(self.open_document)
         self.layout.addWidget(self.btn_open)
 
-        self.btn_save_pdf = QPushButton('Guardar como PDF', self)
-        self.btn_save_pdf.clicked.connect(self.save_as_pdf)
-        self.layout.addWidget(self.btn_save_pdf)
+        self.btn_save = QPushButton('Guardar Documento Word', self)
+        self.btn_save.clicked.connect(self.save_document)
+        self.layout.addWidget(self.btn_save)
 
-        # Botón para insertar imagen
         self.btn_insert_image = QPushButton('Insertar Imagen', self)
         self.btn_insert_image.clicked.connect(self.insert_image)
         self.layout.addWidget(self.btn_insert_image)
@@ -42,54 +38,37 @@ class EstampadoApp(QMainWindow):
 
         self.central_widget.setLayout(self.layout)
 
-        self.current_document_path = None
+        self.current_document = Document()
 
     def open_document(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Abrir Documento Word", "", "Documentos Word (*.docx)")
 
         if file_path:
-            self.current_document_path = file_path
-            document = Document(file_path)
+            self.current_document = Document(file_path)
             content = ""
-            for paragraph in document.paragraphs:
+            for paragraph in self.current_document.paragraphs:
                 content += paragraph.text + '\n'
             self.text_edit.setPlainText(content)
 
-    def save_as_pdf(self):
-        if self.current_document_path:
-            pdf_file_path, _ = QFileDialog.getSaveFileName(self, "Guardar como PDF", "", "Archivos PDF (*.pdf)")
+    def save_document(self):
+        file_path, _ = QFileDialog.getSaveFileName(self, "Guardar Documento PDF", "", "Documentos PDF (*.pdf)")
 
-            if pdf_file_path:
-                # Crear un objeto QTextDocument y establecer su contenido
-                text_document = QTextDocument()
-                text_document.setPlainText(self.text_edit.toPlainText())
+        if file_path:
+            # Guarda el documento de Word
+            self.current_document.save(file_path + ".docx")
 
-                # Crear una imagen del QTextDocument
-                image = QImage(text_document.size().toSize(), QImage.Format_ARGB32)
-                painter = QPainter(image)
-                text_document.drawContents(painter)
-                painter.end()
-
-                # Crear un objeto Canvas de reportlab para el PDF
-                pdf_canvas = canvas.Canvas(pdf_file_path, pagesize=letter)
-                width, height = letter
-                pdf_canvas.drawInlineImage(image, 0, 0, width, height)
-
-                # Cerrar el objeto Canvas
-                pdf_canvas.save()
-
-                self.statusBar().showMessage("Documento guardado como PDF con éxito.")
-        else:
-            self.statusBar().showMessage("Abre o guarda un documento Word antes de convertirlo a PDF.")
+            # Convierte el documento de Word a PDF
+            pdf_path = file_path + ".pdf"
+            convert(file_path + ".docx", pdf_path)
 
     def insert_image(self):
-        # Abre un cuadro de diálogo para seleccionar una imagen
         image_path, _ = QFileDialog.getOpenFileName(self, "Insertar Imagen", "", "Imágenes (*.png *.jpg *.bmp *.gif)")
 
         if image_path:
-            # Inserta la imagen en el QTextEdit
-            cursor = self.text_edit.textCursor()
-            cursor.insertImage(image_path)
+            # Agregar una imagen al documento Word
+            paragraph = self.current_document.add_paragraph()
+            run = paragraph.add_run()
+            run.add_picture(image_path)
 
 def main():
     app = QApplication(sys.argv)
