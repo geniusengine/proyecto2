@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : samedi 4 novembre 2023 à 22:27:30
+Dernière modification : mercredi 15 novembre 2023 à 17:56:01
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout
@@ -34,7 +34,7 @@ class MiApp(QMainWindow):
 
         self.table = QTableWidget()
         self.table.setColumnCount(7)
-        self.table.setHorizontalHeaderLabels(["numjui", "nombmandante", "nombdemandado", "domicilio", "rolcausa", "nombTribunal", "arancel"])
+        self.table.setHorizontalHeaderLabels(["numero de causa", "nombre demandante", "nombre demandado", "domicilio", "rolcausa", "nombre Tribunal", "arancel"])
         layout.addWidget(self.table)
 
         self.add_row_button = QPushButton("Agregar Fila")
@@ -79,15 +79,15 @@ class MiApp(QMainWindow):
                 domicilio = self.table.item(row_idx, 3).text()
                 rolcausa = self.table.item(row_idx, 4).text()
 
-                arancel_item = self.table.cellWidget(row_idx, 5)  # Usar cellWidget para obtener el QLineEdit
-                arancel_text = arancel_item.text() if isinstance(arancel_item, QLineEdit) else "0"
+                arancel_text = self.table.item(row_idx, 6).text()
                 try:
-                    arancel = float(arancel_text)
+                        arancel = int(arancel_text)
                 except ValueError:
-                    arancel = 0  # Valor predeterminado si la conversión falla
+                        arancel = 0  # Valor predeterminado si la conversión falla
 
-                tribunal_item = self.table.cellWidget(row_idx, 6)  # Usar cellWidget para obtener el QLineEdit
-                tribunal = tribunal_item.text() if isinstance(tribunal_item, QLineEdit) else "Tribunal Desconocido"
+                    
+                tribunal = self.table.item(row_idx, 5).text()
+
 
                 if all([numjui, nombmandante, nombdemandado, domicilio, rolcausa]):
                     insert_query = "INSERT INTO demanda (numjui, nombmandante, nombdemandado, domicilio, rolcausa, nombTribunal, arancel) VALUES (%s, %s, %s, %s, %s, %s, %s)"
