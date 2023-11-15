@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 insertar.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 16:15:10 
-Dernière modification : mercredi 15 novembre 2023 à 17:26:48
+Dernière modification : mercredi 15 novembre 2023 à 17:59:11
 """
 
 import sys
@@ -41,7 +41,7 @@ class ExcelToDatabaseApp(QMainWindow):
 
         self.data_table = QTableWidget(self)
         self.data_table.setColumnCount(7)  # 5 para los datos Excel, 1 para "arancel", 1 para "tribunal"
-        self.data_table.setHorizontalHeaderLabels(["numjui", "nombmandante", "nombdemandado", "domicilio", "Arancel", "Tribunal"])
+        self.data_table.setHorizontalHeaderLabels(["numjui", "nombmandante", "nombdemandado", "domicilio", "rolcausa", "Arancel", "Tribunal"])
         layout.addWidget(self.data_table)
 
         layout.addWidget(self.upload_button)
@@ -65,10 +65,10 @@ class ExcelToDatabaseApp(QMainWindow):
                     self.data_table.setItem(row_idx, col_idx, item)
                     if col_idx == 5:  # Columna "Arancel"
                         arancel_input = QLineEdit()
-                        self.data_table.setCellWidget(row_idx, 4, arancel_input)
+                        self.data_table.setCellWidget(row_idx, 5, arancel_input)
                     if col_idx == 6:  # Columna "Tribunal"
                         tribunal_input = QLineEdit()
-                        self.data_table.setCellWidget(row_idx, 5, tribunal_input)
+                        self.data_table.setCellWidget(row_idx, 6, tribunal_input)
 
     def saveData(self):
         if self.excel_data is None:
@@ -89,14 +89,15 @@ class ExcelToDatabaseApp(QMainWindow):
                 nombmandante = self.data_table.item(row_idx, 1).text()
                 nombdemandado = self.data_table.item(row_idx, 2).text()
                 domicilio = self.data_table.item(row_idx, 3).text()
-                arancel_item = self.data_table.item(row_idx, 4)
+                rolcausa = self.data_table.item(row_idx, 4).text()
+                arancel_item = self.data_table.item(row_idx, 5)
             if arancel_item and isinstance(arancel_item, QLineEdit):
                 arancel_text = arancel_item.text()
                 try:
                     arancel = float(arancel_text)
                 except ValueError:
                     arancel = 0  # Valor predeterminado si la conversión falla
-            tribunal_item = self.data_table.item(row_idx, 5)
+            tribunal_item = self.data_table.item(row_idx, 6)
             tribunal = ""
             if tribunal_item:
                 tribunal = tribunal_item.text()
@@ -106,8 +107,8 @@ class ExcelToDatabaseApp(QMainWindow):
                 tribunal = "Tribunal Desconocido"  # O utiliza otro valor predeterminado si es apropiado
 
             # Insertar datos de la demanda en la tabla "demanda"
-            insert_query = "INSERT INTO demanda (numjui, nombmandante, nombdemandado, domicilio, nombTribunal, arancel) VALUES (%s, %s, %s, %s, %s, %s)"
-            cursor.execute(insert_query, (numjui, nombmandante, nombdemandado, domicilio,  tribunal, arancel))
+            insert_query = "INSERT INTO demanda (numjui, nombmandante, nombdemandado, domicilio, rolcausa, nombTribunal,arancel) VALUES (%s, %s, %s, %s, %s, %s,%s)"
+            cursor.execute(insert_query, (numjui, nombmandante, nombdemandado, domicilio, rolcausa, tribunal,arancel))
             db_connection.commit()
             db_connection.close()
         except Exception as e:
