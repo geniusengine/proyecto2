@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : samedi 4 novembre 2023 à 22:27:30
+Dernière modification : mercredi 15 novembre 2023 à 18:35:48
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout
@@ -34,7 +34,7 @@ class MiApp(QMainWindow):
 
         self.table = QTableWidget()
         self.table.setColumnCount(7)
-        self.table.setHorizontalHeaderLabels(["numjui", "nombmandante", "nombdemandado", "domicilio", "rolcausa", "nombTribunal", "arancel"])
+        self.table.setHorizontalHeaderLabels(["Rol causa", "Mandante", "Demandado", "Domicilio", "estado", "Tribunal", "Arancel"])
         layout.addWidget(self.table)
 
         self.add_row_button = QPushButton("Agregar Fila")
