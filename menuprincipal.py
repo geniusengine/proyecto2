@@ -1,7 +1,7 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QMessageBox, QInputDialog
-from login import LoginApp
-from formularios.registro import RegisterApp
+from login.login import LoginApp
+from login.registro import RegisterApp
 
 class MainMenu(QMainWindow):
     def __init__(self):
