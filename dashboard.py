@@ -106,8 +106,6 @@ class DashboardApp(QMainWindow):
                     "Notificada": True,
                     "Estampada": True,
                     "VerCausa": "Ver Causa",
-                    "Busqueda positiva": fila[8],
-                    "Busqueda negativa": fila[8],
                 }
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
@@ -117,7 +115,7 @@ class DashboardApp(QMainWindow):
     def mostrar_clicked(self):
         self.table.setColumnCount(16)
         self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Nombre mandante', 'Nombre demandante', 'Domicilio', 'Estado', 'Arancel', 'Tribunal', 'Notificada',
-                                              'Estampada', 'Ver Causa', 'Busqueda Positiva', 'Busqueda Negativa'])
+                                              'Estampada', 'Ver Causa'])
 
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)

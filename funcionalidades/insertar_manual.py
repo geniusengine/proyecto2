@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : mercredi 15 novembre 2023 à 17:56:01
+Dernière modification : jeudi 16 novembre 2023 à 10:55:18
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout
@@ -34,7 +34,7 @@ class MiApp(QMainWindow):
 
         self.table = QTableWidget()
         self.table.setColumnCount(7)
-        self.table.setHorizontalHeaderLabels(["numero de causa", "nombre demandante", "nombre demandado", "domicilio", "rolcausa", "nombre Tribunal", "arancel"])
+        self.table.setHorizontalHeaderLabels(["Rol", "Mandante", "Demandado", "Domicilio", "Estado", "Arancel", "Tribunal"])
         layout.addWidget(self.table)
 
         self.add_row_button = QPushButton("Agregar Fila")
@@ -79,19 +79,19 @@ class MiApp(QMainWindow):
                 domicilio = self.table.item(row_idx, 3).text()
                 rolcausa = self.table.item(row_idx, 4).text()
 
-                arancel_text = self.table.item(row_idx, 6).text()
+                arancel_text = self.table.item(row_idx, 5).text()
                 try:
-                        arancel = int(arancel_text)
+                        arancel = (arancel_text)
                 except ValueError:
                         arancel = 0  # Valor predeterminado si la conversión falla
 
                     
-                tribunal = self.table.item(row_idx, 5).text()
+                tribunal = self.table.item(row_idx, 6).text()
 
 
                 if all([numjui, nombmandante, nombdemandado, domicilio, rolcausa]):
-                    insert_query = "INSERT INTO demanda (numjui, nombmandante, nombdemandado, domicilio, rolcausa, nombTribunal, arancel) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                    cursor.execute(insert_query, (numjui, nombmandante, nombdemandado, domicilio, rolcausa, tribunal, arancel))
+                    insert_query = "INSERT INTO demanda (numjui, nombmandante, nombdemandado, domicilio, rolcausa, arancel, nombTribunal) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                    cursor.execute(insert_query, (numjui, nombmandante, nombdemandado, domicilio, rolcausa, arancel,tribunal))
                 else:
                     QMessageBox.critical(self, "Error", "No se permiten celdas vacías en la fila {}".format(row_idx + 1))
                     db_connection.rollback()
