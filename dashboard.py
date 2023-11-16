@@ -7,6 +7,7 @@ from funcionalidades.verCausa import VerCausaApp
 from funcionalidades.buscado import BuscadorDatosCausaApp
 from funcionalidades.insertar_excel import ExcelToDatabaseApp
 from funcionalidades.insertar_manual import MiApp
+from funcionalidades.estampadoV2  import EstampadoApp
 
 class DashboardApp(QMainWindow):
     def __init__(self):
@@ -164,8 +165,8 @@ class DashboardApp(QMainWindow):
 
     def estampar_clicked(self):
         # logicas para estampar
-        import subprocess
-        subprocess.Popen(['python', 'estampado(prueba).py'])
+        self.ex3 = EstampadoApp()
+        self.ex3.show()
 
     def buscar_clicked(self):
         # Lógica para buscar
