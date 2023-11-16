@@ -40,7 +40,7 @@ class MainMenu(QMainWindow):
 
     def open_registro(self):
         # Define un usuario y contraseña designados
-        usuario_designado = "RobertoNarigon"
+        usuario_designado = "roberto"
         contrasena_designada = "tulachi"
 
         # Obtiene usuario y contraseña ingresados por el usuario

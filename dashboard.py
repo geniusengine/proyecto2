@@ -3,7 +3,10 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout,
     QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox
 from PyQt6.QtGui import QColor
 import pymssql
-from verCausa import VerCausaApp
+from funcionalidades.verCausa import VerCausaApp
+from funcionalidades.buscado import BuscadorDatosCausaApp
+from funcionalidades.insertar_excel import ExcelToDatabaseApp
+from funcionalidades.insertar_manual import MiApp
 
 class DashboardApp(QMainWindow):
     def __init__(self):
@@ -84,7 +87,7 @@ class DashboardApp(QMainWindow):
     def acceder_base_de_datos(self):
         try:
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion, numjui, nombmandante, rolCausa, nombTribunal, estadoCausa FROM notificacion"
+                query = "SELECT fechaNotificacion, numjui, nombmandante, nombDemandado, domicilio, rolCausa, arancel, nombTribunal, estadoCausa FROM notificacion"
                 cursor.execute(query)
                 resultados = cursor.fetchall()
 
@@ -92,14 +95,18 @@ class DashboardApp(QMainWindow):
             for fila in resultados:
                 causa = {
                     "Fecha notificacion": fila[0],
+                    "Rol": fila[1],
                     "Nombre Mandante": fila[2],
-                    "Rol Causa": fila[3],
-                    "Tribunal": fila[4],
+                    "Nombre Demandante": fila[3],
+                    "Domicilio": fila[4],    
+                    "Estado": fila[5],
+                    "Arancel": fila[6],
+                    "Tribunal": fila[7],
                     "Notificada": True,
                     "Estampada": True,
                     "VerCausa": "Ver Causa",
-                    "Busqueda positiva": fila[5],
-                    "Busqueda negativa": fila[5],
+                    "Busqueda positiva": fila[8],
+                    "Busqueda negativa": fila[8],
                 }
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
@@ -107,8 +114,8 @@ class DashboardApp(QMainWindow):
             print(f"Error al acceder a la base de datos: {e}")
 
     def mostrar_clicked(self):
-        self.table.setColumnCount(9)
-        self.table.setHorizontalHeaderLabels(['Fecha', 'Nombre mandante', 'Rol Causa', 'Tribunal', 'Notificada',
+        self.table.setColumnCount(16)
+        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Nombre mandante', 'Nombre demandante', 'Domicilio', 'Estado', 'Arancel', 'Tribunal', 'Notificada',
                                               'Estampada', 'Ver Causa', 'Busqueda Positiva', 'Busqueda Negativa'])
 
         for row_index, causa in enumerate(self.causas):
@@ -147,13 +154,13 @@ class DashboardApp(QMainWindow):
         QMessageBox.information(self, "Exito", "Datos guardados correctamente")
     def Insertar_excel_clicked(self):
         # Lógica para insertar desde Excel
-        import subprocess
-        subprocess.Popen(['python', 'insertar_excel.py'])
+        self.exc = ExcelToDatabaseApp()
+        self.exc.show()
 
     def Insertar_manual_clicked(self):
         # Lógica para insertar manualmente
-        import subprocess
-        subprocess.Popen(['python', 'insertar_manual.py'])
+        self.exa = MiApp()
+        self.exa.show()
 
     def estampar_clicked(self):
         # logicas para estampar
@@ -162,8 +169,8 @@ class DashboardApp(QMainWindow):
 
     def buscar_clicked(self):
         # Lógica para buscar
-        import subprocess
-        subprocess.Popen(['python', 'buscado.py'])
+        self.bas = BuscadorDatosCausaApp()
+        self.bas.show()
 
     def verCausa_clicked(self):
         button = self.sender()

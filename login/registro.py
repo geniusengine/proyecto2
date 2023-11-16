@@ -10,7 +10,7 @@ Auteur: danie(mitchel.dmch@gmail.com)
 registro.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 26 août 2023 à 18:37:13 
-Dernière modification : mercredi 1 novembre 2023 à 14:04:31
+Dernière modification : jeudi 16 novembre 2023 à 1:12:40
 """
 import sys
 import pymssql
@@ -35,8 +35,6 @@ class RegisterApp(QMainWindow):
 
         self.layout = QVBoxLayout()
         
-        self.rut_label = QLabel("Rut:")
-        self.rut_input = QLineEdit()
         self.name_label = QLabel("Nombre:")
         self.name_input = QLineEdit()
         self.apellido_label = QLabel("Apellido:")
@@ -49,8 +47,6 @@ class RegisterApp(QMainWindow):
         self.register_button = QPushButton("Registrar")
         self.register_button.clicked.connect(self.register_user)
 
-        self.layout.addWidget(self.rut_label)
-        self.layout.addWidget(self.rut_input)
         self.layout.addWidget(self.name_label)
         self.layout.addWidget(self.name_input)
         self.layout.addWidget(self.apellido_label)
@@ -77,7 +73,6 @@ class RegisterApp(QMainWindow):
 
         self.cursor = self.db.cursor()
     def register_user(self):
-        rut = self.rut_input.text()
         name = self.name_input.text()
         apellido = self.apellido_input.text()
         username = self.username_input.text()
@@ -92,14 +87,13 @@ class RegisterApp(QMainWindow):
         hashed_password = bcrypt.hash(password)
 
     # Insertar el nuevo usuario en la base de datos MySQL
-        sql = "INSERT INTO usuarios (rut,nombreusuario,apellidousuario, username, password) VALUES (%s,%s, %s, %s, %s)"
-        values = (rut,name,apellido,  username, hashed_password)
+        sql = "INSERT INTO usuarios (nombreusuario,apellidousuario, username, password) VALUES (%s, %s, %s, %s)"
+        values = (name,apellido,  username, hashed_password)
 
         try:
             self.cursor.execute(sql, values)
             self.db.commit()
             QMessageBox.information(self, "Registro Exitoso", "Usuario registrado correctamente.")
-            self.rut_input.clear()
             self.name_input.clear()
             self.apellido_input.clear()
             self.username_input.clear()

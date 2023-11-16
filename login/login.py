@@ -82,8 +82,6 @@ class LoginApp(QMainWindow):
         else:
             # Usuario no encontrado
             QMessageBox.warning(self, "Inicio de Sesión", "Usuario no encontrado.")
-            self.dashboard_window = DashboardApp()#borrar
-            self.dashboard_window.show()#borrar
 
     def close_db_connection(self):
         self.cursor.close()
