@@ -103,9 +103,10 @@ class DashboardApp(QMainWindow):
                     "Estado": fila[5],
                     "Arancel": fila[6],
                     "Tribunal": fila[7],
+                    "estadoCausa": fila[8],
                     "Notificada": True,
                     "Estampada": True,
-                    "VerCausa": "Ver Causa",
+                    "VerCausa": "Ver Causa"
                 }
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
@@ -114,8 +115,8 @@ class DashboardApp(QMainWindow):
 
     def mostrar_clicked(self):
         self.table.setColumnCount(16)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Nombre mandante', 'Nombre demandante', 'Domicilio', 'Estado', 'Arancel', 'Tribunal', 'Notificada',
-                                              'Estampada', 'Ver Causa'])
+        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Nombre mandante', 'Nombre demandante', 'Domicilio', 'Estado', 'Arancel', 'Tribunal','xd',
+                                               'Notificada','Estampada', 'Ver Causa'])
 
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
@@ -142,14 +143,7 @@ class DashboardApp(QMainWindow):
         self.ajustar_tamanio()
 
     def Guardar_clicked(self):
-        for row_index, causa in enumerate(self.causas):
-            checkbox_positiva = self.table.cellWidget(row_index, 7)
-            checkbox_negativa = self.table.cellWidget(row_index, 8)
-            causa["Busqueda positiva"] = "1" if checkbox_positiva.isChecked() else "0"
-            causa["Busqueda positiva"] = "0" if checkbox_negativa.isChecked() else "1"
-            causa["Busqueda negativa"] = "1" if checkbox_negativa.isChecked() else "0"
-            causa["Busqueda negativa"] = "0" if checkbox_positiva.isChecked() else "1"
-            self.actualizar_base_de_datos(causa)
+        self.actualizar_base_de_datos()
         QMessageBox.information(self, "Exito", "Datos guardados correctamente")
     def Insertar_excel_clicked(self):
         # Lógica para insertar desde Excel
@@ -189,13 +183,13 @@ class DashboardApp(QMainWindow):
     def color_y_etiqueta_celda(self, item, estampada, notificada):
         color = QColor()
         if estampada and notificada:
-            color = QColor(0, 255, 0)  # Verde
+            color = QColor(255, 0, 0)  # Verde
         elif estampada and not notificada:
             color = QColor(255, 255, 0)  # Amarillo
         elif not estampada and notificada:
             color = QColor(0, 0, 255)  # Azul
         else:
-            color = QColor(255, 0, 0)  # Rojo
+            color = QColor(0, 255, 0)  # Rojo
         item.setBackground(color)
 
 
