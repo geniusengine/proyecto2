@@ -8,7 +8,7 @@ from funcionalidades.verCausa import VerCausaApp
 from funcionalidades.buscado import BuscadorDatosCausaApp
 from funcionalidades.insertar_excel import ExcelToDatabaseApp
 from funcionalidades.insertar_manual import MiApp
-from funcionalidades.estampadoV2  import EstampadoApp
+from funcionalidades.estampado_app import Estampadoxd
 
 class DashboardApp(QMainWindow):
     def __init__(self):
@@ -157,6 +157,7 @@ class DashboardApp(QMainWindow):
     def Guardar_clicked(self):
         self.actualizar_base_de_datos()
         QMessageBox.information(self, "Exito", "Datos guardados correctamente")
+        
     def Insertar_excel_clicked(self):
         # Lógica para insertar desde Excel
         self.exc = ExcelToDatabaseApp()
@@ -168,9 +169,24 @@ class DashboardApp(QMainWindow):
         self.exa.show()
 
     def estampar_clicked(self):
-        # logicas para estampar
-        self.ex3 = EstampadoApp()
-        self.ex3.show()
+        # Obtener la fila seleccionada
+        selected_row = self.table.currentRow()
+
+        # Verificar si se seleccionó una fila
+        if selected_row != -1:
+            # Obtener datos de la fila seleccionada
+            fechaNotificacion = self.table.item(selected_row, 0).text()
+            numjui = self.table.item(selected_row, 1).text()
+            nombmandante = self.table.item(selected_row, 2).text()
+            nombDemandado = self.table.item(selected_row, 3).text()
+            domicilio = self.table.item(selected_row, 4).text()
+            rolCausa = self.table.item(selected_row, 5).text()
+            arancel = self.table.item(selected_row, 6).text()
+            nombTribunal = self.table.item(selected_row, 7).text()
+
+            # Importa Estampadoxd localmente
+            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombmandante, nombDemandado, domicilio, rolCausa, arancel, nombTribunal)
+            self.ex3.show()
 
     def buscar_clicked(self):
         # Lógica para buscar

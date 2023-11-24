@@ -41,7 +41,7 @@ class MainMenu(QMainWindow):
     def open_registro(self):
         # Define un usuario y contraseña designados
         usuario_designado = "roberto"
-        contrasena_designada = "tulachi"
+        contrasena_designada = "vivael"
 
         # Obtiene usuario y contraseña ingresados por el usuario
         usuario_ingresado, contrasena_ingresada = self.get_usuario_contraseña()
