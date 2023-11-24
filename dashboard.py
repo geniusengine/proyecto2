@@ -145,6 +145,7 @@ class DashboardApp(QMainWindow):
     def Guardar_clicked(self):
         self.actualizar_base_de_datos()
         QMessageBox.information(self, "Exito", "Datos guardados correctamente")
+        
     def Insertar_excel_clicked(self):
         # Lógica para insertar desde Excel
         self.exc = ExcelToDatabaseApp()
