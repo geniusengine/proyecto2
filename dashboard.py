@@ -2,6 +2,7 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
     QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox
 from PyQt6.QtGui import QColor
+from PyQt6.QtCore import QDateTime
 import pymssql
 from funcionalidades.verCausa import VerCausaApp
 from funcionalidades.buscado import BuscadorDatosCausaApp
@@ -104,19 +105,28 @@ class DashboardApp(QMainWindow):
                     "Arancel": fila[6],
                     "Tribunal": fila[7],
                     "estadoCausa": fila[8],
-                    "Notificada": True,
-                    "Estampada": True,
-                    "VerCausa": "Ver Causa"
+                    "Notificada": fila[8],
+                    "Estampada": fila[5],
+                    "VerCausa": "Ver Causa",
+                    "Notificar": "Notificar"
                 }
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
         except Exception as e:
             print(f"Error al acceder a la base de datos: {e}")
 
+    def obtener_fecha_actual(self):
+        # Obtener la fecha y hora actual
+        fecha_actual = QDateTime.currentDateTime()
+
+        # Formatear la fecha y hora
+        formato_fecha = fecha_actual.toString('yyyy-MM-dd HH:mm:ss')
+
+        return formato_fecha
     def mostrar_clicked(self):
         self.table.setColumnCount(16)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Nombre mandante', 'Nombre demandante', 'Domicilio', 'Estado', 'Arancel', 'Tribunal','xd',
-                                               'Notificada','Estampada', 'Ver Causa'])
+        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Nombre mandante', 'Nombre demandante', 'Domicilio', 'Estado', 'Arancel', 'Tribunal','estado_color',
+                                               'Notificada','Estampada', 'Ver Causa','Notificar'])
 
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
@@ -136,7 +146,9 @@ class DashboardApp(QMainWindow):
                     checkbox = QCheckBox("Si" if value == 1 else "No", self)
                     checkbox.setChecked(bool(value))
                     self.table.setCellWidget(row_index, col_index, checkbox)
-
+                elif key == "Notificar":
+                    button = self.crear_boton("Notificar", self.notificar_clicked)
+                    self.table.setCellWidget(row_index, col_index, button)
                 self.color_y_etiqueta_celda(item, estampada, notificada)
                 self.table.setItem(row_index, col_index, item)
 
@@ -172,7 +184,17 @@ class DashboardApp(QMainWindow):
         causa = self.causas[row]
         self.vercausa_app = VerCausaApp(causa)
         self.vercausa_app.show()
-
+    def notificar_clicked(self):
+        button = self.sender()
+        index = self.table.indexAt(button.pos())
+        row, col = index.row(), index.column()
+        causa = self.causas[row]
+        causa["Notificada"] = 1
+        self.actualizar_base_de_datos(causa)
+        fecha_actual=self.obtener_fecha_actual()
+        print(fecha_actual)
+        self.table.cellWidget(row, col).setText("Si")
+        self.color_y_etiqueta_celda(self.table.item(row, col), causa["Estampada"], causa["Notificada"])
     def ajustar_tamanio(self):
         self.table.resizeColumnsToContents()
         total_width = sum(self.table.columnWidth(col) for col in range(self.table.columnCount()))
