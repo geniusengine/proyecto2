@@ -125,7 +125,7 @@ class DashboardApp(QMainWindow):
         return formato_fecha
     def mostrar_clicked(self):
         self.table.setColumnCount(16)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Nombre mandante', 'Nombre demandante', 'Domicilio', 'Estado', 'Arancel', 'Tribunal','estado_color',
+        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Nombre mandante', 'Nombre demandante', 'Domicilio', 'Estado', 'Arancel', 'Tribunal',
                                                'Notificada','Estampada', 'Ver Causa','Notificar'])
 
         for row_index, causa in enumerate(self.causas):
