@@ -2,7 +2,7 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
     QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox
 from PyQt6.QtGui import QColor
-from PyQt6.QtCore import QDateTime
+from PyQt6.QtCore import QDateTime, QTimer
 import pymssql
 from funcionalidades.verCausa import VerCausaApp
 from funcionalidades.buscado import BuscadorDatosCausaApp
@@ -23,6 +23,11 @@ class DashboardApp(QMainWindow):
         self.setCentralWidget(self.central_widget)
         self.layout_vertical = QVBoxLayout()  # Crea un layout vertical
         self.layout_horizontal = QHBoxLayout()  # Crea un layout horizontal
+
+        # Crea un temporizador para actualizar los datos cada 1 minuto
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.actualizar_datos)
+        self.timer.start(60000)  # 60000 milisegundos = 1 minuto
 
         # Crea botones
         self.crear_botones()
@@ -114,6 +119,10 @@ class DashboardApp(QMainWindow):
             self.cerrar_conexion_base_de_datos()
         except Exception as e:
             print(f"Error al acceder a la base de datos: {e}")
+
+    def limpiar_tabla(self):
+        self.table.clearContents()
+        self.table.setRowCount(0)
 
     def obtener_fecha_actual(self):
         # Obtener la fecha y hora actual
@@ -229,6 +238,14 @@ class DashboardApp(QMainWindow):
         else:
             color = QColor(0, 255, 0)  # Rojo
         item.setBackground(color)
+
+    def actualizar_datos(self):
+        # Limpia la tabla
+        self.limpiar_tabla()
+
+        # Actualiza los datos de la base de datos y la tabla
+        self.acceder_base_de_datos()
+        self.mostrar_clicked()
 
 
 def main():

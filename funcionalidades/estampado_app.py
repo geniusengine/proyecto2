@@ -1,6 +1,7 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
 from docx import Document
+from docx2pdf import convert
 
 class Estampadoxd(QMainWindow):
     def __init__(self, fechaNotificacion, numjui, nombmandante, nombDemandado, domicilio, rolCausa, arancel, nombTribunal, parent=None):
@@ -31,12 +32,21 @@ class Estampadoxd(QMainWindow):
         boton5 = QPushButton('Notificacion Personal', self)
         boton5.clicked.connect(self.estampar_5)
 
+        boton6 = QPushButton('Convertir Pdf', self)
+        boton6.clicked.connect(self.convertir)
+
         # Agregar botones al layout vertical
         layout_vertical.addWidget(boton1)
         layout_vertical.addWidget(boton2)
         layout_vertical.addWidget(boton3)
         layout_vertical.addWidget(boton4)
         layout_vertical.addWidget(boton5)
+
+        # Establecer el diseño principal de la ventana
+        self.setLayout(layout_vertical)
+
+        # Agregar botones al layout vertical
+        layout_vertical.addWidget(boton6)
 
         # Guardar los datos recibidos
         self.fechaNotificacion = fechaNotificacion
@@ -124,8 +134,6 @@ class Estampadoxd(QMainWindow):
         # Guarda el documento
         doc.save(f'{self.numjui}.docx')
 
-        
-
     #5
     def notificacionP(self):
         # Crea un nuevo documento de Word
@@ -144,7 +152,14 @@ class Estampadoxd(QMainWindow):
 
         # Guarda el documento
         doc.save(f'{self.numjui}.docx')
+
+    def pdfxd(self):
+        #convertir
+        convert(f'{self.numjui}.docx')
+
+        print(f"El archivo PDF se ha creado en: {self.numjui}.pdf")
     
+
     # Botones enlazados con sus opciones correspindientes    
     def estampar_1(self):
         self.negativa52()
@@ -161,6 +176,8 @@ class Estampadoxd(QMainWindow):
     def estampar_5(self):
         self.notificacionP()
 
+    def convertir(self):
+        self.pdfxd()
 
 def main():
     app = QApplication([])
