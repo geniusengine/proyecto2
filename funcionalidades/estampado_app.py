@@ -1,4 +1,4 @@
-import sys
+import os
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
 from docx import Document
 from docx2pdf import convert
@@ -75,7 +75,9 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(f"Drs. {self.arancel}.-")
 
         # Guarda el documento
-        doc.save(f'{self.numjui}.docx')
+        desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
+        doc.save(os.path.join(desktop_path, f'{self.numjui}.docx'))
+
     
     #2
     def negativaP(self):
@@ -94,7 +96,9 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(f"Drs. {self.arancel}.-")
 
         # Guarda el documento
-        doc.save(f'{self.numjui}.docx')
+        desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
+        doc.save(os.path.join(desktop_path, f'{self.numjui}.docx'))
+
 
     #3
     def positivaP(self):
@@ -113,7 +117,9 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(f"Drs. {self.arancel}.-")
 
         # Guarda el documento
-        doc.save(f'{self.numjui}.docx')
+        desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
+        doc.save(os.path.join(desktop_path, f'{self.numjui}.docx'))
+
 
     #4
     def busquedaN(self):
@@ -132,7 +138,9 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(f"Drs. {self.arancel}.-")
 
         # Guarda el documento
-        doc.save(f'{self.numjui}.docx')
+        desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
+        doc.save(os.path.join(desktop_path, f'{self.numjui}.docx'))
+
 
     #5
     def notificacionP(self):
@@ -151,13 +159,16 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(f"Drs. {self.arancel}.-") 
 
         # Guarda el documento
-        doc.save(f'{self.numjui}.docx')
+        desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
+        doc.save(os.path.join(desktop_path, f'{self.numjui}.docx'))
+
 
     def pdfxd(self):
         #convertir
-        convert(f'{self.numjui}.docx')
-
-        print(f"El archivo PDF se ha creado en: {self.numjui}.pdf")
+        desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
+        pdf_path = os.path.join(desktop_path, f'{self.numjui}.pdf')
+        convert(os.path.join(desktop_path, f'{self.numjui}.docx'), pdf_path)
+        print(f"El archivo PDF se ha creado en: {pdf_path}")
     
 
     # Botones enlazados con sus opciones correspindientes    
