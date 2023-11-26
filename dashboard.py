@@ -13,11 +13,12 @@ from funcionalidades.estampado_app import Estampadoxd
 class DashboardApp(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.db_connection = None
         self.initUI()
 
     def initUI(self):
         self.setWindowTitle('Dashboard App')
-        self.setGeometry(100, 100, 830, 600)
+        self.setGeometry(100, 100, 1280, 720)
 
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
@@ -27,7 +28,7 @@ class DashboardApp(QMainWindow):
         # Crea un temporizador para actualizar los datos cada 1 minuto
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.actualizar_datos)
-        self.timer.start(60000)  # 60000 milisegundos = 1 minuto
+        self.timer.start(30000)  # 30000 milisegundos = 30 seggundos
 
         # Crea botones
         self.crear_botones()
@@ -41,9 +42,9 @@ class DashboardApp(QMainWindow):
         # Crea una tabla y un botón de guardar
         self.table = QTableWidget()
         self.layout_vertical.addWidget(self.table)
-        self.btn_Guardar = QPushButton('Guardar', self)
-        self.btn_Guardar.clicked.connect(self.Guardar_clicked)
-        self.layout_vertical.addWidget(self.btn_Guardar)
+        #self.btn_Guardar = QPushButton('Guardar', self)
+        #self.btn_Guardar.clicked.connect(self.Guardar_clicked)
+        #self.layout_vertical.addWidget(self.btn_Guardar)
 
         # Configuraciones finales del diseño
         self.central_widget.setLayout(self.layout_vertical)
@@ -133,9 +134,9 @@ class DashboardApp(QMainWindow):
 
         return formato_fecha
     def mostrar_clicked(self):
-        self.table.setColumnCount(16)
+        self.table.setColumnCount(13)
         self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Nombre mandante', 'Nombre demandante', 'Domicilio', 'Estado', 'Arancel', 'Tribunal',
-                                               'Notificada','Estampada', 'Ver Causa','Notificar'])
+                                               'Notificada','Estampada', 'Estampar','Ver Causa','Notificar'])
 
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
@@ -240,12 +241,16 @@ class DashboardApp(QMainWindow):
         item.setBackground(color)
 
     def actualizar_datos(self):
-        # Limpia la tabla
-        self.limpiar_tabla()
+        try:
+            self.limpiar_tabla()
+            self.establecer_conexion_base_de_datos()
+            self.acceder_base_de_datos()
+            self.mostrar_clicked()
 
-        # Actualiza los datos de la base de datos y la tabla
-        self.acceder_base_de_datos()
-        self.mostrar_clicked()
+        except Exception as e:
+            print(f"Error al actualizar datos: {e}")
+        finally:
+            self.cerrar_conexion_base_de_datos()
 
 
 def main():
