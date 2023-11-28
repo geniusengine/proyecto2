@@ -21,10 +21,10 @@ class VerCausaApp(QMainWindow):
         self.label_causa = QLabel(f'Detalles de la Causa:\n{causa}', self)
         self.layout.addWidget(self.label_causa)
 
-        # Checkbox para editar el estampado
-        self.checkbox_estampado = QCheckBox('Estampada', self)
-        self.checkbox_estampado.setChecked(self.causa["Estampada"])
-        self.layout.addWidget(self.checkbox_estampado)
+        # Checkbox para editar el notificado
+        self.checkbox_notificado = QCheckBox('Notificado', self)
+        self.checkbox_notificado.setChecked(self.causa["Notificada"])
+        self.layout.addWidget(self.checkbox_notificado)
 
         # Botón para aplicar cambios
         self.btn_guardar = QPushButton('Guardar Cambios', self)

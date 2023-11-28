@@ -28,7 +28,7 @@ class DashboardApp(QMainWindow):
         # Crea un temporizador para actualizar los datos cada 1 minuto
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.actualizar_datos)
-        self.timer.start(30000)  # 30000 milisegundos = 30 seggundos
+        self.timer.start(240000)  # 240000 milisegundos = 4 minutos
 
         # Crea botones
         self.crear_botones()
@@ -90,7 +90,9 @@ class DashboardApp(QMainWindow):
         except Exception as e:
              print(e)
              QMessageBox.critical(self, "Error", "Error al guardar los datos")
-        
+        finally:
+            self.cerrar_conexion_base_de_datos()
+            
 
     def acceder_base_de_datos(self):
         try:
