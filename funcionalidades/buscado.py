@@ -42,10 +42,6 @@ class BuscadorDatosCausaApp(QMainWindow):
         self.button_select.clicked.connect(self.select_results)
         self.buttons_layout.addWidget(self.button_select)
 
-        self.button_estampar = QPushButton("Estampar", self)
-        self.button_estampar.clicked.connect(self.estampar_results)
-        self.buttons_layout.addWidget(self.button_estampar)
-
         self.button_clear = QPushButton("Limpiar", self)
         self.button_clear.clicked.connect(self.clear_results)
         self.buttons_layout.addWidget(self.button_clear)
@@ -118,14 +114,6 @@ class BuscadorDatosCausaApp(QMainWindow):
             self.result_list.clear()
             item = QListWidgetItem("Ningún resultado seleccionado")
 
-    def estampar_results(self):
-        selected_results = [self.result_list.item(i) for i, checkbox in enumerate(self.result_checkboxes) if checkbox.isChecked()]
-
-        if not selected_results:
-            self.result_list.clear()
-            item = QListWidgetItem("Ningún resultado seleccionado")
-            self.result_list.addItem(item)
-            return
 
         try:
             connection = pymssql.connect(
