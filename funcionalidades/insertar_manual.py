@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : jeudi 16 novembre 2023 à 10:55:18
+Dernière modification : lundi 4 décembre 2023 à 19:30:56
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout
@@ -33,8 +33,8 @@ class MiApp(QMainWindow):
         layout_vertical = QVBoxLayout()
 
         self.table = QTableWidget()
-        self.table.setColumnCount(7)
-        self.table.setHorizontalHeaderLabels(["Rol", "Mandante", "Demandado", "Domicilio", "Estado", "Arancel", "Tribunal"])
+        self.table.setColumnCount(8)
+        self.table.setHorizontalHeaderLabels(["Rol", "Mandante", "Demandante", "Demandado", "Domicilio", "Estado", "Arancel", "Tribunal"])
         layout.addWidget(self.table)
 
         self.add_row_button = QPushButton("Agregar Fila")
@@ -75,23 +75,24 @@ class MiApp(QMainWindow):
             for row_idx in range(self.table.rowCount()):
                 numjui = self.table.item(row_idx, 0).text()
                 nombmandante = self.table.item(row_idx, 1).text()
-                nombdemandado = self.table.item(row_idx, 2).text()
-                domicilio = self.table.item(row_idx, 3).text()
-                rolcausa = self.table.item(row_idx, 4).text()
+                nombdemandante = self.table.item(row_idx, 2).text()
+                nombdemandado = self.table.item(row_idx, 3).text()
+                domicilio = self.table.item(row_idx, 4).text()
+                rolcausa = self.table.item(row_idx, 5).text()
 
-                arancel_text = self.table.item(row_idx, 5).text()
+                arancel_text = self.table.item(row_idx, 6).text()
                 try:
                         arancel = (arancel_text)
                 except ValueError:
                         arancel = 0  # Valor predeterminado si la conversión falla
 
                     
-                tribunal = self.table.item(row_idx, 6).text()
+                tribunal = self.table.item(row_idx, 7).text()
 
 
                 if all([numjui, nombmandante, nombdemandado, domicilio, rolcausa]):
-                    insert_query = "INSERT INTO demanda (numjui, nombmandante, nombdemandado, domicilio, rolcausa, arancel, nombTribunal) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                    cursor.execute(insert_query, (numjui, nombmandante, nombdemandado, domicilio, rolcausa, arancel,tribunal))
+                    insert_query = "INSERT INTO demanda (numjui, nombmandante, nombdemandante, nombdemandado, domicilio, rolcausa, arancel, nombTribunal) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                    cursor.execute(insert_query, (numjui, nombmandante, nombdemandante, nombdemandado, domicilio, rolcausa, arancel,tribunal))
                 else:
                     QMessageBox.critical(self, "Error", "No se permiten celdas vacías en la fila {}".format(row_idx + 1))
                     db_connection.rollback()

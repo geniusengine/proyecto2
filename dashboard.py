@@ -2,7 +2,7 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
     QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox
 from PyQt6.QtGui import QColor
-from PyQt6.QtCore import QDateTime, QTimer
+from PyQt6.QtCore import QDateTime, QTimer, Qt
 import pymssql
 from funcionalidades.verCausa import VerCausaApp
 from funcionalidades.buscado import BuscadorDatosCausaApp
@@ -39,12 +39,12 @@ class DashboardApp(QMainWindow):
         self.layout_horizontal.addWidget(self.btn_Insertar_manual)
         self.layout_vertical.addLayout(self.layout_horizontal)
 
- # Crea una tabla y un botón de guardar
+# Crea una tabla y un botón de guardar
         self.table = QTableWidget()
         self.layout_vertical.addWidget(self.table)
-        #self.btn_Guardar = QPushButton('Guardar', self)
-        #self.btn_Guardar.clicked.connect(self.Guardar_clicked)
-        #self.layout_vertical.addWidget(self.btn_Guardar)
+
+# Conectar la señal de clic en el encabezado de la columna para ordenar
+        self.table.horizontalHeader().sectionClicked.connect(self.ordenar_tabla)
 
 # Configuraciones finales del diseño
         self.central_widget.setLayout(self.layout_vertical)
@@ -76,35 +76,12 @@ class DashboardApp(QMainWindow):
     def cerrar_conexion_base_de_datos(self):
         if self.db_connection:
             self.db_connection.close()
-# actualiza la base de datos
-    # actualiza la base de datos
-    def actualizar_base_de_datos(self, causa):
-        # elimina los botones de la causa innecesarios para la base de datos
-        causa.pop("Notificar", None)
-        causa.pop("VerCausa", None)
-        try:
-            self.establecer_conexion_base_de_datos()
-            with self.db_connection.cursor() as cursor:
-                query = f"UPDATE notificacion SET [estadoCausa] = '{causa['estadoCausa']}' WHERE rolCausa = '{causa['Rol']}'"
 
-                cursor.execute(query)
-            self.db_connection.commit()
-        except pymssql.Error as db_error:
-            print(f"Error al ejecutar la consulta SQL: {db_error}")
-            self.db_connection.rollback()
-            raise  # Re-levanta la excepción para que el programa no continúe si hay un error grave en la base de datos
-        except Exception as e:
-            print(f"Error desconocido: {e}")
-            raise  # Re-levanta la excepción para que el programa no continúe si hay un error desconocido
-        finally:
-            self.cerrar_conexion_base_de_datos()
-
-            
 # accede a la base de datos
     def acceder_base_de_datos(self):
         try:
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion, numjui, nombmandante, nombDemandado, domicilio, rolCausa, arancel, nombTribunal, estadoCausa FROM notificacion"
+                query = "SELECT fechaNotificacion, numjui, nombmandante, nombdemandante, nombDemandado, domicilio, rolCausa, arancel, nombTribunal, estadoCausa, estadoNoti FROM notificacion"
                 cursor.execute(query)
                 resultados = cursor.fetchall()
             self.causas = []
@@ -114,13 +91,14 @@ class DashboardApp(QMainWindow):
                     "Rol": fila[1],
                     "Nombre Mandante": fila[2],
                     "Nombre Demandante": fila[3],
-                    "Domicilio": fila[4],    
-                    "Estado": fila[5],
-                    "Arancel": fila[6],
-                    "Tribunal": fila[7],
-                    "estadoCausa": fila[8],
-                    "Notificada": fila[8],
-                    "Estampada": fila[5],
+                    "Nombre Demandado": fila[4],
+                    "Domicilio": fila[5],    
+                    "Estado": fila[6],
+                    "Arancel": fila[7],
+                    "Tribunal": fila[8],
+                    "estadoCausa": fila[9],
+                    "Notificada": fila[10],
+                    "Estampada": "Estampada",
                     "VerCausa": "Ver Causa",
                     "Notificar": "Notificar"
                 }
@@ -141,35 +119,41 @@ class DashboardApp(QMainWindow):
         return formato_fecha
 # muestra los datos en la tabla
     def mostrar_clicked(self):
-        self.table.setColumnCount(13)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Nombre mandante', 'Nombre demandante', 'Domicilio', 'Estado', 'Arancel', 'Tribunal',
-                                               'Notificada','Estampada', 'Estampar','Ver Causa','Notificar'])
+        self.table.setColumnCount(14)
+        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Nombre mandante', 'Nombre demandante', 'Nombre demandando', 'Domicilio', 'Estado', 'Arancel', 'Tribunal',
+                                            'E.C','Notificada', 'Estampar','Ver Causa','Notificar'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
-            notificada = causa["Notificada"]
             estampada = causa["Estampada"]
+            notificada = causa["Notificada"]
             for col_index, (key, value) in enumerate(causa.items()):
-                item = QTableWidgetItem(str(value))
                 if key == "Estampada":
                     button = self.crear_boton("Estampar", self.estampar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
                 elif key == "VerCausa":
                     button = self.crear_boton("Ver Causa", self.verCausa_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
-                elif key in ["Busqueda positiva", "Busqueda negativa"]:
-                    checkbox = QCheckBox("Si" if value == 1 else "No", self)
-                    checkbox.setChecked(bool(value))
-                    self.table.setCellWidget(row_index, col_index, checkbox)
                 elif key == "Notificar":
                     button = self.crear_boton("Notificar", self.notificar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
-                self.color_y_etiqueta_celda(item, estampada, notificada)
-                self.table.setItem(row_index, col_index, item)
+                else:
+                    # Crea un objeto QTableWidgetItem para las otras columnas
+                    item = QTableWidgetItem(str(value))
+                    self.table.setItem(row_index, col_index, item)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 0), estampada, notificada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 1), estampada, notificada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 2), estampada, notificada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 3), estampada, notificada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 4), estampada, notificada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 5), estampada, notificada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 6), estampada, notificada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 7), estampada, notificada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 8), estampada, notificada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 9), estampada, notificada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 10), estampada, notificada)
+            
+
         self.ajustar_tamanio()
-# guarda los datos en la base de datos
-    def Guardar_clicked(self):
-        self.actualizar_base_de_datos()
-        QMessageBox.information(self, "Exito", "Datos guardados correctamente")
 # abre la ventana de insertar excel
     def Insertar_excel_clicked(self):
         # Lógica para insertar desde Excel
@@ -190,14 +174,20 @@ class DashboardApp(QMainWindow):
             fechaNotificacion = self.table.item(selected_row, 0).text()
             numjui = self.table.item(selected_row, 1).text()
             nombmandante = self.table.item(selected_row, 2).text()
-            nombDemandado = self.table.item(selected_row, 3).text()
-            domicilio = self.table.item(selected_row, 4).text()
-            rolCausa = self.table.item(selected_row, 5).text()
-            arancel = self.table.item(selected_row, 6).text()
-            nombTribunal = self.table.item(selected_row, 7).text()
+            nombdemandante = self.table.item(selected_row, 3).text()
+            nombDemandado = self.table.item(selected_row, 4).text()
+            domicilio = self.table.item(selected_row, 5).text()
+            rolCausa = self.table.item(selected_row, 6).text()
+            arancel = self.table.item(selected_row, 7).text()
+            nombTribunal = self.table.item(selected_row, 8).text()
             # Importa Estampadoxd localmente
-            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombmandante, nombDemandado, domicilio, rolCausa, arancel, nombTribunal)
+            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombmandante, nombdemandante, nombDemandado, domicilio, rolCausa, arancel, nombTribunal)
             self.ex3.show()
+
+# Función para ordenar la tabla según la columna clicada
+    def ordenar_tabla(self, logicalIndex):
+        self.table.sortItems(logicalIndex, Qt.SortOrder.AscendingOrder if self.table.horizontalHeader().sortIndicatorOrder() == Qt.SortOrder.DescendingOrder else Qt.SortOrder.DescendingOrder)
+
 # abre la ventana de buscar
     def buscar_clicked(self):
         # Lógica para buscar
@@ -217,12 +207,38 @@ class DashboardApp(QMainWindow):
         index = self.table.indexAt(button.pos())
         row, col = index.row(), index.column()
         causa = self.causas[row]
-        causa["Notificada"] = True
-        self.actualizar_base_de_datos(causa)
-        fecha_actual=self.obtener_fecha_actual()
+        
+        # Verifica si la causa ya ha sido notificada
+        if causa["Notificada"] == 1:
+            QMessageBox.warning(self, "Advertencia", "Esta causa ya ha sido notificada.")
+            return
+        
+        # Actualiza la información localmente
+        causa["Notificada"] = 1
+        
+        # Actualiza el valor en la base de datos
+        try:
+            self.establecer_conexion_base_de_datos()
+            with self.db_connection.cursor() as cursor:
+                query = f"UPDATE notificacion SET estadoNoti = 1"
+                cursor.execute(query)
+            self.db_connection.commit()
+        except pymssql.Error as db_error:
+            print(f"Error al ejecutar la consulta SQL: {db_error}")
+            self.db_connection.rollback()
+            raise  # Re-levanta la excepción para que el programa no continúe si hay un error grave en la base de datos
+        except Exception as e:
+            print(f"Error desconocido: {e}")
+            raise  # Re-levanta la excepción para que el programa no continúe si hay un error desconocido
+        finally:
+            self.cerrar_conexion_base_de_datos()
+        
+        # Actualiza la celda en la tabla y el color de la fila
         self.table.cellWidget(row, col).setText("Si")
-        # actualiza el color de la fila
         self.actualizar_color_fila(row)
+        
+        # Proporciona un mensaje de éxito al usuario
+        QMessageBox.information(self, "Éxito", "Causa notificada correctamente.")
 
 # ajusta el tamaño de la tabla ajustandose al contenido
     def ajustar_tamanio(self):
@@ -235,29 +251,32 @@ class DashboardApp(QMainWindow):
     # función para actualizar el color de la fila
     def actualizar_color_fila(self, row):
         causa = self.causas[row]
-        notificada = causa["Notificada"]
         estampada = causa["Estampada"]
+        notificada = causa["Notificada"]
         
+
         for col_index in range(self.table.columnCount()):
             item = self.table.item(row, col_index)
-            # Llamas a la función que establece el color para cada celda
-            self.color_y_etiqueta_celda(item, estampada, notificada)
-        
+            if item is not None:
+                # Llamas a la función que establece el color para cada celda
+                self.color_y_etiqueta_celda(item, estampada, notificada)
+
         # Actualiza la vista de la tabla
         self.table.viewport().update()
 
 #define el color de la las filas de la tabla
     def color_y_etiqueta_celda(self, item, estampada, notificada):
-        color = QColor()
-        if estampada and notificada:
-            color = QColor(0, 255, 0)  # Verde
-        elif estampada and not notificada:
-            color = QColor(255, 255, 0)  # Amarillo
-        elif not estampada and notificada:
-            color = QColor(0, 0, 255)  # Azul
-        elif not estampada and not notificada:
-            color = QColor(255, 0, 0)  # Rojo
-        item.setBackground(color)
+        if item is not None:
+            color = QColor()
+            if estampada and notificada:
+                color = QColor(0, 255, 0)  # Verde
+            elif estampada and not notificada:
+                color = QColor(255, 255, 0)  # Amarillo
+            elif not estampada and notificada:
+                color = QColor(0, 0, 255)  # Azul
+            elif not estampada and not notificada:
+                color = QColor(255, 0, 0)  # Rojo
+            item.setBackground(color)
 # actualiza los datos de la tabla
     def actualizar_datos(self):
         try:

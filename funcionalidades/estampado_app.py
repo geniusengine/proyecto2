@@ -4,7 +4,7 @@ from docx import Document
 from docx2pdf import convert
 
 class Estampadoxd(QMainWindow):
-    def __init__(self, fechaNotificacion, numjui, nombmandante, nombDemandado, domicilio, rolCausa, arancel, nombTribunal, parent=None):
+    def __init__(self, fechaNotificacion, numjui, nombmandante, nombdemandante, nombDemandado, domicilio, rolCausa, arancel, nombTribunal, parent=None):
         super().__init__(parent)
 
         self.setWindowTitle('Ventana con Botones')
@@ -52,6 +52,7 @@ class Estampadoxd(QMainWindow):
         self.fechaNotificacion = fechaNotificacion
         self.numjui = numjui
         self.nombmandante = nombmandante
+        self.nombdemandante = nombdemandante
         self.nombDemandado = nombDemandado
         self.domicilio = domicilio
         self.rolCausa = rolCausa
@@ -64,11 +65,11 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui}: {self.rolCausa}\n{self.nombmandante} CON {self.nombDemandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.rolCausa}\n{self.nombmandante} CON {self.nombDemandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_negativa = f"BÚSQUEDA NEGATIVA: Certifico haber buscado al(la) demandado(a) {self.nombmandante}, con domicilio en {self.domicilio} especialmente el día {self.fechaNotificacion}, siendo las {self.fechaNotificacion} horas, a fin de notificarle la resolución de fecha {self.fechaNotificacion}. Diligencia que no se llevó a efecto por cuanto el(la) demandado(a) no fue habido(a), {self.rolCausa}. DOY FE."
+        busqueda_negativa = f"BÚSQUEDA NEGATIVA: Certifico haber buscado al(la) demandado(a) {self.nombDemandado}, con domicilio en {self.domicilio} especialmente el día {self.fechaNotificacion}, a fin de notificarle la resolución de fecha {self.fechaNotificacion}. Diligencia que no se llevó a efecto por cuanto el(la) demandado(a) no fue habido(a), {self.rolCausa}. DOY FE."
         doc.add_paragraph(busqueda_negativa)
 
         # Agrega la firma al final del documento
@@ -76,7 +77,7 @@ class Estampadoxd(QMainWindow):
 
         # Guarda el documento
         desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
-        doc.save(os.path.join(desktop_path, f'{self.numjui}.docx'))
+        doc.save(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'))
 
     
     #2
@@ -85,19 +86,19 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui}: {self.rolCausa}\n{self.nombmandante} CON {self.nombDemandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.rolCausa}\n{self.nombdemandante}  CON  {self.nombDemandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_negativa = f"BÚSQUEDA NEGATIVA: Certifico haber buscado al(la) demandado(a) {self.nombmandante} horas, a fin de notificarle la resolución de fecha {self.fechaNotificacion}. Diligencia que no se llevó a efecto por cuanto el(la) demandado(a) no fue habido(a), {self.rolCausa}. DOY FE."
-        doc.add_paragraph(busqueda_negativa)
+        busqueda_negativaP = f"BÚSQUEDA NEGATIVA: Certifico haber buscado al(la) demandado(a) {self.nombDemandado} con domicilio en {self.domicilio},especialmente el  día **, siendo las ** horas, a fin de notificarle la demanda íntegra y su respectivo proveído. Diligencia que no se llevó a efecto por cuanto el(la) demandado(a) no fue habido(a), **. DOY FE."
+        doc.add_paragraph(busqueda_negativaP)
 
         # Agrega la firma al final del documento
         doc.add_paragraph(f"Drs. {self.arancel}.-")
 
         # Guarda el documento
         desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
-        doc.save(os.path.join(desktop_path, f'{self.numjui}.docx'))
+        doc.save(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'))
 
 
     #3
@@ -106,11 +107,11 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n  {self.numjui}: {self.rolCausa}\n  {self.nombmandante} CON {self.nombDemandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.rolCausa}\n{self.nombdemandante}  CON  {self.nombDemandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {self.fechaNotificacion} horas, en su domicilio ubicado en {self.domicilio} busqué a {self.nombDemandado} horas, a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de <<constatación1>>.DOY FE.  "
+        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {self.fechaNotificacion} horas, en su domicilio ubicado en {self.domicilio} busqué a {self.nombDemandado} horas, a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de **.DOY FE."
         doc.add_paragraph(busqueda_positiva)
 
         # Agrega la firma al final del documento
@@ -118,7 +119,7 @@ class Estampadoxd(QMainWindow):
 
         # Guarda el documento
         desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
-        doc.save(os.path.join(desktop_path, f'{self.numjui}.docx'))
+        doc.save(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'))
 
 
     #4
@@ -127,11 +128,11 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui}: {self.rolCausa}\n{self.nombmandante} CON {self.nombDemandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.rolCausa}\n{self.nombmandante}  CON  {self.nombDemandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busquedaN = f"BÚSQUEDA Y NOTIFICACIÓN: a {self.fechaNotificacion} horas, en su domicilio ubicado en {self.domicilio} busqué a {self.nombDemandado}, a fin de notificarle la resolución de fecha <<fecharesolucion52>>, junto al escrito que antecede, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Informado por <<constatación2>>, quien manifestó que es el domicilio del demandado y que se encuentra en el lugar del juicio, acto seguido procedo a notificar de conformidad al artículo 52 c.p.c. la resolución de fecha <<fecharesolucion52>>, junto al escrito que antecede,  copia integra fue <<constatación2.1>>. DOY FE.  "
+        busquedaN = f"BÚSQUEDA Y NOTIFICACIÓN: a {self.fechaNotificacion} horas, en su domicilio ubicado en {self.domicilio} busqué a {self.nombDemandado}, a fin de notificarle la resolución de fecha **, junto al escrito que antecede, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Informado por **, quien manifestó que es el domicilio del demandado y que se encuentra en el lugar del juicio, acto seguido procedo a notificar de conformidad al artículo 52 c.p.c. la resolución de fecha **, junto al escrito que antecede,  copia integra fue **. DOY FE."
         doc.add_paragraph(busquedaN)
 
         # Agrega la firma al final del documento
@@ -139,7 +140,7 @@ class Estampadoxd(QMainWindow):
 
         # Guarda el documento
         desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
-        doc.save(os.path.join(desktop_path, f'{self.numjui}.docx'))
+        doc.save(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'))
 
 
     #5
@@ -148,11 +149,11 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui}: {self.rolCausa}\n{self.nombmandante} CON {self.nombDemandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.rolCausa}\n{self.nombmandante}  CON  {self.nombDemandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        notificacionP = f"NOTIFICACIÓN PERSONAL SUBSIDIARIA: a {self.fechaNotificacion} horas, en su domicilio ubicado en {self.domicilio} busqué a {self.nombDemandado}, se constató que es su domicilio y que se encuentra en el lugar del juicio por <<constatacion-bus/subsi>>, en conformidad al artículo 44 inciso segundo del Código de Procedimiento Civil modificado por el artículo 3, N°3 letra A y B de la ley N°21.394,  la demanda íntegra, su respectivo proveído. Copia íntegra de lo notificado fue <<constatacion-notisubsi>>. Doy fe. "
+        notificacionP = f"NOTIFICACIÓN PERSONAL SUBSIDIARIA: a {self.fechaNotificacion} horas, en su domicilio ubicado en {self.domicilio} notifiqué a {self.nombDemandado}, se constató que es su domicilio y que se encuentra en el lugar del juicio por **, en conformidad al artículo 44 inciso segundo del Código de Procedimiento Civil modificado por el artículo 3, N°3 letra A y B de la ley N°21.394,  la demanda íntegra, su respectivo proveído. Copia íntegra de lo notificado fue **. Doy fe."
         doc.add_paragraph(notificacionP)
 
         # Agrega la firma al final del documento
@@ -160,14 +161,14 @@ class Estampadoxd(QMainWindow):
 
         # Guarda el documento
         desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
-        doc.save(os.path.join(desktop_path, f'{self.numjui}.docx'))
+        doc.save(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'))
 
 
     def pdfxd(self):
         #convertir
         desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
-        pdf_path = os.path.join(desktop_path, f'{self.numjui}.pdf')
-        convert(os.path.join(desktop_path, f'{self.numjui}.docx'), pdf_path)
+        pdf_path = os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.pdf')
+        convert(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'), pdf_path)
         print(f"El archivo PDF se ha creado en: {pdf_path}")
     
 

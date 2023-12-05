@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 insertar.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 16:15:10 
-Dernière modification : mercredi 15 novembre 2023 à 19:02:58
+Dernière modification : lundi 4 décembre 2023 à 17:51:26
 """
 
 import sys
@@ -40,8 +40,8 @@ class ExcelToDatabaseApp(QMainWindow):
         layout = QVBoxLayout(self.central_widget)
 
         self.data_table = QTableWidget(self)
-        self.data_table.setColumnCount(7)  # 5 para los datos Excel, 1 para "arancel", 1 para "tribunal"
-        self.data_table.setHorizontalHeaderLabels(["numjui", "nombmandante", "nombdemandado", "domicilio","rolcausa", "Arancel", "Tribunal"])
+        self.data_table.setColumnCount(8)  # 5 para los datos Excel, 1 para "arancel", 1 para "tribunal"
+        self.data_table.setHorizontalHeaderLabels(["Rol", "Mandante","Demandante", "Demandado", "Domicilio","Estado", "Arancel", "Tribunal"])
         layout.addWidget(self.data_table)
 
         layout.addWidget(self.upload_button)
@@ -63,12 +63,12 @@ class ExcelToDatabaseApp(QMainWindow):
                 for col_idx, cell_value in enumerate(row):
                     item = QTableWidgetItem(str(cell_value))
                     self.data_table.setItem(row_idx, col_idx, item)
-                    if col_idx == 5:  # Columna "Arancel"
+                    if col_idx == 6:  # Columna "Arancel"
                         arancel_input = QLineEdit()
-                        self.data_table.setCellWidget(row_idx, 5, arancel_input)
-                    if col_idx == 6:  # Columna "Tribunal"
+                        self.data_table.setCellWidget(row_idx, 6, arancel_input)
+                    if col_idx == 7:  # Columna "Tribunal"
                         tribunal_input = QLineEdit()
-                        self.data_table.setCellWidget(row_idx, 6, tribunal_input)
+                        self.data_table.setCellWidget(row_idx, 7, tribunal_input)
 
     def saveData(self):
         if self.excel_data is None:
@@ -87,10 +87,11 @@ class ExcelToDatabaseApp(QMainWindow):
             for row_idx in range(self.data_table.rowCount()):
                 numjui = self.data_table.item(row_idx, 0).text()
                 nombmandante = self.data_table.item(row_idx, 1).text()
-                nombdemandado = self.data_table.item(row_idx, 2).text()
-                domicilio = self.data_table.item(row_idx, 3).text()
-                rolcausa = self.data_table.item(row_idx,4).text()
-                arancel_item = self.data_table.item(row_idx, 5)
+                nombdemandante = self.data_table.item(row_idx, 2).text()
+                nombdemandado = self.data_table.item(row_idx, 3).text()
+                domicilio = self.data_table.item(row_idx, 4).text()
+                rolcausa = self.data_table.item(row_idx,5).text()
+                arancel_item = self.data_table.item(row_idx, 6)
                 if arancel_item is not None:
                     try:
                         arancel_text = arancel_item.text()
@@ -100,13 +101,13 @@ class ExcelToDatabaseApp(QMainWindow):
                 else:
                     arancel = 0  # Valor predeterminado si el ítem es None
 
-                tribunal = self.data_table.item(row_idx, 6).text()
+                tribunal = self.data_table.item(row_idx, 7).text()
 
         
 
             # Insertar datos de la demanda en la tabla "demanda"
-            insert_query = "INSERT INTO demanda (numjui, nombmandante, nombdemandado, domicilio,rolcausa, nombTribunal, arancel) VALUES (%s, %s, %s, %s,%s, %s, %s)"
-            cursor.execute(insert_query, (numjui, nombmandante, nombdemandado, domicilio, rolcausa,  tribunal, arancel))
+            insert_query = "INSERT INTO demanda (numjui, nombmandante, nombdemandante, nombDemandado, domicilio, rolcausa, arancel, nombTribunal) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (numjui, nombmandante, nombdemandante, nombdemandado, domicilio, rolcausa, arancel, tribunal))
             db_connection.commit()
             db_connection.close()
             
