@@ -2,7 +2,8 @@ import os
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
 from docx import Document
 from docx2pdf import convert
-
+import tkinter as tk
+from tkinter import filedialog
 class Estampadoxd(QMainWindow):
     def __init__(self, fechaNotificacion, numjui, nombmandante, nombdemandante, nombDemandado, domicilio, rolCausa, arancel, nombTribunal, parent=None):
         super().__init__(parent)
@@ -75,9 +76,17 @@ class Estampadoxd(QMainWindow):
         # Agrega la firma al final del documento
         doc.add_paragraph(f"Drs. {self.arancel}.-")
 
+        # Abre un cuadro de diálogo para seleccionar el directorio donde se guardará el documento
+        root = tk.Tk()
+        root.withdraw()  # Oculta la ventana de Tkinter
+        save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
+
+         # Guarda el documento en el directorio seleccionado
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.rolCausa}.docx'))
+
         # Guarda el documento
-        desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
-        doc.save(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'))
+        #desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
+        #doc.save(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'))
 
     
     #2
@@ -96,9 +105,13 @@ class Estampadoxd(QMainWindow):
         # Agrega la firma al final del documento
         doc.add_paragraph(f"Drs. {self.arancel}.-")
 
-        # Guarda el documento
-        desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
-        doc.save(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'))
+        # Abre un cuadro de diálogo para seleccionar el directorio donde se guardará el documento
+        root = tk.Tk()
+        root.withdraw()  # Oculta la ventana de Tkinter
+        save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
+
+         # Guarda el documento en el directorio seleccionado
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.rolCausa}.docx'))
 
 
     #3
@@ -117,9 +130,13 @@ class Estampadoxd(QMainWindow):
         # Agrega la firma al final del documento
         doc.add_paragraph(f"Drs. {self.arancel}.-")
 
-        # Guarda el documento
-        desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
-        doc.save(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'))
+        # Abre un cuadro de diálogo para seleccionar el directorio donde se guardará el documento
+        root = tk.Tk()
+        root.withdraw()  # Oculta la ventana de Tkinter
+        save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
+
+         # Guarda el documento en el directorio seleccionado
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.rolCausa}.docx'))
 
 
     #4
@@ -138,9 +155,13 @@ class Estampadoxd(QMainWindow):
         # Agrega la firma al final del documento
         doc.add_paragraph(f"Drs. {self.arancel}.-")
 
-        # Guarda el documento
-        desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
-        doc.save(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'))
+        # Abre un cuadro de diálogo para seleccionar el directorio donde se guardará el documento
+        root = tk.Tk()
+        root.withdraw()  # Oculta la ventana de Tkinter
+        save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
+
+         # Guarda el documento en el directorio seleccionado
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.rolCausa}.docx'))
 
 
     #5
@@ -159,17 +180,24 @@ class Estampadoxd(QMainWindow):
         # Agrega la firma al final del documento
         doc.add_paragraph(f"Drs. {self.arancel}.-") 
 
-        # Guarda el documento
-        desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
-        doc.save(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'))
+        # Abre un cuadro de diálogo para seleccionar el directorio donde se guardará el documento
+        root = tk.Tk()
+        root.withdraw()  # Oculta la ventana de Tkinter
+        save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
+
+         # Guarda el documento en el directorio seleccionado
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.rolCausa}.docx'))
 
 
     def pdfxd(self):
-        #convertir
-        desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
-        pdf_path = os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.pdf')
-        convert(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'), pdf_path)
-        print(f"El archivo PDF se ha creado en: {pdf_path}")
+     #convertir
+     root = tk.Tk()
+     root.withdraw()  # Oculta la ventana de Tkinter
+     save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
+
+     pdf_path = os.path.join(save_path, f'{self.numjui} {self.rolCausa}.pdf')
+     convert(os.path.join(save_path, f'{self.numjui} {self.rolCausa}.docx'), pdf_path)
+     print(f"El archivo PDF se ha creado en: {pdf_path}")
     
 
     # Botones enlazados con sus opciones correspindientes    
