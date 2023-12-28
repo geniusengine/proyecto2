@@ -127,9 +127,7 @@ class BuscadorDatosCausaApp(QMainWindow):
             selected_data = []
             for result_item in selected_results:
                 numjui = result_item.text().split(',')[0].split(':')[-1].strip()
-                query = """
-                SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa FROM notificacion"
-                """
+                query = "SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa FROM notificacion"
                 cursor.execute(query, (numjui,))
                 data = cursor.fetchall()
                 selected_data.extend(data)
