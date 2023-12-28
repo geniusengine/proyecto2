@@ -128,11 +128,7 @@ class BuscadorDatosCausaApp(QMainWindow):
             selected_data = []
             for result_item in selected_results:
                 numjui = result_item.text().split(',')[0].split(':')[-1].strip()
-                query = """
-                SELECT *
-                FROM demanda
-                WHERE numjui = %s
-                """
+                query = """SELECT * FROM demandaWHERE numjui = %s """
                 cursor.execute(query, (numjui,))
                 data = cursor.fetchall()
                 selected_data.extend(data)
