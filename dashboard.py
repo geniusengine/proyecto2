@@ -198,16 +198,17 @@ class DashboardApp(QMainWindow):
                 if key == "Notificar":
                     button = self.crear_boton_con_icono("static/icons/notificar.png", self.notificar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
+
                 elif key == "Estampada":
                     button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
+                
                 else:
                     # Crea un objeto QTableWidgetItem para las otras columnas
                     item = QTableWidgetItem(str(value))
                     self.table.setItem(row_index, col_index, item)
                     self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
         self.ajustar_tamanio()
-        QColor(250, 193, 114)
 # abre la ventana de insertar excel
     def Insertar_excel_clicked(self):
         # Lógica para insertar desde Excel
@@ -330,7 +331,7 @@ class DashboardApp(QMainWindow):
     def actualizar_color_fila(self, row):
         causa = self.causas[row]
         notificada = causa["Notificada"]
-        estampada = causa["Estampada"]
+        estampada = causa["estadoCausa"]
         
         for col_index in range(self.table.columnCount()):
             item = self.table.item(row, col_index)
@@ -343,7 +344,7 @@ class DashboardApp(QMainWindow):
 #define el color de la las filas de la tabla
     def color_y_etiqueta_celda(self, item, notificada, estampada):
         if item is not None:
-            color = QColor()
+            color = QColor(250, 193, 114)
             if notificada and estampada:
                 color = QColor(46, 204, 113)  #verde
             elif not notificada and estampada:
