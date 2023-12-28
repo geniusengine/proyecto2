@@ -2,6 +2,7 @@ import os
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
 from docx import Document
 from docx2pdf import convert
+from datetime import datetime
 import tkinter as tk
 from tkinter import filedialog
 class Estampadoxd(QMainWindow):
@@ -33,8 +34,6 @@ class Estampadoxd(QMainWindow):
         boton5 = QPushButton('Notificacion Personal', self)
         boton5.clicked.connect(self.estampar_5)
 
-        boton6 = QPushButton('Convertir Pdf', self)
-        boton6.clicked.connect(self.convertir)
 
         # Agregar botones al layout vertical
         layout_vertical.addWidget(boton1)
@@ -45,9 +44,6 @@ class Estampadoxd(QMainWindow):
 
         # Establecer el diseño principal de la ventana
         self.setLayout(layout_vertical)
-
-        # Agregar botones al layout vertical
-        layout_vertical.addWidget(boton6)
 
         # Guardar los datos recibidos
         self.fechaNotificacion = fechaNotificacion
@@ -66,10 +62,16 @@ class Estampadoxd(QMainWindow):
         self.encargo = encargo
         self.arancel = arancel
 
-  
+    
 
     #1 
     def negativa52(self):
+
+        now = datetime.now()
+        date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+
+
+
         # Crea un nuevo documento de Word
         doc = Document()
 
