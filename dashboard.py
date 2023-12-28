@@ -25,44 +25,44 @@ class DashboardApp(QMainWindow):
         self.layout_vertical = QVBoxLayout()  # Crea un layout vertical
         self.layout_horizontal = QHBoxLayout()  # Crea un layout horizontal
 
-# Crea un temporizador para actualizar los datos cada 4 minuto
+        #Crea un temporizador para actualizar los datos cada 4 minuto
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.actualizar_datos)
         self.timer.start(240000)  # 240000 milisegundos = 4 minutos
- # Crea botones
+        # Crea botones
         self.crear_botones()
 
-# Añade botones al layout horizontal y el layout horizontal al layout vertical
+        # Añade botones al layout horizontal y el layout horizontal al layout vertical
         self.layout_horizontal.addWidget(self.btn_buscar)
         self.layout_horizontal.addWidget(self.btn_Insertar_excel)
         self.layout_horizontal.addWidget(self.btn_Insertar_manual)
         self.layout_vertical.addLayout(self.layout_horizontal)
 
-# Crea una tabla y un botón de guardar
+        # Crea una tabla y un botón de guardar
         self.table = QTableWidget()
         # Establecer el color de las líneas de las celdas
         self.table.setStyleSheet(
         "QTableView { gridline-color: white; }"
         "QTableCornerButton::section { background-color: #d3d3d3; border: 1px solid black; }"
         "QHeaderView::section { background-color: #d3d3d3; border: 1px solid black; }"
-)
+        )
         self.layout_vertical.addWidget(self.table)
     
-# Conectar la señal de clic en el encabezado de la columna para ordenar
+        # Conectar la señal de clic en el encabezado de la columna para ordenar
         self.table.horizontalHeader().sectionClicked.connect(self.ordenar_tabla)
 
-# Configuraciones finales del diseño
+        # Configuraciones finales del diseño
         self.central_widget.setLayout(self.layout_vertical)
         self.ajustar_tamanio()
 
-# Llama automáticamente a acceder_base_de_datos y mostrar_clicked al iniciar la aplicación
+        # Llama automáticamente a acceder_base_de_datos y mostrar_clicked al iniciar la aplicación
         self.establecer_conexion_base_de_datos()
         self.acceder_base_de_datos()
         self.mostrar_clicked()
 
         self.setGeometry(100, 100, 400, 300)
 
-# Agrega un contenedor para la leyenda de colores
+        # Agrega un contenedor para la leyenda de colores
         color_legend_layout = QHBoxLayout()
 
         # Círculo verde con texto
@@ -107,23 +107,24 @@ class DashboardApp(QMainWindow):
 
         # Agrega la leyenda de colores al layout vertical existente
         self.layout_vertical.addLayout(color_legend_layout)
-# crea los botones de la interfaz
+    # crea los botones de la interfaz
     def crear_botones(self):
         self.btn_buscar = self.crear_boton('Buscar', self.buscar_clicked)
         self.btn_Insertar_excel = self.crear_boton('Insertar Excel', self.Insertar_excel_clicked)
         self.btn_Insertar_manual = self.crear_boton('Insertar Manual', self.Insertar_manual_clicked)
-# crea cada boton que se necesite
+    # crea cada boton que se necesite
     def crear_boton(self, texto, funcion):
         boton = QPushButton(texto, self)
         boton.clicked.connect(funcion)
         return boton
+    # crea un boton con un icono
     def crear_boton_con_icono(self, icono_path, funcion):
         boton = QPushButton(self)
         icono = QIcon(icono_path)
         boton.setIcon(icono)
         boton.clicked.connect(funcion)
         return boton
-# establece la conexion con la base de datos
+    # establece la conexion con la base de datos
     def establecer_conexion_base_de_datos(self):
         self.db_connection = pymssql.connect(
             server='vps-3697915-x.dattaweb.com',
@@ -131,40 +132,41 @@ class DashboardApp(QMainWindow):
             password='LOLxdsas--',
             database='micau5a'
         )
-# cierra la conexion con la base de datos
+    # cierra la conexion con la base de datos
     def cerrar_conexion_base_de_datos(self):
         if self.db_connection:
             self.db_connection.close()
 
-# accede a la base de datos
+    # accede a la base de datos
     def acceder_base_de_datos(self):
         try:
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa FROM notificacion"
+                query = "SELECT fechaNotificacion,numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,soli,encargo,arancel,estadoNoti,estadoCausa FROM notificacion"
                 cursor.execute(query)
                 resultados = cursor.fetchall()
+
             self.causas = []
             for fila in resultados:
                 fecha_formateada = fila[0].strftime("%d-%m-%Y")
-                
                 causa = {
                     "Fecha notificacion": fecha_formateada,
                     "Rol": fila[1],
                     "Tribunal": fila[2],
-                    "Nombre Demandante": fila[3],
-                    "Apellido Demandante": fila[4],
-                    "Nombre Demandado": fila[5],
-                    "Apellido Demandado": fila[6],
-                    "Nombre Mandante": fila[7],
-                    "Apellido Mandante": fila[8],
+                    "Nombre demandante": fila[3],
+                    "Apellido demandante": fila[4],
+                    "Nombre demandado": fila[5],
+                    "Apellido demandado": fila[6],
+                    "Nombre mandante": fila[7],
+                    "Apellido mandante": fila[8],
                     "Representante": fila[9],
                     "Domicilio": fila[10],
                     "Comuna": fila[11],
                     "Solicitud": fila[12],
-                    "encargo": fila[13],
+                    "Encargo": fila[13],
                     "Arancel": fila[14],
                     "Notificada": fila[15],
                     "estadoCausa": fila[16],
+
                     "Notificar": "Notificar",
                     "Estampada": "Estampada",
                 }
@@ -185,7 +187,10 @@ class DashboardApp(QMainWindow):
         return formato_fecha
 # muestra los datos en la tabla
     def mostrar_clicked(self):
-        self.table.setColumnCount(19)
+        for row_index, causa in enumerate(self.causas):
+            self.table.insertRow(row_index)
+            estampada = causa["estadoCausa"]
+        self.table.setColumnCount(20)
         self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel',
                                             'Notificada','E.C','Notificar','Estampar'])
         for row_index, causa in enumerate(self.causas):
@@ -203,23 +208,7 @@ class DashboardApp(QMainWindow):
                     # Crea un objeto QTableWidgetItem para las otras columnas
                     item = QTableWidgetItem(str(value))
                     self.table.setItem(row_index, col_index, item)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 0), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 1), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 2), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 3), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 4), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 5), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 6), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 7), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 8), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 9), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 10), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 11), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 12), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 13), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 14), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 15), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 16), notificada, estampada)
+                    self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
         self.ajustar_tamanio()
 # abre la ventana de insertar excel
     def Insertar_excel_clicked(self):
@@ -289,11 +278,9 @@ class DashboardApp(QMainWindow):
             raise  # Re-levanta la excepción para que el programa no continúe si hay un error desconocido
         finally:
             self.cerrar_conexion_base_de_datos()
-        
         # Actualiza la celda en la tabla y el color de la fila
         self.table.cellWidget(row, col).setText("Si")
         self.actualizar_color_fila(row)
-        
         # Proporciona un mensaje de éxito al usuario
         QMessageBox.information(self, "Éxito", "Causa notificada correctamente.")
 # ajusta el tamaño de la tabla ajustandose al contenido
@@ -301,7 +288,7 @@ class DashboardApp(QMainWindow):
         self.table.resizeColumnsToContents()
         total_width = sum(self.table.columnWidth(col) for col in range(self.table.columnCount()))
         min_width = max(self.width(), total_width)
-        self.setMinimumWidth(min_width)
+        self.setMinimumWidth(min_width+40)
         self.adjustSize()
 # actualiza el color de la fila        
     # función para actualizar el color de la fila
