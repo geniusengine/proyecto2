@@ -87,7 +87,7 @@ class BuscadorDatosCausaApp(QMainWindow):
 
             if data:
                 for row in data:
-                    result = f"Número de Juicio: {row[0]}, Tribunal: {row[1]}"
+                    result = f"Rol: {row[0]}, Tribunal: {row[1]}"
                     item = QListWidgetItem(result)
                     checkbox = QCheckBox()
                     self.result_list.addItem(item)
