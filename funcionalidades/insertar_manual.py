@@ -33,8 +33,8 @@ class MiApp(QMainWindow):
         layout_vertical = QVBoxLayout()
 
         self.table = QTableWidget()
-        self.table.setColumnCount(8)
-        self.table.setHorizontalHeaderLabels(["Rol", "Mandante", "Demandante", "Demandado", "Domicilio", "Estado", "Arancel", "Tribunal"])
+        self.table.setColumnCount(15)
+        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel','Notificada'])
         layout.addWidget(self.table)
 
         self.add_row_button = QPushButton("Agregar Fila")
@@ -51,7 +51,7 @@ class MiApp(QMainWindow):
 
         layout.addLayout(layout_vertical)
         self.central_widget.setLayout(layout)
-        self.ajustar_tamanio
+        self.ajustar_tamanio()
     def add_row(self):
         self.table.insertRow(self.table.rowCount())
         
@@ -73,26 +73,31 @@ class MiApp(QMainWindow):
             cursor = db_connection.cursor()
 
             for row_idx in range(self.table.rowCount()):
-                numjui = self.table.item(row_idx, 0).text()
-                nombmandante = self.table.item(row_idx, 1).text()
-                nombdemandante = self.table.item(row_idx, 2).text()
-                nombdemandado = self.table.item(row_idx, 3).text()
-                domicilio = self.table.item(row_idx, 4).text()
-                rolcausa = self.table.item(row_idx, 5).text()
+                numjui= self.table.item(row_idx, 0).text()
+                nombTribunal= self.table.item(row_idx, 1).text()
+                nombdemandante= self.table.item(row_idx, 2).text()
+                apellidemandante= self.table.item(row_idx, 3).text()
+                nombdemandado= self.table.item(row_idx, 4).text()
+                apellidemandado= self.table.item(row_idx, 5).text()
+                nombmandante= self.table.item(row_idx, 6).text()
+                apellimandante= self.table.item(row_idx, 7).text()
+                repre= self.table.item(row_idx, 8).text()
+                domicilio= self.table.item(row_idx, 9).text()
+                comuna= self.table.item(row_idx, 10).text()
+                solicitante= self.table.item(row_idx, 11).text()
+                encargo= self.table.item(row_idx, 12).text()
+                arancel= self.table.item(row_idx, 13).text()
 
-                arancel_text = self.table.item(row_idx, 6).text()
+                arancel_text = self.table.item(row_idx, 13).text()
+                print(arancel_text)
                 try:
                         arancel = (arancel_text)
                 except ValueError:
                         arancel = 0  # Valor predeterminado si la conversión falla
 
-                    
-                tribunal = self.table.item(row_idx, 7).text()
-
-
-                if all([numjui, nombmandante, nombdemandado, domicilio, rolcausa]):
-                    insert_query = "INSERT INTO demanda (numjui, nombmandante, nombdemandante, nombdemandado, domicilio, rolcausa, arancel, nombTribunal) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-                    cursor.execute(insert_query, (numjui, nombmandante, nombdemandante, nombdemandado, domicilio, rolcausa, arancel,tribunal))
+                if all([numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,solicitante,encargo,arancel]):
+                    insert_query = "INSERT INTO demanda (numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,solicitante,encargo,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                    cursor.execute(insert_query, (numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,solicitante,encargo,arancel))
                 else:
                     QMessageBox.critical(self, "Error", "No se permiten celdas vacías en la fila {}".format(row_idx + 1))
                     db_connection.rollback()
@@ -119,11 +124,12 @@ class MiApp(QMainWindow):
         min_width = max(self.width(), total_width)
         
         # Ajustar el tamaño de la ventana al tamaño máximo necesario
-        self.setMinimumWidth(min_width)
-        #self.resize(total_width, self.height())  # Opcional: Ajustar también el ancho actual de la ventana
+        self.setMinimumWidth(min_width+110)
+        self.resize(total_width, self.height())  # Opcional: Ajustar también el ancho actual de la ventana
         
         # Ajustar automáticamente el tamaño de la ventana
-        #self.adjustSize()
+        self.adjustSize()
+
     def clear_table(self):
         self.table.setRowCount(0)
 
