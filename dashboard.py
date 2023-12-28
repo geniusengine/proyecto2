@@ -163,11 +163,10 @@ class DashboardApp(QMainWindow):
                     "Solicitud": fila[12],
                     "encargo": fila[13],
                     "Arancel": fila[14],
-                    "Notificada": fila[16],
-                    "estadoCausa": fila[15],
+                    "Notificada": fila[15],
+                    "estadoCausa": fila[16],
                     "Notificar": "Notificar",
                     "Estampada": "Estampada",
-                    "VerCausa": "Ver Causa",
                 }
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
@@ -186,9 +185,9 @@ class DashboardApp(QMainWindow):
         return formato_fecha
 # muestra los datos en la tabla
     def mostrar_clicked(self):
-        self.table.setColumnCount(20)
+        self.table.setColumnCount(19)
         self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel',
-                                            'Notificada','E.C','Notificar' 'Estampar','Ver Causa'])
+                                            'Notificada','E.C','Notificar','Estampar'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
             notificada = causa["Notificada"]
@@ -199,9 +198,6 @@ class DashboardApp(QMainWindow):
                     self.table.setCellWidget(row_index, col_index, button)
                 elif key == "Estampada":
                     button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
-                    self.table.setCellWidget(row_index, col_index, button)
-                elif key == "VerCausa":
-                    button = self.crear_boton_con_icono("static/icons/ver causa 1.png", self.verCausa_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
                 else:
                     # Crea un objeto QTableWidgetItem para las otras columnas
@@ -218,6 +214,12 @@ class DashboardApp(QMainWindow):
             self.color_y_etiqueta_celda(self.table.item(row_index, 8), notificada, estampada)
             self.color_y_etiqueta_celda(self.table.item(row_index, 9), notificada, estampada)
             self.color_y_etiqueta_celda(self.table.item(row_index, 10), notificada, estampada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 11), notificada, estampada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 12), notificada, estampada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 13), notificada, estampada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 14), notificada, estampada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 15), notificada, estampada)
+            self.color_y_etiqueta_celda(self.table.item(row_index, 16), notificada, estampada)
         self.ajustar_tamanio()
 # abre la ventana de insertar excel
     def Insertar_excel_clicked(self):
@@ -256,14 +258,6 @@ class DashboardApp(QMainWindow):
         # Lógica para buscar
         self.bas = BuscadorDatosCausaApp()
         self.bas.show()
-# abre la ventana de ver causa
-    def verCausa_clicked(self):
-        button = self.sender()
-        index = self.table.indexAt(button.pos())
-        row, col = index.row(), index.column()
-        causa = self.causas[row]
-        self.vercausa_app = VerCausaApp(causa)
-        self.vercausa_app.show()
 # al notificar cambia el estado de la causa
     def notificar_clicked(self):
         button = self.sender()
