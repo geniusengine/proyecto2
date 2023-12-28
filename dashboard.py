@@ -140,7 +140,7 @@ class DashboardApp(QMainWindow):
     def acceder_base_de_datos(self):
         try:
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion, numjui, nombmandante, nombdemandante, nombDemandado, domicilio, rolCausa, arancel, nombTribunal, estadoCausa, estadoNoti FROM notificacion"
+                query = "SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoCausa, estadoNoti FROM notificacion"
                 cursor.execute(query)
                 resultados = cursor.fetchall()
             self.causas = []
