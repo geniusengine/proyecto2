@@ -107,7 +107,6 @@ class BuscadorDatosCausaApp(QMainWindow):
         if selected_results:
             selected_data = [item.text() for item in selected_results]
             selected_data = "\n".join(selected_data)
-            self.result_list.clear()
             item = QListWidgetItem(selected_data)
             self.result_list.addItem(item)
         else:
@@ -128,7 +127,7 @@ class BuscadorDatosCausaApp(QMainWindow):
             selected_data = []
             for result_item in selected_results:
                 numjui = result_item.text().split(',')[0].split(':')[-1].strip()
-                query = """SELECT * FROM demandaWHERE numjui = %s """
+                query = "SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa FROM notificacion"
                 cursor.execute(query, (numjui,))
                 data = cursor.fetchall()
                 selected_data.extend(data)
@@ -138,12 +137,12 @@ class BuscadorDatosCausaApp(QMainWindow):
             self.result_list.clear()
             if selected_data:
                 for row in selected_data:
-                    result = f"Rol: {row[0]}, Tribunal: {row[1]}, Otros Datos: {row[2]}, {row[3]}, ..."
+                    result = f"Rol: {row[0]}, Tribunal: {row[1]}, 'Nombre demandante'{row[2]}, 'Apellido demandante'{row[3]}, 'Nombre demandando'{row[4]},{row[5]},'Apellido demandando'{row[6]},'Nombre mandante'{row[7]},Apellido mandante'{row[8]},'Representante'{row[10]},'Domicilio'{row[11]},'Comuna'{row[12]},'Solicitante'{row[13]},'Encargo'{row[14]},'Arancel'{row[15]},'Notificada'{row[16]},'E.C'{row[15]},'Notificar'{row[17]},'Estampar'{row[18]},'Ver Causa' {row[19]}"
                     item = QListWidgetItem(result)
                     self.result_list.addItem(item)
 
                 # Llamar al script externo
-                subprocess.run(['python', 'estampado(prueba).py'])
+                subprocess.run(['python', 'estampado_app.py'])
             else:
                 item = QListWidgetItem("No se encontraron datos para la búsqueda especificada.")
                 self.result_list.addItem(item)
