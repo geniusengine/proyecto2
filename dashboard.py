@@ -141,13 +141,10 @@ class DashboardApp(QMainWindow):
     def acceder_base_de_datos(self):
         try:
             with self.db_connection.cursor() as cursor:
-<<<<<<< HEAD
-                query = "SELECT fechaNotificacion, numjui, nombmandante, nombdemandante, nombDemandado, domicilio, arancel, nombTribunal, estadoCausa, estadoNoti FROM notificacion"
-=======
-                query = "SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa FROM notificacion"
->>>>>>> 9d83cc27b464b537807a2b5dba5491d09f0a6483
+                query = "SELECT fechaNotificacion,numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,soli,encargo,arancel,estadoNoti,estadoCausa FROM notificacion"
                 cursor.execute(query)
                 resultados = cursor.fetchall()
+
             self.causas = []
             for fila in resultados:
                 fecha_formateada = fila[0].strftime("%d-%m-%Y")
@@ -155,37 +152,24 @@ class DashboardApp(QMainWindow):
                     "Fecha notificacion": fecha_formateada,
                     "Rol": fila[1],
                     "Tribunal": fila[2],
-                    "Nombre Demandante": fila[3],
-<<<<<<< HEAD
-                    "Nombre Demandado": fila[4],
-                    "Domicilio": fila[5],
-                    "Comuna": "Sydney",   
-                    "Estado": fila[6],
-                    "Arancel": fila[7],
-                    "Tribunal": fila[8],
-                    "estadoCausa": fila[9],
-                    "Notificada": fila[10],
-                    "Notificar": "Notificar",
-                    "Estampada": "Estampada",
-                    "VerCausa": "Ver Causa"                    
-=======
-                    "Apellido Demandante": fila[4],
-                    "Nombre Demandado": fila[5],
-                    "Apellido Demandado": fila[6],
-                    "Nombre Mandante": fila[7],
-                    "Apellido Mandante": fila[8],
+                    "Nombre demandante": fila[3],
+                    "Apellido demandante": fila[4],
+                    "Nombre demandado": fila[5],
+                    "Apellido demandado": fila[6],
+                    "Nombre mandante": fila[7],
+                    "Apellido mandante": fila[8],
                     "Representante": fila[9],
                     "Domicilio": fila[10],
                     "Comuna": fila[11],
                     "Solicitud": fila[12],
-                    "encargo": fila[13],
+                    "Encargo": fila[13],
                     "Arancel": fila[14],
-                    "Notificada": fila[16],
-                    "estadoCausa": fila[15],
+                    "Notificada": fila[15],
+                    "estadoCausa": fila[16],
+
                     "Notificar": "Notificar",
                     "Estampada": "Estampada",
                     "VerCausa": "Ver Causa",
->>>>>>> 9d83cc27b464b537807a2b5dba5491d09f0a6483
                 }
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
@@ -204,20 +188,14 @@ class DashboardApp(QMainWindow):
         return formato_fecha
 # muestra los datos en la tabla
     def mostrar_clicked(self):
-<<<<<<< HEAD
-        self.table.setColumnCount(15)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Nombre mandante', 'Nombre demandante', 'Nombre demandando', 'Domicilio','Comuna', 'Estado', 'Arancel', 'Tribunal',
-                                            'E.C','Notificada', 'Notificar','Estampar','Ver Causa',])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
             estampada = causa["estadoCausa"]
-=======
         self.table.setColumnCount(20)
         self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel',
                                             'Notificada','E.C','Notificar' 'Estampar','Ver Causa'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
->>>>>>> 9d83cc27b464b537807a2b5dba5491d09f0a6483
             notificada = causa["Notificada"]
             estampada = causa["Estampada"]
             for col_index, (key, value) in enumerate(causa.items()):
@@ -234,22 +212,7 @@ class DashboardApp(QMainWindow):
                     # Crea un objeto QTableWidgetItem para las otras columnas
                     item = QTableWidgetItem(str(value))
                     self.table.setItem(row_index, col_index, item)
-<<<<<<< HEAD
                     self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
-
-=======
-            self.color_y_etiqueta_celda(self.table.item(row_index, 0), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 1), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 2), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 3), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 4), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 5), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 6), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 7), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 8), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 9), notificada, estampada)
-            self.color_y_etiqueta_celda(self.table.item(row_index, 10), notificada, estampada)
->>>>>>> 9d83cc27b464b537807a2b5dba5491d09f0a6483
         self.ajustar_tamanio()
 # abre la ventana de insertar excel
     def Insertar_excel_clicked(self):
@@ -344,11 +307,8 @@ class DashboardApp(QMainWindow):
     def actualizar_color_fila(self, row):
         causa = self.causas[row]
         notificada = causa["Notificada"]
-<<<<<<< HEAD
-=======
         estampada = causa["Estampada"]
         
->>>>>>> 9d83cc27b464b537807a2b5dba5491d09f0a6483
         for col_index in range(self.table.columnCount()):
             item = self.table.item(row, col_index)
             if item is not None:
