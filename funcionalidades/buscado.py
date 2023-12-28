@@ -18,8 +18,8 @@ class BuscadorDatosCausaApp(QMainWindow):
         # Parte superior (en una sola fila)
         search_layout = QHBoxLayout()
 
-        self.check_numjui = QCheckBox("Buscar por Número de Juicio o tribunal")
-        self.numjui_label = QLabel("Número de Juicio o tribunal:")
+        self.check_numjui = QCheckBox("rol o tribunal")
+        self.numjui_label = QLabel("rol o tribunal:")
         self.numjui_input = QLineEdit(self)
         search_layout.addWidget(self.check_numjui)
         search_layout.addWidget(self.numjui_label)
@@ -87,7 +87,7 @@ class BuscadorDatosCausaApp(QMainWindow):
 
             if data:
                 for row in data:
-                    result = f"Número de Juicio: {row[0]}, Tribunal: {row[1]}"
+                    result = f"Rol: {row[0]}, Tribunal: {row[1]}"
                     item = QListWidgetItem(result)
                     checkbox = QCheckBox()
                     self.result_list.addItem(item)
@@ -138,7 +138,7 @@ class BuscadorDatosCausaApp(QMainWindow):
             self.result_list.clear()
             if selected_data:
                 for row in selected_data:
-                    result = f"Número de Juicio: {row[0]}, Tribunal: {row[1]}, Otros Datos: {row[2]}, {row[3]}, ..."
+                    result = f"Rol: {row[0]}, Tribunal: {row[1]}, Otros Datos: {row[2]}, {row[3]}, ..."
                     item = QListWidgetItem(result)
                     self.result_list.addItem(item)
 
