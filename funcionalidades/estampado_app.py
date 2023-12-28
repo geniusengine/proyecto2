@@ -68,19 +68,19 @@ class Estampadoxd(QMainWindow):
     def negativa52(self):
 
         now = datetime.now()
-        date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
-
+        años = now.strftime("%d/%m/%y")
+        horas = now.strftime("%H:%M")
 
 
         # Crea un nuevo documento de Word
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.rolCausa}\n{self.nombmandante} CON {self.nombDemandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo}\n {self.nombmandante} {self.apellidemandante} CON {self.nombdemandado} {self.apellidemandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_negativa = f"BÚSQUEDA NEGATIVA: Certifico haber buscado al(la) demandado(a) {self.nombDemandado}, con domicilio en {self.domicilio} especialmente el día {self.fechaNotificacion}, a fin de notificarle la resolución de fecha {self.fechaNotificacion}. Diligencia que no se llevó a efecto por cuanto el(la) demandado(a) no fue habido(a), {self.rolCausa}. DOY FE."
+        busqueda_negativa = f"BÚSQUEDA NEGATIVA: Certifico haber buscado al(la) demandado(a) {self.nombdemandado} {self.apellidemandado}, con domicilio en {self.domicilio} {self.comuna} especialmente el día {años}, siendo las {horas} horas, a fin de notificarle la resolución de fecha nose . Diligencia que no se llevó a efecto por cuanto el(la) demandado(a) no fue habido(a), {self.encargo}. DOY FE."
         doc.add_paragraph(busqueda_negativa)
 
         # Agrega la firma al final del documento
@@ -92,7 +92,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
          # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.rolCausa}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
         # Guarda el documento
         #desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
@@ -198,16 +198,6 @@ class Estampadoxd(QMainWindow):
          # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.rolCausa}.docx'))
 
-
-    def pdfxd(self):
-     #convertir
-     root = tk.Tk()
-     root.withdraw()  # Oculta la ventana de Tkinter
-     save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
-
-     pdf_path = os.path.join(save_path, f'{self.numjui} {self.rolCausa}.pdf')
-     convert(os.path.join(save_path, f'{self.numjui} {self.rolCausa}.docx'), pdf_path)
-     print(f"El archivo PDF se ha creado en: {pdf_path}")
     
 
     # Botones enlazados con sus opciones correspindientes    
@@ -225,9 +215,6 @@ class Estampadoxd(QMainWindow):
 
     def estampar_5(self):
         self.notificacionP()
-
-    def convertir(self):
-        self.pdfxd()
 
 def main():
     app = QApplication([])
