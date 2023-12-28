@@ -187,8 +187,8 @@ class DashboardApp(QMainWindow):
 # muestra los datos en la tabla
     def mostrar_clicked(self):
         self.table.setColumnCount(20)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel',
-                                            'Notificada','E.C','Notificar' 'Estampar','Ver Causa'])
+        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitante', 'Encargo', 'Arancel',
+                                            'Notificada','E.C','Notificar', 'Estampar','Ver Causa'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
             notificada = causa["Notificada"]
