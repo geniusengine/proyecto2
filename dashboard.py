@@ -169,7 +169,6 @@ class DashboardApp(QMainWindow):
 
                     "Notificar": "Notificar",
                     "Estampada": "Estampada",
-                    "VerCausa": "Ver Causa",
                 }
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
@@ -193,7 +192,7 @@ class DashboardApp(QMainWindow):
             estampada = causa["estadoCausa"]
         self.table.setColumnCount(20)
         self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel',
-                                            'Notificada','E.C','Notificar' 'Estampar','Ver Causa'])
+                                            'Notificada','E.C','Notificar','Estampar'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
             notificada = causa["Notificada"]
@@ -204,9 +203,6 @@ class DashboardApp(QMainWindow):
                     self.table.setCellWidget(row_index, col_index, button)
                 elif key == "Estampada":
                     button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
-                    self.table.setCellWidget(row_index, col_index, button)
-                elif key == "VerCausa":
-                    button = self.crear_boton_con_icono("static/icons/ver causa 1.png", self.verCausa_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
                 else:
                     # Crea un objeto QTableWidgetItem para las otras columnas
@@ -251,14 +247,6 @@ class DashboardApp(QMainWindow):
         # Lógica para buscar
         self.bas = BuscadorDatosCausaApp()
         self.bas.show()
-# abre la ventana de ver causa
-    def verCausa_clicked(self):
-        button = self.sender()
-        index = self.table.indexAt(button.pos())
-        row, col = index.row(), index.column()
-        causa = self.causas[row]
-        self.vercausa_app = VerCausaApp(causa)
-        self.vercausa_app.show()
 # al notificar cambia el estado de la causa
     def notificar_clicked(self):
         button = self.sender()
