@@ -240,9 +240,10 @@ class DashboardApp(QMainWindow):
             soli = self.table.item(selected_row, 12).text()
             encargo = self.table.item(selected_row, 13).text()
             arancel = self.table.item(selected_row, 14).text()
+            observacion = self.table.item(selected_row, 17).text()
             
             # Importa Estampadoxd localmente
-            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel)
+            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, observacion)
             self.ex3.show()
         
         button = self.sender()

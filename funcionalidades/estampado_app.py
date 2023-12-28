@@ -6,7 +6,7 @@ from datetime import datetime
 import tkinter as tk
 from tkinter import filedialog
 class Estampadoxd(QMainWindow):
-    def __init__(self, fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, parent=None):
+    def __init__(self, fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel,observacion, parent=None):
         super().__init__(parent)
 
         self.setWindowTitle('Ventana con Botones')
@@ -61,12 +61,14 @@ class Estampadoxd(QMainWindow):
         self.soli = soli
         self.encargo = encargo
         self.arancel = arancel
+        self.observacion = observacion
 
     
 
     #1 
     def negativa52(self):
 
+        # variables de tiempo lel
         now = datetime.now()
         años = now.strftime("%d/%m/%y")
         horas = now.strftime("%H:%M")
@@ -101,15 +103,21 @@ class Estampadoxd(QMainWindow):
     
     #2
     def negativaP(self):
+
+        # variables de tiempo lel
+        now = datetime.now()
+        años = now.strftime("%d/%m/%y")
+        horas = now.strftime("%H:%M")
+
         # Crea un nuevo documento de Word
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.rolCausa}\n{self.nombdemandante}  CON  {self.nombDemandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.encargo}\n {self.nombmandante} {self.apellidemandante} CON {self.nombdemandado} {self.apellidemandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_negativaP = f"BÚSQUEDA NEGATIVA: Certifico haber buscado al(la) demandado(a) {self.nombDemandado} con domicilio en {self.domicilio},especialmente el  día **, siendo las ** horas, a fin de notificarle la demanda íntegra y su respectivo proveído. Diligencia que no se llevó a efecto por cuanto el(la) demandado(a) no fue habido(a), **. DOY FE."
+        busqueda_negativaP = f"BÚSQUEDA NEGATIVA: Certifico haber buscado al(la) demandado(a) {self.nombdemandado} {self.apellidemandado} con domicilio en {self.domicilio} {self.comuna}, especialmente el día {años}, siendo las {horas} horas, a fin de notificarle la demanda íntegra y su respectivo proveído. Diligencia que no se llevó a efecto por cuanto el(la) demandado(a) no fue habido(a), {self.observacion}. DOY FE."
         doc.add_paragraph(busqueda_negativaP)
 
         # Agrega la firma al final del documento
@@ -121,20 +129,26 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
          # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.rolCausa}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
 
     #3
     def positivaP(self):
+        
+        # variables de tiempo lel
+        now = datetime.now()
+        años = now.strftime("%d/%m/%y")
+        horas = now.strftime("%H:%M")
+        
         # Crea un nuevo documento de Word
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.rolCausa}\n{self.nombdemandante}  CON  {self.nombDemandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.encargo}\n {self.nombmandante} {self.apellidemandante} CON {self.nombdemandado} {self.apellidemandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {self.fechaNotificacion} horas, en su domicilio ubicado en {self.domicilio} busqué a {self.nombDemandado} horas, a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de **.DOY FE."
+        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.nombdemandado} {self.apellidemandado}, a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de {self.observacion}.DOY FE."
         doc.add_paragraph(busqueda_positiva)
 
         # Agrega la firma al final del documento
@@ -146,20 +160,26 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
          # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.rolCausa}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
 
     #4
     def busquedaN(self):
+                
+        # variables de tiempo lel
+        now = datetime.now()
+        años = now.strftime("%d/%m/%y")
+        horas = now.strftime("%H:%M")
+        
         # Crea un nuevo documento de Word
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.rolCausa}\n{self.nombmandante}  CON  {self.nombDemandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.encargo}\n {self.nombmandante} {self.apellidemandante} CON {self.nombdemandado} {self.apellidemandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busquedaN = f"BÚSQUEDA Y NOTIFICACIÓN: a {self.fechaNotificacion} horas, en su domicilio ubicado en {self.domicilio} busqué a {self.nombDemandado}, a fin de notificarle la resolución de fecha **, junto al escrito que antecede, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Informado por **, quien manifestó que es el domicilio del demandado y que se encuentra en el lugar del juicio, acto seguido procedo a notificar de conformidad al artículo 52 c.p.c. la resolución de fecha **, junto al escrito que antecede,  copia integra fue **. DOY FE."
+        busquedaN = f"BÚSQUEDA Y NOTIFICACIÓN: a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.nombdemandado} {self.apellidemandado}, a fin de notificarle la resolución de fecha **, junto al escrito que antecede, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Informado por **, quien manifestó que es el domicilio del demandado y que se encuentra en el lugar del juicio, acto seguido procedo a notificar de conformidad al artículo 52 c.p.c. la resolución de fecha **, junto al escrito que antecede,  copia integra fue **. DOY FE."
         doc.add_paragraph(busquedaN)
 
         # Agrega la firma al final del documento
@@ -176,11 +196,17 @@ class Estampadoxd(QMainWindow):
 
     #5
     def notificacionP(self):
+                
+        # variables de tiempo lel
+        now = datetime.now()
+        años = now.strftime("%d/%m/%y")
+        horas = now.strftime("%H:%M")
+        
         # Crea un nuevo documento de Word
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.rolCausa}\n{self.nombmandante}  CON  {self.nombDemandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.encargo}\n {self.nombmandante} {self.apellidemandante} CON {self.nombdemandado} {self.apellidemandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
