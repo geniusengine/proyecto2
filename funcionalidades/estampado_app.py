@@ -5,7 +5,7 @@ from docx2pdf import convert
 import tkinter as tk
 from tkinter import filedialog
 class Estampadoxd(QMainWindow):
-    def __init__(self, fechaNotificacion, numjui, nombmandante, nombdemandante, nombDemandado, domicilio, rolCausa, arancel, nombTribunal, parent=None):
+    def __init__(self, fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, parent=None):
         super().__init__(parent)
 
         self.setWindowTitle('Ventana con Botones')
@@ -52,13 +52,21 @@ class Estampadoxd(QMainWindow):
         # Guardar los datos recibidos
         self.fechaNotificacion = fechaNotificacion
         self.numjui = numjui
-        self.nombmandante = nombmandante
-        self.nombdemandante = nombdemandante
-        self.nombDemandado = nombDemandado
-        self.domicilio = domicilio
-        self.rolCausa = rolCausa
-        self.arancel = arancel
         self.nombTribunal = nombTribunal
+        self.nombdemandante = nombdemandante
+        self.apellidemandante = apellidemandante
+        self.nombdemandado = nombdemandado
+        self.apellidemandado = apellidemandado
+        self.nombmandante = nombmandante
+        self.apellimandante = apellimandante
+        self.repre = repre
+        self.domicilio = domicilio
+        self.comuna = comuna
+        self.soli = soli
+        self.encargo = encargo
+        self.arancel = arancel
+
+  
 
     #1 
     def negativa52(self):
