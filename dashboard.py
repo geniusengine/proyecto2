@@ -1,7 +1,7 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
-    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox
-from PyQt6.QtGui import QColor
+    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel
+from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt
 import pymssql
 from funcionalidades.verCausa import VerCausaApp
@@ -16,7 +16,6 @@ class DashboardApp(QMainWindow):
         self.db_connection = None
         self.initUI()
     
-
     def initUI(self):
         self.setWindowTitle('Dashboard App')
         self.setGeometry(100, 100, 1280, 720)
@@ -41,8 +40,14 @@ class DashboardApp(QMainWindow):
 
 # Crea una tabla y un botón de guardar
         self.table = QTableWidget()
+        # Establecer el color de las líneas de las celdas
+        self.table.setStyleSheet(
+        "QTableView { gridline-color: white; }"
+        "QTableCornerButton::section { background-color: #d3d3d3; border: 1px solid black; }"
+        "QHeaderView::section { background-color: #d3d3d3; border: 1px solid black; }"
+)
         self.layout_vertical.addWidget(self.table)
-
+    
 # Conectar la señal de clic en el encabezado de la columna para ordenar
         self.table.horizontalHeader().sectionClicked.connect(self.ordenar_tabla)
 
@@ -54,6 +59,54 @@ class DashboardApp(QMainWindow):
         self.establecer_conexion_base_de_datos()
         self.acceder_base_de_datos()
         self.mostrar_clicked()
+
+        self.setGeometry(100, 100, 400, 300)
+
+# Agrega un contenedor para la leyenda de colores
+        color_legend_layout = QHBoxLayout()
+
+        # Círculo verde con texto
+        green_widget = QWidget()
+        green_layout = QHBoxLayout()
+        green_label = QLabel()
+        green_label.setFixedSize(20, 20)
+        green_label.setStyleSheet("background-color: rgb(46, 204, 113); border-radius: 10px;")
+        green_text = QLabel("Estampada y Notificada")
+        green_text.setStyleSheet("color: rgb(46, 204, 113)")
+        green_layout.addWidget(green_label)
+        green_layout.addWidget(green_text)
+        green_widget.setLayout(green_layout)
+        color_legend_layout.addWidget(green_widget)
+
+        # Círculo amarillo con texto
+        yellow_widget = QWidget()
+        yellow_layout = QHBoxLayout()
+        yellow_label = QLabel()
+        yellow_label.setFixedSize(20, 20)
+        yellow_label.setStyleSheet("background-color: rgb(250, 193, 114); border-radius: 10px;")
+        yellow_text = QLabel("No estampada y Notificada")
+        yellow_text.setStyleSheet("color: rgb(250, 193, 114);")
+        yellow_layout.addWidget(yellow_label)
+        yellow_layout.addWidget(yellow_text)
+        yellow_widget.setLayout(yellow_layout)
+        color_legend_layout.addWidget(yellow_widget)
+
+
+        # Círculo rojo con texto
+        red_widget = QWidget()
+        red_layout = QHBoxLayout()
+        red_label = QLabel()
+        red_label.setFixedSize(20, 20)
+        red_label.setStyleSheet("background-color: rgb(224, 92, 69); border-radius: 10px;")
+        red_text = QLabel("No Estampada y No Notificada")
+        red_text.setStyleSheet("color: rgb(224, 92, 69);")
+        red_layout.addWidget(red_label)
+        red_layout.addWidget(red_text)
+        red_widget.setLayout(red_layout)
+        color_legend_layout.addWidget(red_widget)
+
+        # Agrega la leyenda de colores al layout vertical existente
+        self.layout_vertical.addLayout(color_legend_layout)
 # crea los botones de la interfaz
     def crear_botones(self):
         self.btn_buscar = self.crear_boton('Buscar', self.buscar_clicked)
@@ -62,6 +115,12 @@ class DashboardApp(QMainWindow):
 # crea cada boton que se necesite
     def crear_boton(self, texto, funcion):
         boton = QPushButton(texto, self)
+        boton.clicked.connect(funcion)
+        return boton
+    def crear_boton_con_icono(self, icono_path, funcion):
+        boton = QPushButton(self)
+        icono = QIcon(icono_path)
+        boton.setIcon(icono)
         boton.clicked.connect(funcion)
         return boton
 # establece la conexion con la base de datos
@@ -86,8 +145,10 @@ class DashboardApp(QMainWindow):
                 resultados = cursor.fetchall()
             self.causas = []
             for fila in resultados:
+                fecha_formateada = fila[0].strftime("%d-%m-%Y")
+                
                 causa = {
-                    "Fecha notificacion": fila[0],
+                    "Fecha notificacion": fecha_formateada,
                     "Rol": fila[1],
                     "Nombre Mandante": fila[2],
                     "Nombre Demandante": fila[3],
@@ -128,13 +189,13 @@ class DashboardApp(QMainWindow):
             notificada = causa["Notificada"]
             for col_index, (key, value) in enumerate(causa.items()):
                 if key == "Estampada":
-                    button = self.crear_boton("Estampar", self.estampar_clicked)
+                    button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
                 elif key == "VerCausa":
-                    button = self.crear_boton("Ver Causa", self.verCausa_clicked)
+                    button = self.crear_boton_con_icono("static/icons/ver causa 1.png", self.verCausa_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
                 elif key == "Notificar":
-                    button = self.crear_boton("Notificar", self.notificar_clicked)
+                    button = self.crear_boton_con_icono("static/icons/notificar.png", self.notificar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
                 else:
                     # Crea un objeto QTableWidgetItem para las otras columnas
@@ -151,8 +212,6 @@ class DashboardApp(QMainWindow):
             self.color_y_etiqueta_celda(self.table.item(row_index, 8), estampada, notificada)
             self.color_y_etiqueta_celda(self.table.item(row_index, 9), estampada, notificada)
             self.color_y_etiqueta_celda(self.table.item(row_index, 10), estampada, notificada)
-            
-
         self.ajustar_tamanio()
 # abre la ventana de insertar excel
     def Insertar_excel_clicked(self):
@@ -183,11 +242,9 @@ class DashboardApp(QMainWindow):
             # Importa Estampadoxd localmente
             self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombmandante, nombdemandante, nombDemandado, domicilio, rolCausa, arancel, nombTribunal)
             self.ex3.show()
-
 # Función para ordenar la tabla según la columna clicada
     def ordenar_tabla(self, logicalIndex):
         self.table.sortItems(logicalIndex, Qt.SortOrder.AscendingOrder if self.table.horizontalHeader().sortIndicatorOrder() == Qt.SortOrder.DescendingOrder else Qt.SortOrder.DescendingOrder)
-
 # abre la ventana de buscar
     def buscar_clicked(self):
         # Lógica para buscar
@@ -239,7 +296,6 @@ class DashboardApp(QMainWindow):
         
         # Proporciona un mensaje de éxito al usuario
         QMessageBox.information(self, "Éxito", "Causa notificada correctamente.")
-
 # ajusta el tamaño de la tabla ajustandose al contenido
     def ajustar_tamanio(self):
         self.table.resizeColumnsToContents()
@@ -263,19 +319,16 @@ class DashboardApp(QMainWindow):
 
         # Actualiza la vista de la tabla
         self.table.viewport().update()
-
 #define el color de la las filas de la tabla
     def color_y_etiqueta_celda(self, item, estampada, notificada):
         if item is not None:
             color = QColor()
             if estampada and notificada:
-                color = QColor(0, 255, 0)  # Verde
-            elif estampada and not notificada:
-                color = QColor(255, 255, 0)  # Amarillo
+                color = QColor(46, 204, 113)  # Verde
             elif not estampada and notificada:
-                color = QColor(0, 0, 255)  # Azul
+                color = QColor(250, 193, 114)  # Amarillo
             elif not estampada and not notificada:
-                color = QColor(255, 0, 0)  # Rojo
+                color = QColor(224, 92, 69)  # Rojo
             item.setBackground(color)
 # actualiza los datos de la tabla
     def actualizar_datos(self):
