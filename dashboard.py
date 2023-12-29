@@ -4,7 +4,6 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout,
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt
 import pymssql
-from funcionalidades.verCausa import VerCausaApp
 from funcionalidades.buscado import BuscadorDatosCausaApp
 from funcionalidades.insertar_excel import ExcelToDatabaseApp
 from funcionalidades.insertar_manual import MiApp
@@ -141,7 +140,7 @@ class DashboardApp(QMainWindow):
     def acceder_base_de_datos(self):
         try:
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion,numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,soli,encargo,arancel,estadoNoti,estadoCausa FROM notificacion"
+                query = "SELECT fechaNotificacion,numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,soli,encargo,arancel,estadoNoti,estadoCausa,observacion FROM notificacion"
                 cursor.execute(query)
                 resultados = cursor.fetchall()
 
@@ -166,9 +165,11 @@ class DashboardApp(QMainWindow):
                     "Arancel": fila[14],
                     "Notificada": fila[15],
                     "estadoCausa": fila[16],
-
+                    "observacion": fila[17],
                     "Notificar": "Notificar",
                     "Estampada": "Estampada",
+
+                
                 }
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
@@ -187,9 +188,9 @@ class DashboardApp(QMainWindow):
         return formato_fecha
 # muestra los datos en la tabla
     def mostrar_clicked(self):
-        self.table.setColumnCount(19)
+        self.table.setColumnCount(20)
         self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel',
-                                            'Notificada','Estado','Notificar','Estampar'])
+                                            'Notificada','Estado', 'Observacion','Notificar','Estampar'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
             notificada = causa["Notificada"]
@@ -198,11 +199,9 @@ class DashboardApp(QMainWindow):
                 if key == "Notificar":
                     button = self.crear_boton_con_icono("static/icons/notificar.png", self.notificar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
-
                 elif key == "Estampada":
                     button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
-                
                 else:
                     # Crea un objeto QTableWidgetItem para las otras columnas
                     item = QTableWidgetItem(str(value))
@@ -241,9 +240,10 @@ class DashboardApp(QMainWindow):
             soli = self.table.item(selected_row, 12).text()
             encargo = self.table.item(selected_row, 13).text()
             arancel = self.table.item(selected_row, 14).text()
+            observacion = self.table.item(selected_row, 17).text()
             
             # Importa Estampadoxd localmente
-            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel)
+            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, observacion)
             self.ex3.show()
         
         button = self.sender()

@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 insertar.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 16:15:10 
-Dernière modification : lundi 4 décembre 2023 à 17:51:26
+Dernière modification : vendredi 29 décembre 2023 à 13:47:10
 """
 
 import sys
@@ -40,9 +40,10 @@ class ExcelToDatabaseApp(QMainWindow):
         layout = QVBoxLayout(self.central_widget)
 
         self.data_table = QTableWidget(self)
-        self.data_table.setColumnCount(8)  # 5 para los datos Excel, 1 para "arancel", 1 para "tribunal"
-        self.data_table.setHorizontalHeaderLabels(["Rol", "Mandante","Demandante", "Demandado", "Domicilio","Estado", "Arancel", "Tribunal"])
+        self.data_table.setColumnCount(15)  # 5 para los datos Excel, 1 para "arancel", 1 para "tribunal"
+        self.data_table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel','Notificada'])
         layout.addWidget(self.data_table)
+        
 
         layout.addWidget(self.upload_button)
         layout.addWidget(self.save_button)
@@ -63,12 +64,10 @@ class ExcelToDatabaseApp(QMainWindow):
                 for col_idx, cell_value in enumerate(row):
                     item = QTableWidgetItem(str(cell_value))
                     self.data_table.setItem(row_idx, col_idx, item)
-                    if col_idx == 6:  # Columna "Arancel"
+                    if col_idx == 13:  # Columna "Arancel"
                         arancel_input = QLineEdit()
-                        self.data_table.setCellWidget(row_idx, 6, arancel_input)
-                    if col_idx == 7:  # Columna "Tribunal"
-                        tribunal_input = QLineEdit()
-                        self.data_table.setCellWidget(row_idx, 7, tribunal_input)
+                        self.data_table.setCellWidget(row_idx, 13, arancel_input)
+                    
 
     def saveData(self):
         if self.excel_data is None:
@@ -85,29 +84,34 @@ class ExcelToDatabaseApp(QMainWindow):
             cursor = db_connection.cursor()
 
             for row_idx in range(self.data_table.rowCount()):
-                numjui = self.data_table.item(row_idx, 0).text()
-                nombmandante = self.data_table.item(row_idx, 1).text()
-                nombdemandante = self.data_table.item(row_idx, 2).text()
-                nombdemandado = self.data_table.item(row_idx, 3).text()
-                domicilio = self.data_table.item(row_idx, 4).text()
-                rolcausa = self.data_table.item(row_idx,5).text()
-                arancel_item = self.data_table.item(row_idx, 6)
-                if arancel_item is not None:
-                    try:
-                        arancel_text = arancel_item.text()
-                        arancel = int(arancel_text)
-                    except ValueError:
-                        arancel = 0  # Valor predeterminado si la conversión falla
-                else:
-                    arancel = 0  # Valor predeterminado si el ítem es None
+                numjui= self.table.item(row_idx, 0).text()
+                nombTribunal= self.table.item(row_idx, 1).text()
+                nombdemandante= self.table.item(row_idx, 2).text()
+                apellidemandante= self.table.item(row_idx, 3).text()
+                nombdemandado= self.table.item(row_idx, 4).text()
+                apellidemandado= self.table.item(row_idx, 5).text()
+                nombmandante= self.table.item(row_idx, 6).text()
+                apellimandante= self.table.item(row_idx, 7).text()
+                repre= self.table.item(row_idx, 8).text()
+                domicilio= self.table.item(row_idx, 9).text()
+                comuna= self.table.item(row_idx, 10).text()
+                solicitante= self.table.item(row_idx, 11).text()
+                encargo= self.table.item(row_idx, 12).text()
+                arancel= self.table.item(row_idx, 13).text()
 
-                tribunal = self.data_table.item(row_idx, 7).text()
+                arancel_text = self.table.item(row_idx, 13).text()
+                print(arancel_text)
+                try:
+                        arancel = (arancel_text)
+                except ValueError:
+                        arancel = 0  # Valor predeterminado si la conversión falla
+                
 
         
 
             # Insertar datos de la demanda en la tabla "demanda"
-            insert_query = "INSERT INTO demanda (numjui, nombmandante, nombdemandante, nombDemandado, domicilio, rolcausa, arancel, nombTribunal) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            cursor.execute(insert_query, (numjui, nombmandante, nombdemandante, nombdemandado, domicilio, rolcausa, arancel, tribunal))
+            insert_query = "INSERT INTO demanda (numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,solicitante,encargo,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,solicitante,encargo,arancel))
             db_connection.commit()
             db_connection.close()
             
