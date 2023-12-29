@@ -1,8 +1,10 @@
 import pymssql
 import subprocess  # Importa el módulo subprocess
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, QVBoxLayout, QHBoxLayout, QWidget, QCheckBox, QListWidget, QListWidgetItem
-
+from PyQt6.QtGui import QColor, QIcon
+from PyQt6.QtWidgets import QMessageBox,QApplication,QRadioButton, QButtonGroup, QMainWindow, QPushButton, QLabel, QLineEdit,QTableWidgetItem ,QVBoxLayout, QHBoxLayout, QWidget, QCheckBox, QListWidget, QListWidgetItem,QTableWidget
+from PyQt6.QtCore import Qt
+import estampado_app
 class BuscadorDatosCausaApp(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -18,12 +20,18 @@ class BuscadorDatosCausaApp(QMainWindow):
         # Parte superior (en una sola fila)
         search_layout = QHBoxLayout()
 
-        self.check_numjui = QCheckBox("rol o tribunal")
-        self.numjui_label = QLabel("rol o tribunal:")
+
+        self.check_numjui = QCheckBox("Rol")
         self.numjui_input = QLineEdit(self)
+
+        self.check_tribunal = QCheckBox("Tribunal")
+        self.tribunal_input = QLineEdit(self)
+
         search_layout.addWidget(self.check_numjui)
-        search_layout.addWidget(self.numjui_label)
         search_layout.addWidget(self.numjui_input)
+
+        search_layout.addWidget(self.check_tribunal)
+        search_layout.addWidget(self.tribunal_input)
 
         self.button_search = QPushButton("Buscar", self)
         self.button_search.clicked.connect(self.search_data)
@@ -32,8 +40,16 @@ class BuscadorDatosCausaApp(QMainWindow):
         main_layout.addLayout(search_layout)
 
         # Parte inferior (resultados con casillas de verificación y botones)
-        self.result_list = QListWidget(self)
-        main_layout.addWidget(self.result_list)
+        # self.result_list = QListWidget(self)
+        # main_layout.addWidget(self.result_list)
+        
+        #crea tabla que mostrara resultados de buscar
+        self.table = QTableWidget()
+        main_layout.addWidget(self.table)
+        # Grupo de exclusión para los checkboxes
+        self.checkbox_group = QButtonGroup()
+        self.checkbox_group.setExclusive(True)#solo se puede seleccionar un checkbox a la vez
+        self.checkbox_group.buttonToggled.connect(self.checkbox_seleccionado)
 
         self.result_checkboxes = []
 
@@ -43,7 +59,7 @@ class BuscadorDatosCausaApp(QMainWindow):
         self.buttons_layout.addWidget(self.button_select)
 
         self.button_clear = QPushButton("Limpiar", self)
-        self.button_clear.clicked.connect(self.clear_results)
+        self.button_clear.clicked.connect(self.limpiar_tabla)
         self.buttons_layout.addWidget(self.button_clear)
 
         main_layout.addLayout(self.buttons_layout)
@@ -52,16 +68,20 @@ class BuscadorDatosCausaApp(QMainWindow):
         container.setLayout(main_layout)
         self.setCentralWidget(container)
 
+    # limpia la tabla
+    def limpiar_tabla(self):
+        self.table.clearContents()
+        self.table.setRowCount(0)
+#busca los datos en la base de datos en base al rol o tribunal
     def search_data(self):
         search_by_numjui = self.check_numjui.isChecked()
+        search_by_tribunal = self.check_tribunal.isChecked()
         numjui = self.numjui_input.text()
+        tribunal = self.tribunal_input.text()
 
-        if not search_by_numjui:
-            self.result_list.clear()
-            item = QListWidgetItem("Por favor, seleccione al menos un criterio de búsqueda.")
-            self.result_list.addItem(item)
+        if not search_by_numjui and not search_by_tribunal:
+            print("No se ha seleccionado ningún criterio de búsqueda.")
             return
-
         try:
             connection = pymssql.connect(
                 server='vps-3697915-x.dattaweb.com',
@@ -69,96 +89,327 @@ class BuscadorDatosCausaApp(QMainWindow):
                 password='LOLxdsas--',
                 database='micau5a'
             )
-
             cursor = connection.cursor()
-
-            query = """
-            SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa
-            FROM notificacion
-            WHERE numjui = %s OR nombtribunal = %s
-            """
-            cursor.execute(query, (numjui, numjui))
-
-            data = cursor.fetchall()
-            connection.close()
-
-            self.result_list.clear()
-            self.result_checkboxes.clear()
-
-            if data:
-                for row in data:
-                    result = f"Rol: {row[0]}, Tribunal: {row[1]}"
-                    item = QListWidgetItem(result)
-                    checkbox = QCheckBox()
-                    self.result_list.addItem(item)
-                    self.result_list.setItemWidget(item, checkbox)
-                    self.result_checkboxes.append(checkbox)
-            else:
-                item = QListWidgetItem("No se encontraron datos para la búsqueda especificada.")
-                self.result_list.addItem(item)
-
-        except pymssql.Error as err:
-            self.result_list.clear()
-            item = QListWidgetItem(f"Error: {err}")
-            self.result_list.addItem(item)
-
-    def select_results(self):
-        selected_results = [self.result_list.item(i) for i, checkbox in enumerate(self.result_checkboxes) if checkbox.isChecked()]
-        if selected_results:
-            selected_data = [item.text() for item in selected_results]
-            selected_data = "\n".join(selected_data)
-            item = QListWidgetItem(selected_data)
-            self.result_list.addItem(item)
-        else:
-            self.result_list.clear()
-            item = QListWidgetItem("Ningún resultado seleccionado")
-
-
-        try:
-            connection = pymssql.connect(
-                server='vps-3697915-x.dattaweb.com',
-                user='daniel',
-                password='LOLxdsas--',
-                database='micau5a'
-            )
-
-            cursor = connection.cursor()
-
-            selected_data = []
-            for result_item in selected_results:
-                numjui = result_item.text().split(',')[0].split(':')[-1].strip()
-                nombTribunal = result_item.text().split(',')[1].split(':')[-1].strip()
+            if search_by_numjui:#si se selecciono numjui para buscar se ejecuta esta query
+                print ("se metio a buscar por rol")
                 query = """
                 SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa
                 FROM notificacion
-                WHERE numjui = %s OR nombtribunal = %s"""               
-                cursor.execute(query, (numjui,nombTribunal))
-                data = cursor.fetchall()
-                selected_data.extend(data)
-
+                WHERE numjui = %s
+                """
+                cursor.execute(query, (numjui))
+            elif search_by_tribunal:#si se selecciono tribunal para buscar se ejecuta esta query
+                print ("se metio a buscar por tribunal")
+                query = """
+                SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa
+                FROM notificacion
+                WHERE nombtribunal = %s
+                """
+                cursor.execute(query, (tribunal))
+            elif search_by_numjui and search_by_tribunal:#si se selecciono ambos para buscar se ejecuta esta query
+                print ("se metio a buscar por ambos")
+                query = """
+                SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa
+                FROM notificacion
+                WHERE numjui = %s OR nombtribunal = %s
+                """
+                cursor.execute(query, (numjui,tribunal))
+            resultado = cursor.fetchall()
+            print("linea 115 resultado:",resultado)
             connection.close()
+            self.limpiar_tabla()
+            if resultado:#si hay datos en la base de datos los muestra en la lista
+                self.table.setStyleSheet(
+                "QTableView { gridline-color: grey; }"
+                "QTableCornerButton::section { background-color: #d3d3d3; border: 1px solid black; }"
+                "QHeaderView::section { background-color: #d3d3d3; border: 1px solid black; }"
+                "QTableWidget::item {padding: 5px;text-align: center;}"
+                )
+                self.causas = []
+                for fila in resultado:
+                    fecha_formateada = fila[0].strftime("%d-%m-%Y")
+                    causa={
+                        "fecha Notificacion": fecha_formateada,
+                        "rol": fila[1],
+                        "tribunal": fila[2],
+                        "checkbox": "",
+                    }
+                    self.causas.append(causa)
+                self.table.setColumnCount(4)
+                self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal','Seleccionar'])
+                for row_index, causa in enumerate(self.causas):
+                    self.table.insertRow(row_index)
+                    for column_index, (key,value) in enumerate(causa.items()):
+                        if key == "checkbox":
+                            checkbox = QRadioButton()
+                            self.checkbox_group.addButton(checkbox)
+                            self.table.setCellWidget(row_index, column_index, checkbox)
+                        item = QTableWidgetItem(str(value))  
+                        self.table.setItem(row_index, column_index, item)
 
-            self.result_list.clear()
-            if selected_data:
-                for row in selected_data:
-                    result = f"Rol: {row[0]}, Tribunal: {row[1]}, 'Nombre demandante'{row[2]}, 'Apellido demandante'{row[3]}, 'Nombre demandando'{row[4]},{row[5]},'Apellido demandando'{row[6]},'Nombre mandante'{row[7]},Apellido mandante'{row[8]},'Representante'{row[10]},'Domicilio'{row[11]},'Comuna'{row[12]},'Solicitante'{row[13]},'Encargo'{row[14]},'Arancel'{row[15]},'Notificada'{row[16]},'E.C'{row[15]},'Notificar'{row[17]},'Estampar'{row[18]},'Ver Causa' {row[19]}"
-                    item = QListWidgetItem(result)
-                    self.result_list.addItem(item)
+                            
+            else:#si no hay datos en la base de datos muestra un mensaje
+                self.limpiar_tabla()
+                self.table.setStyleSheet("")
+                self.table.setColumnCount(1)         
+                self.table.setHorizontalHeaderLabels(['No se encontraron datos para la búsqueda especificada.'])
+                print("no hay datos")
+        except pymssql.Error as err:     
+            print(" hola" ,err)
+            self.limpiar_tabla()
+            self.table.setColumnCount(1)
+            self.table.setStyleSheet("")
+            self.table.setHorizontalHeaderLabels([str(err)])                                                                                                                                        
 
-                # Llamar al script externo
-                subprocess.run(['python', 'estampado_app.py'])
+        self.ajustar_tamanio()
+    def ajustar_tamanio(self):
+        self.table.resizeColumnsToContents()
+        total_width = sum(self.table.columnWidth(col) for col in range(self.table.columnCount()))
+        min_width = max(self.width(), total_width)
+        self.setMinimumWidth(min_width+40)
+        self.adjustSize()
+
+    def checkbox_seleccionado(self, checkbox, checked):
+        if checked:
+            # Obtener la fila y las columnas seleccionadas
+            row_index = self.table.indexAt(checkbox.pos()).row()
+            cols = self.table.columnCount()
+            # Obtener los valores de las celdas de la fila
+            self.causa_seleccionada = [self.table.item(row_index, col).text() for col in range(cols)]
+            # Imprimir o hacer algo con los valores
+            
+#muestra los datos relacionados con la busqueda en la base de datos y los muestra en la tabla
+    def select_results(self):
+        self.limpiar_tabla()
+        self.table.setColumnCount(19)
+        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel','Notificada','Estado','Notificar','Estampar'])
+        
+        if self.causa_seleccionada:
+            print("causa_seleccionada")
+        else:
+            self.limpiar_tabla()
+            self.table.setStyleSheet("")
+            self.table.setColumnCount(1)         
+            self.table.setHorizontalHeaderLabels(['Ningún resultado seleccionado'])
+        try:
+            connection = pymssql.connect(
+                server='vps-3697915-x.dattaweb.com',
+                user='daniel',
+                password='LOLxdsas--',
+                database='micau5a'
+            )
+            numjui = self.causa_seleccionada[1]
+            nombTribunal = self.causa_seleccionada[2]
+
+            cursor = connection.cursor()
+            self.causas_seleccionadas = []
+
+            if numjui:#si se selecciono numjui para buscar se ejecuta esta query
+                print ("se metio a buscar por rol 2")
+                query = """
+                SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa
+                FROM notificacion
+                WHERE numjui = %s
+                """
+                cursor.execute(query, (numjui))
+            elif nombTribunal:#si se selecciono tribunal para buscar se ejecuta esta query
+                print ("se metio a buscar por tribunal 2")
+                query = """
+                SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa
+                FROM notificacion
+                WHERE nombtribunal = %s
+                """
+                cursor.execute(query, (nombTribunal))
+            elif numjui and nombTribunal:#si se selecciono ambos para buscar se ejecuta esta query
+                print ("se metio a buscar por ambos 2")
+                query = """
+                SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa
+                FROM notificacion
+                WHERE numjui = %s OR nombtribunal = %s
+                """
+            causas = cursor.fetchall()
+            #self.causas_seleccionadas.extend(causas)#agrega los datos a la lista
+            if causas:
+                
+                for fila in causas:
+                    fecha_formateada = fila[0].strftime("%d-%m-%Y")
+                    datos_causa = {
+                        "Fecha notificacion": fecha_formateada,
+                        "Rol": fila[1],
+                        "Tribunal": fila[2],
+                        "Nombre demandante": fila[3],
+                        "Apellido demandante": fila[4],
+                        "Nombre demandado": fila[5],
+                        "Apellido demandado": fila[6],
+                        "Nombre mandante": fila[7],
+                        "Apellido mandante": fila[8],
+                        "Representante": fila[9],
+                        "Domicilio": fila[10],
+                        "Comuna": fila[11],
+                        "Solicitud": fila[12],
+                        "Encargo": fila[13],
+                        "Arancel": fila[14],
+                        "Notificada": fila[15],
+                        "estadoCausa": fila[16],
+                        "Notificar": "Notificar",
+                        "Estampada": "Estampada",
+                    }
+                    self.causas_seleccionadas.append(datos_causa)
+                self.mostrar_datos_causa()
             else:
-                item = QListWidgetItem("No se encontraron datos para la búsqueda especificada.")
-                self.result_list.addItem(item)
-
+                self.limpiar_tabla()
+                self.table.setStyleSheet("")
+                self.table.setColumnCount(1)         
+                self.table.setHorizontalHeaderLabels(['No se encontraron datos para la búsqueda especificada.'])
+    
         except pymssql.Error as err:
-            self.result_list.clear()
-            item = QListWidgetItem(f"Error: {err}")
-            self.result_list.addItem(item)
+            self.limpiar_tabla()
+            self.table.setStyleSheet("")
+            self.table.setColumnCount(1)         
+            self.table.setHorizontalHeaderLabels(['No se encontraron datos para la búsqueda especificada.'])
+            print(err)  
+        self.ajustar_tamanio()
 
-    def clear_results(self):
-        self.result_list.clear()
+    #muestra los datos encontrados segun la causa seleccionada
+    def mostrar_datos_causa(self):
+        self.limpiar_tabla()
+        for row_index, causa in enumerate(self.causas_seleccionadas):# row_index es el indice de la fila y causa es el diccionario con los datos de la causa
+            self.table.insertRow(row_index)
+            notificada =causa["Notificada"]
+            estampada = causa["estadoCausa"]
+            for col_index, (key, value) in enumerate(causa.items()):
+                if key == "Notificar":
+                    button = self.crear_boton_con_icono("static/icons/notificar.png", self.notificar_clicked)
+                    self.table.setCellWidget(row_index, col_index, button)
+                elif key == "Estampada":
+                    button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
+                    self.table.setCellWidget(row_index, col_index, button)
+                else:
+                    # Crea un objeto QTableWidgetItem para las otras columnas
+                    item = QTableWidgetItem(str(value))
+                    self.table.setItem(row_index, col_index, item)
+                    self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
+        self.ajustar_tamanio()
 
+ #define el color de la las filas de la tabla
+    def color_y_etiqueta_celda(self, item, notificada, estampada):
+        if item is not None:
+            color = QColor(250, 193, 114)
+            if notificada and estampada:
+                color = QColor(46, 204, 113)  #verde
+            elif not notificada and estampada:
+                color = QColor(250, 193, 114)  # Amarillo
+            elif not notificada and not estampada:
+                color = QColor(224, 92, 69)  #rojo
+            item.setBackground(color)
+    def crear_boton(self, texto, funcion):
+        boton = QPushButton(texto, self)
+        boton.clicked.connect(funcion)
+        return boton
+    # crea un boton con un icono
+    def crear_boton_con_icono(self, icono_path, funcion):
+        boton = QPushButton(self)
+        icono = QIcon(icono_path)
+        boton.setIcon(icono)
+        boton.clicked.connect(funcion)
+        return boton
+    # al notificar cambia el estado de la causa
+    def notificar_clicked(self):
+        button = self.sender()
+        index = self.table.indexAt(button.pos())
+        row, col = index.row(), index.column()
+        causa = self.causas[row]
+        
+        # Verifica si la causa ya ha sido notificada
+        if causa["Notificada"] == 1:
+            QMessageBox.warning(self, "Advertencia", "Esta causa ya ha sido notificada.")
+            return
+        
+        # Actualiza la información localmente
+        causa["Notificada"] = 1
+        
+        # Actualiza el valor en la base de datos
+        try:
+            self.establecer_conexion_base_de_datos()
+            with self.db_connection.cursor() as cursor:
+                query = f"UPDATE notificacion SET estadoNoti = 1"
+                cursor.execute(query)
+            self.db_connection.commit()
+        except pymssql.Error as db_error:
+            print(f"Error al ejecutar la consulta SQL: {db_error}")
+            self.db_connection.rollback()
+            raise  # Re-levanta la excepción para que el programa no continúe si hay un error grave en la base de datos
+        except Exception as e:
+            print(f"Error desconocido: {e}")
+            raise  # Re-levanta la excepción para que el programa no continúe si hay un error desconocido
+        finally:
+            self.cerrar_conexion_base_de_datos()
+        # Actualiza la celda en la tabla y el color de la fila
+        self.table.cellWidget(row, col).setText("Si")
+        self.actualizar_color_fila(row)
+        # Proporciona un mensaje de éxito al usuario
+        QMessageBox.information(self, "Éxito", "Causa notificada correctamente.")
+
+     # abre la ventana de estampado
+    def estampar_clicked(self):
+        # Obtener la fila seleccionada
+        selected_row = self.table.currentRow()
+        # Verificar si se seleccionó una fila
+        if selected_row != -1:
+            # Obtener datos de la fila seleccionada
+            fechaNotificacion = self.table.item(selected_row, 0).text()
+            numjui = self.table.item(selected_row, 1).text()
+            nombTribunal = self.table.item(selected_row, 2).text()
+            nombdemandante = self.table.item(selected_row, 3).text()
+            apellidemandante = self.table.item(selected_row, 4).text()
+            nombdemandado = self.table.item(selected_row, 5).text()
+            apellidemandado = self.table.item(selected_row, 6).text()
+            nombmandante = self.table.item(selected_row, 7).text()
+            apellimandante = self.table.item(selected_row, 8).text()
+            repre = self.table.item(selected_row, 9).text()
+            domicilio = self.table.item(selected_row, 10).text()
+            comuna = self.table.item(selected_row, 11).text()
+            soli = self.table.item(selected_row, 12).text()
+            encargo = self.table.item(selected_row, 13).text()
+            arancel = self.table.item(selected_row, 14).text()
+            
+            # Importa Estampadoxd localmente
+            self.ex3 = estampado_app.Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel)
+            self.ex3.show()
+        
+        button = self.sender()
+        index = self.table.indexAt(button.pos())
+        row, col = index.row(), index.column()
+        causa = self.causas[row]
+        color = QColor(250, 193, 114)
+
+        # Verifica si la causa ya ha sido notificada
+        if causa["Estampada"] == 1:
+            QMessageBox.warning(self, "Advertencia", "Esta causa ya ha sido notificada.")
+            return
+        
+        # Actualiza la información localmente
+        causa["Estampada"] = 1
+        
+        # Actualiza el valor en la base de datos
+        try:
+            self.establecer_conexion_base_de_datos()
+            with self.db_connection.cursor() as cursor:
+                query = f"UPDATE notificacion SET estadoCausa = 1"
+                cursor.execute(query)
+            self.db_connection.commit()
+        except pymssql.Error as db_error:
+            print(f"Error al ejecutar la consulta SQL: {db_error}")
+            self.db_connection.rollback()
+            raise  # Re-levanta la excepción para que el programa no continúe si hay un error grave en la base de datos
+        except Exception as e:
+            print(f"Error desconocido: {e}")
+            raise  # Re-levanta la excepción para que el programa no continúe si hay un error desconocido
+        finally:
+            self.cerrar_conexion_base_de_datos()
+        # Actualiza la celda en la tabla y el color de la fila
+        self.actualizar_color_fila(row)
+        # Proporciona un mensaje de éxito al usuario
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = BuscadorDatosCausaApp()
