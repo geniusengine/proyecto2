@@ -4,7 +4,7 @@ import sys
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtWidgets import QMessageBox,QApplication,QRadioButton, QButtonGroup, QMainWindow, QPushButton, QLabel, QLineEdit,QTableWidgetItem ,QVBoxLayout, QHBoxLayout, QWidget, QCheckBox, QListWidget, QListWidgetItem,QTableWidget
 from PyQt6.QtCore import Qt
-import estampado_app
+from funcionalidades import estampado_app
 class BuscadorDatosCausaApp(QMainWindow):
     def __init__(self):
         super().__init__()
