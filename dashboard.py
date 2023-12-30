@@ -28,7 +28,7 @@ class DashboardApp(QMainWindow):
         #Crea un temporizador para actualizar los datos cada 4 minuto
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.actualizar_datos)
-        self.timer.start(1000)  # 240000 milisegundos = 4 minutos
+        self.timer.start(15000)  # 240000 milisegundos = 4 minutos
         
         
         # Crea botones
