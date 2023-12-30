@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 insertar.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 16:15:10 
-Dernière modification : vendredi 29 décembre 2023 à 13:47:10
+Dernière modification : vendredi 29 décembre 2023 à 23:50:27
 """
 
 import sys
@@ -40,8 +40,8 @@ class ExcelToDatabaseApp(QMainWindow):
         layout = QVBoxLayout(self.central_widget)
 
         self.data_table = QTableWidget(self)
-        self.data_table.setColumnCount(15)  # 5 para los datos Excel, 1 para "arancel", 1 para "tribunal"
-        self.data_table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel','Notificada'])
+        self.data_table.setColumnCount(14)  # 5 para los datos Excel, 1 para "arancel", 1 para "tribunal"
+        self.data_table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel'])
         layout.addWidget(self.data_table)
         
 
@@ -110,7 +110,7 @@ class ExcelToDatabaseApp(QMainWindow):
         
 
             # Insertar datos de la demanda en la tabla "demanda"
-            insert_query = "INSERT INTO demanda (numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,solicitante,encargo,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            insert_query = "INSERT INTO demanda (numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,soli,encargo,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             cursor.execute(insert_query, (numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,solicitante,encargo,arancel))
             db_connection.commit()
             db_connection.close()

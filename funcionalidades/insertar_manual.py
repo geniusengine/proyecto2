@@ -10,16 +10,18 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : lundi 4 décembre 2023 à 19:30:56
+Dernière modification : samedi 30 décembre 2023 à 15:40:46
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QLineEdit  # Agregado para importar QLineEdit
 
 import pymssql
 
 class MiApp(QMainWindow):
+    
+
     def __init__(self):
         super().__init__()
 
@@ -112,7 +114,9 @@ class MiApp(QMainWindow):
             print(e)
             QMessageBox.critical(self, "Error", "Error al guardar los datos")
             db_connection.rollback()
-
+            
+             # Emitir la señal cuando se guardan los datos
+            self.datos_guardados_signal.emit()
     def ajustar_tamanio(self):
         # Ajustar automáticamente el tamaño de las columnas
         self.table.resizeColumnsToContents()

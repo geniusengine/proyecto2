@@ -2,7 +2,7 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
     QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel
 from PyQt6.QtGui import QColor, QIcon
-from PyQt6.QtCore import QDateTime, QTimer, Qt
+from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
 from funcionalidades.buscado import BuscadorDatosCausaApp
 from funcionalidades.insertar_excel import ExcelToDatabaseApp
@@ -10,6 +10,7 @@ from funcionalidades.insertar_manual import MiApp
 from funcionalidades.estampado_app import Estampadoxd
 
 class DashboardApp(QMainWindow):
+    datos_actualizados_signal = pyqtSignal()
     def __init__(self):
         super().__init__()
         self.db_connection = None
@@ -27,7 +28,9 @@ class DashboardApp(QMainWindow):
         #Crea un temporizador para actualizar los datos cada 4 minuto
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.actualizar_datos)
-        self.timer.start(240000)  # 240000 milisegundos = 4 minutos
+        self.timer.start(1000)  # 240000 milisegundos = 4 minutos
+        
+        
         # Crea botones
         self.crear_botones()
 
@@ -123,6 +126,12 @@ class DashboardApp(QMainWindow):
         boton.setIcon(icono)
         boton.clicked.connect(funcion)
         return boton
+    
+    def update_dashboard(self):
+        # Esta función se llamará cuando se guarden los datos
+        self.label.setText("¡Panel Actualizado!")
+        
+        
     # establece la conexion con la base de datos
     def establecer_conexion_base_de_datos(self):
         self.db_connection = pymssql.connect(
@@ -207,7 +216,7 @@ class DashboardApp(QMainWindow):
                     item = QTableWidgetItem(str(value))
                     self.table.setItem(row_index, col_index, item)
                     self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
-        self.ajustar_tamanio()
+        
 # abre la ventana de insertar excel
     def Insertar_excel_clicked(self):
         # Lógica para insertar desde Excel
@@ -375,8 +384,13 @@ class DashboardApp(QMainWindow):
 def main():
     app = QApplication(sys.argv)
     window = DashboardApp()
+    
+
     window.show()
     sys.exit(app.exec())
+    
 # Ejecuta la función principal
 if __name__ == '__main__':
     main()
+    
+ 
