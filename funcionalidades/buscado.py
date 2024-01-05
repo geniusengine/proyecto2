@@ -223,7 +223,7 @@ class BuscadorDatosCausaApp(QMainWindow):
             elif numjui and nombTribunal:#si se selecciono ambos para buscar se ejecuta esta query
                 print ("se metio a buscar por ambos 2")
                 query = """
-                SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa
+                SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
                 FROM notificacion
                 WHERE numjui = %s OR nombtribunal = %s
                 """
@@ -240,19 +240,15 @@ class BuscadorDatosCausaApp(QMainWindow):
                         "Nombre demandante": fila[3],
                         "Apellido demandante": fila[4],
                         "Nombre demandado": fila[5],
-                        "Apellido demandado": fila[6],
-                        "Nombre mandante": fila[7],
-                        "Apellido mandante": fila[8],
-                        "Representante": fila[9],
-                        "Domicilio": fila[10],
-                        "Comuna": fila[11],
-                        "Solicitud": fila[12],
-                        "Encargo": fila[13],
-                        "Arancel": fila[14],
-                        "Notificada": fila[15],
-                        "estadoCausa": fila[16],
+                        "repre": fila[6],
+                        "mandante": fila[7],
+                        "Domicilio": fila[8],
+                        "Comuna": fila[9],
+                        "Encargo": fila[10],
+                        "Solicitud": fila[11],
+                        "Arancel": fila[12],
                         "Notificar": "Notificar",
-                        "Estampada": "Estampada",
+                        "Estampada": "Estampada"
                     }
                     self.causas_seleccionadas.append(datos_causa)
                 self.mostrar_datos_causa()

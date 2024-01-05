@@ -149,7 +149,7 @@ class DashboardApp(QMainWindow):
     def acceder_base_de_datos(self):
         try:
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion,numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,soli,encargo,arancel,estadoNoti,estadoCausa,observacion FROM notificacion"
+                query = "SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa FROM notificacion"
                 cursor.execute(query)
                 resultados = cursor.fetchall()
 
@@ -158,27 +158,22 @@ class DashboardApp(QMainWindow):
                 fecha_formateada = fila[0].strftime("%d-%m-%Y")
                 causa = {
                     "Fecha notificacion": fecha_formateada,
-                    "Rol": fila[1],
-                    "Tribunal": fila[2],
-                    "Nombre demandante": fila[3],
-                    "Apellido demandante": fila[4],
-                    "Nombre demandado": fila[5],
-                    "Apellido demandado": fila[6],
-                    "Nombre mandante": fila[7],
-                    "Apellido mandante": fila[8],
-                    "Representante": fila[9],
-                    "Domicilio": fila[10],
-                    "Comuna": fila[11],
-                    "Solicitud": fila[12],
-                    "Encargo": fila[13],
-                    "Arancel": fila[14],
-                    "Notificada": fila[15],
-                    "estadoCausa": fila[16],
-                    "observacion": fila[17],
-                    "Notificar": "Notificar",
-                    "Estampada": "Estampada",
-
-                
+                        "Rol": fila[1],
+                        "Tribunal": fila[2],
+                        "Nombre demandante": fila[3],
+                        "Apellido demandante": fila[4],
+                        "Nombre demandado": fila[5],
+                        "repre": fila[6],
+                        "mandante": fila[7],
+                        "Domicilio": fila[8],
+                        "Comuna": fila[9],
+                        "Encargo": fila[10],
+                        "Solicitud": fila[11],
+                        "Arancel": fila[12],
+                        "Notificar": "Notificar",
+                        "Estampada": "Estampada",
+                        "Notificada": fila[13],
+                        "estadoCausa": fila[14],
                 }
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
@@ -197,9 +192,9 @@ class DashboardApp(QMainWindow):
         return formato_fecha
 # muestra los datos en la tabla
     def mostrar_clicked(self):
-        self.table.setColumnCount(20)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel',
-                                            'Notificada','Estado', 'Observacion','Notificar','Estampar'])
+        self.table.setColumnCount(15)
+        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'Solicitud', 'Arancel',
+                                            'Notificar','Estampar'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
             notificada = causa["Notificada"]
@@ -216,7 +211,7 @@ class DashboardApp(QMainWindow):
                     item = QTableWidgetItem(str(value))
                     self.table.setItem(row_index, col_index, item)
                     self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
-        
+        self.ajustar_tamanio()
 # abre la ventana de insertar excel
     def Insertar_excel_clicked(self):
         # Lógica para insertar desde Excel
@@ -239,20 +234,19 @@ class DashboardApp(QMainWindow):
             nombTribunal = self.table.item(selected_row, 2).text()
             nombdemandante = self.table.item(selected_row, 3).text()
             apellidemandante = self.table.item(selected_row, 4).text()
-            nombdemandado = self.table.item(selected_row, 5).text()
-            apellidemandado = self.table.item(selected_row, 6).text()
-            nombmandante = self.table.item(selected_row, 7).text()
-            apellimandante = self.table.item(selected_row, 8).text()
-            repre = self.table.item(selected_row, 9).text()
-            domicilio = self.table.item(selected_row, 10).text()
-            comuna = self.table.item(selected_row, 11).text()
-            soli = self.table.item(selected_row, 12).text()
-            encargo = self.table.item(selected_row, 13).text()
-            arancel = self.table.item(selected_row, 14).text()
-            observacion = self.table.item(selected_row, 17).text()
-            
+            demandado = self.table.item(selected_row, 5).text()
+            repre = self.table.item(selected_row, 6).text()
+            mandante = self.table.item(selected_row, 7).text()
+            domicilio = self.table.item(selected_row, 8).text()
+            comuna = self.table.item(selected_row, 9).text()
+            encargo = self.table.item(selected_row, 10).text()
+            soli = self.table.item(selected_row, 11).text()
+            arancel = self.table.item(selected_row, 12).text()
+    
+            #observacion = self.table.item(selected_row, 17).text()
+            #########################################################################################Observacion agreagr ??????????????
             # Importa Estampadoxd localmente
-            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, observacion)
+            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
             self.ex3.show()
         
         button = self.sender()
@@ -340,7 +334,7 @@ class DashboardApp(QMainWindow):
         self.table.resizeColumnsToContents()
         total_width = sum(self.table.columnWidth(col) for col in range(self.table.columnCount()))
         min_width = max(self.width(), total_width)
-        self.setMinimumWidth(min_width+40)
+        self.setMinimumWidth(min_width+10)
         self.adjustSize()
 # actualiza el color de la fila        
     # función para actualizar el color de la fila

@@ -6,7 +6,7 @@ from datetime import datetime
 import tkinter as tk
 from tkinter import filedialog
 class Estampadoxd(QMainWindow):
-    def __init__(self, fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel,observacion, parent=None):
+    def __init__(self, fechaNotificacion, numjui, nombTribunal, nombdemandante,  apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, parent=None):
         super().__init__(parent)
 
         self.setWindowTitle('Ventana con Botones')
@@ -51,18 +51,16 @@ class Estampadoxd(QMainWindow):
         self.nombTribunal = nombTribunal
         self.nombdemandante = nombdemandante
         self.apellidemandante = apellidemandante
-        self.nombdemandado = nombdemandado
-        self.apellidemandado = apellidemandado
-        self.nombmandante = nombmandante
-        self.apellimandante = apellimandante
+        self.demandado = demandado
         self.repre = repre
+        self.mandante = mandante
         self.domicilio = domicilio
         self.comuna = comuna
-        self.soli = soli
         self.encargo = encargo
+        self.soli = soli
         self.arancel = arancel
-        self.observacion = observacion
-
+        #comentarios ver si se pone
+####################HHasta aqui hizo el bastian 1:30 am 05/01/2023-----------------------------------------------------------------------------------------------------------------------------
     
 
     #1 

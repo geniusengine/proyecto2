@@ -35,8 +35,8 @@ class MiApp(QMainWindow):
         layout_vertical = QVBoxLayout()
 
         self.table = QTableWidget()
-        self.table.setColumnCount(14)
-        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel'])
+        self.table.setColumnCount(13)
+        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'Solicitud', 'Arancel'])
         layout.addWidget(self.table)
 
         self.add_row_button = QPushButton("Agregar Fila")
@@ -79,16 +79,14 @@ class MiApp(QMainWindow):
                 nombTribunal= self.table.item(row_idx, 1).text()
                 nombdemandante= self.table.item(row_idx, 2).text()
                 apellidemandante= self.table.item(row_idx, 3).text()
-                nombdemandado= self.table.item(row_idx, 4).text()
-                apellidemandado= self.table.item(row_idx, 5).text()
-                nombmandante= self.table.item(row_idx, 6).text()
-                apellimandante= self.table.item(row_idx, 7).text()
-                repre= self.table.item(row_idx, 8).text()
-                domicilio= self.table.item(row_idx, 9).text()
-                comuna= self.table.item(row_idx, 10).text()
-                solicitante= self.table.item(row_idx, 11).text()
-                encargo= self.table.item(row_idx, 12).text()
-                arancel= self.table.item(row_idx, 13).text()
+                demandado= self.table.item(row_idx, 4).text()
+                repre= self.table.item(row_idx, 5).text()
+                mandante= self.table.item(row_idx, 6).text()
+                domicilio= self.table.item(row_idx, 7).text()
+                comuna= self.table.item(row_idx, 8).text()
+                encargo= self.table.item(row_idx, 9).text()
+                soli= self.table.item(row_idx, 10).text()
+                arancel= self.table.item(row_idx, 11).text()
 
                 arancel_text = self.table.item(row_idx, 13).text()
                 print(arancel_text)
@@ -97,9 +95,9 @@ class MiApp(QMainWindow):
                 except ValueError:
                         arancel = 0  # Valor predeterminado si la conversión falla
 
-                if all([numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,solicitante,encargo,arancel]):
-                    insert_query = "INSERT INTO demanda (numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,soli,encargo,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                    cursor.execute(insert_query, (numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,solicitante,encargo,arancel))
+                if all([numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel]):
+                    insert_query = "INSERT INTO demanda (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                    cursor.execute(insert_query, (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel))
                 else:
                     QMessageBox.critical(self, "Error", "No se permiten celdas vacías en la fila {}".format(row_idx + 1))
                     db_connection.rollback()
