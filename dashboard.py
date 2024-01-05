@@ -197,7 +197,9 @@ class DashboardApp(QMainWindow):
                                             'Notificar','Estampar'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
+            print(causa["Notificada"])    
             notificada = causa["Notificada"]
+            print(notificada)
             estampada = causa["estadoCausa"]
             for col_index, (key, value) in enumerate(causa.items()):
                 if key == "Notificar":

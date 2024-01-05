@@ -93,7 +93,7 @@ class BuscadorDatosCausaApp(QMainWindow):
             if search_by_numjui:#si se selecciono numjui para buscar se ejecuta esta query
                 print ("se metio a buscar por rol")
                 query = """
-                SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa
+                SELECT fechaNotificacion, numjui, nombTribunal
                 FROM notificacion
                 WHERE numjui = %s
                 """
@@ -101,7 +101,7 @@ class BuscadorDatosCausaApp(QMainWindow):
             elif search_by_tribunal:#si se selecciono tribunal para buscar se ejecuta esta query
                 print ("se metio a buscar por tribunal")
                 query = """
-                SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa
+                SELECT fechaNotificacion, numjui, nombTribunal
                 FROM notificacion
                 WHERE nombtribunal = %s
                 """
@@ -109,7 +109,7 @@ class BuscadorDatosCausaApp(QMainWindow):
             elif search_by_numjui and search_by_tribunal:#si se selecciono ambos para buscar se ejecuta esta query
                 print ("se metio a buscar por ambos")
                 query = """
-                SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa
+                SELECT fechaNotificacion, numjui, nombTribunal
                 FROM notificacion
                 WHERE numjui = %s OR nombtribunal = %s
                 """
@@ -181,89 +181,100 @@ class BuscadorDatosCausaApp(QMainWindow):
 #muestra los datos relacionados con la busqueda en la base de datos y los muestra en la tabla
     def select_results(self):
         self.limpiar_tabla()
-        self.table.setColumnCount(19)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel','Notificada','Estado','Notificar','Estampar'])
-        
-        if self.causa_seleccionada:
-            print("causa_seleccionada")
-        else:
-            self.limpiar_tabla()
-            self.table.setStyleSheet("")
-            self.table.setColumnCount(1)         
-            self.table.setHorizontalHeaderLabels(['Ningún resultado seleccionado'])
+        self.table.setColumnCount(15)
+        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'Solicitud', 'Arancel',
+                                            'Notificar','Estampar'])
         try:
-            connection = pymssql.connect(
-                server='vps-3697915-x.dattaweb.com',
-                user='daniel',
-                password='LOLxdsas--',
-                database='micau5a'
-            )
-            numjui = self.causa_seleccionada[1]
-            nombTribunal = self.causa_seleccionada[2]
-
-            cursor = connection.cursor()
-            self.causas_seleccionadas = []
-
-            if numjui:#si se selecciono numjui para buscar se ejecuta esta query
-                print ("se metio a buscar por rol 2")
-                query = """
-                SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa
-                FROM notificacion
-                WHERE numjui = %s
-                """
-                cursor.execute(query, (numjui))
-            elif nombTribunal:#si se selecciono tribunal para buscar se ejecuta esta query
-                print ("se metio a buscar por tribunal 2")
-                query = """
-                SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel, estadoNoti, estadoCausa
-                FROM notificacion
-                WHERE nombtribunal = %s
-                """
-                cursor.execute(query, (nombTribunal))
-            elif numjui and nombTribunal:#si se selecciono ambos para buscar se ejecuta esta query
-                print ("se metio a buscar por ambos 2")
-                query = """
-                SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
-                FROM notificacion
-                WHERE numjui = %s OR nombtribunal = %s
-                """
-            causas = cursor.fetchall()
-            #self.causas_seleccionadas.extend(causas)#agrega los datos a la lista
-            if causas:
-                
-                for fila in causas:
-                    fecha_formateada = fila[0].strftime("%d-%m-%Y")
-                    datos_causa = {
-                        "Fecha notificacion": fecha_formateada,
-                        "Rol": fila[1],
-                        "Tribunal": fila[2],
-                        "Nombre demandante": fila[3],
-                        "Apellido demandante": fila[4],
-                        "Nombre demandado": fila[5],
-                        "repre": fila[6],
-                        "mandante": fila[7],
-                        "Domicilio": fila[8],
-                        "Comuna": fila[9],
-                        "Encargo": fila[10],
-                        "Solicitud": fila[11],
-                        "Arancel": fila[12],
-                        "Notificar": "Notificar",
-                        "Estampada": "Estampada"
-                    }
-                    self.causas_seleccionadas.append(datos_causa)
-                self.mostrar_datos_causa()
+            if self.causa_seleccionada:
+                print("causa_seleccionada")
             else:
                 self.limpiar_tabla()
                 self.table.setStyleSheet("")
                 self.table.setColumnCount(1)         
-                self.table.setHorizontalHeaderLabels(['No se encontraron datos para la búsqueda especificada.'])
-    
+                self.table.setHorizontalHeaderLabels(['Ningún resultado seleccionado'])
+            try:
+                connection = pymssql.connect(
+                    server='vps-3697915-x.dattaweb.com',
+                    user='daniel',
+                    password='LOLxdsas--',
+                    database='micau5a'
+                )
+                numjui = self.causa_seleccionada[1]
+                nombTribunal = self.causa_seleccionada[2]
+
+                cursor = connection.cursor()
+                self.causas_seleccionadas = []
+
+                if numjui:#si se selecciono numjui para buscar se ejecuta esta query
+                    print ("se metio a buscar por rol 2")
+                    query = """
+                    SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
+                    FROM notificacion
+                    WHERE numjui = %s
+                    """
+                    cursor.execute(query, (numjui))
+                elif nombTribunal:#si se selecciono tribunal para buscar se ejecuta esta query
+                    print ("se metio a buscar por tribunal 2")
+                    query = """
+                    SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
+                    FROM notificacion
+                    WHERE nombtribunal = %s
+                    """
+                    cursor.execute(query, (nombTribunal))
+                elif numjui and nombTribunal:#si se selecciono ambos para buscar se ejecuta esta query
+                    print ("se metio a buscar por ambos 2")
+                    query = """
+                    SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
+                    FROM notificacion
+                    WHERE numjui = %s OR nombtribunal = %s
+                    """
+                causas = cursor.fetchall()
+                #self.causas_seleccionadas.extend(causas)#agrega los datos a la lista
+                if causas:
+                    
+                    for fila in causas:
+                        fecha_formateada = fila[0].strftime("%d-%m-%Y")
+                        datos_causa = {
+                            "Fecha notificacion": fecha_formateada,
+                            "Rol": fila[1],
+                            "Tribunal": fila[2],
+                            "Nombre demandante": fila[3],
+                            "Apellido demandante": fila[4],
+                            "Nombre demandado": fila[5],
+                            "repre": fila[6],
+                            "mandante": fila[7],
+                            "Domicilio": fila[8],
+                            "Comuna": fila[9],
+                            "Encargo": fila[10],
+                            "Solicitud": fila[11],
+                            "Arancel": fila[12],
+                            "Notificar": "Notificar",
+                            "Estampada": "Estampada",
+                            "Notificada": fila[13],
+                            "estadoCausa": fila[14],
+                        }
+                        self.causas_seleccionadas.append(datos_causa)
+                    self.mostrar_datos_causa()
+                else:
+                    self.limpiar_tabla()
+                    self.table.setStyleSheet("")
+                    self.table.setColumnCount(1)         
+                    self.table.setHorizontalHeaderLabels(['No se encontraron datos para la búsqueda especificada.'])
+        
+            except pymssql.Error as err:
+                self.limpiar_tabla()
+                self.table.setStyleSheet("")
+                self.table.setColumnCount(1)         
+                self.table.setHorizontalHeaderLabels(['No se Ha seleccionado nada aún para buscar.'])
+                print(err)  
         except pymssql.Error as err:
             self.limpiar_tabla()
             self.table.setStyleSheet("")
             self.table.setColumnCount(1)         
             self.table.setHorizontalHeaderLabels(['No se encontraron datos para la búsqueda especificada.'])
             print(err)  
+
+
         self.ajustar_tamanio()
 
     #muestra los datos encontrados segun la causa seleccionada
@@ -271,7 +282,9 @@ class BuscadorDatosCausaApp(QMainWindow):
         self.limpiar_tabla()
         for row_index, causa in enumerate(self.causas_seleccionadas):# row_index es el indice de la fila y causa es el diccionario con los datos de la causa
             self.table.insertRow(row_index)
-            notificada =causa["Notificada"]
+            print(causa)    
+            notificada = causa["Notificada"]
+            print(notificada)
             estampada = causa["estadoCausa"]
             for col_index, (key, value) in enumerate(causa.items()):
                 if key == "Notificar":
@@ -314,7 +327,7 @@ class BuscadorDatosCausaApp(QMainWindow):
         button = self.sender()
         index = self.table.indexAt(button.pos())
         row, col = index.row(), index.column()
-        causa = self.causas[row]
+        causa = self.causas_seleccionadas[row]
         
         # Verifica si la causa ya ha sido notificada
         if causa["Notificada"] == 1:
@@ -358,25 +371,23 @@ class BuscadorDatosCausaApp(QMainWindow):
             nombTribunal = self.table.item(selected_row, 2).text()
             nombdemandante = self.table.item(selected_row, 3).text()
             apellidemandante = self.table.item(selected_row, 4).text()
-            nombdemandado = self.table.item(selected_row, 5).text()
-            apellidemandado = self.table.item(selected_row, 6).text()
-            nombmandante = self.table.item(selected_row, 7).text()
-            apellimandante = self.table.item(selected_row, 8).text()
-            repre = self.table.item(selected_row, 9).text()
-            domicilio = self.table.item(selected_row, 10).text()
-            comuna = self.table.item(selected_row, 11).text()
-            soli = self.table.item(selected_row, 12).text()
-            encargo = self.table.item(selected_row, 13).text()
-            arancel = self.table.item(selected_row, 14).text()
+            demandado = self.table.item(selected_row, 5).text()
+            repre = self.table.item(selected_row, 6).text()
+            mandante = self.table.item(selected_row, 7).text()
+            domicilio = self.table.item(selected_row, 8).text()
+            comuna = self.table.item(selected_row, 9).text()
+            encargo = self.table.item(selected_row, 10).text()
+            soli = self.table.item(selected_row, 11).text()
+            arancel = self.table.item(selected_row, 12).text()
             
             # Importa Estampadoxd localmente
-            self.ex3 = estampado_app.Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, nombdemandado, apellidemandado, nombmandante, apellimandante, repre, domicilio, comuna, soli, encargo, arancel)
+            self.ex3 = estampado_app.Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
             self.ex3.show()
         
         button = self.sender()
         index = self.table.indexAt(button.pos())
         row, col = index.row(), index.column()
-        causa = self.causas[row]
+        causa = self.causas_seleccionadas[row]
         color = QColor(250, 193, 114)
 
         # Verifica si la causa ya ha sido notificada
