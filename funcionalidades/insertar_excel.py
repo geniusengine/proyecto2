@@ -40,15 +40,23 @@ class ExcelToDatabaseApp(QMainWindow):
         layout = QVBoxLayout(self.central_widget)
 
         self.data_table = QTableWidget(self)
-        self.data_table.setColumnCount(14)  # 5 para los datos Excel, 1 para "arancel", 1 para "tribunal"
-        self.data_table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Apellido demandando', 'Nombre mandante', 'Apellido mandante', 'Representante', 'Domicilio', 'Comuna', 'Solicitud', 'Encargo', 'Arancel'])
+        self.data_table.setColumnCount(12)  # 5 para los datos Excel, 1 para "arancel", 1 para "tribunal"
+        self.data_table.setHorizontalHeaderLabels([ 'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'Solicitud', 'Arancel'])
         layout.addWidget(self.data_table)
         
 
         layout.addWidget(self.upload_button)
         layout.addWidget(self.save_button)
-
+        self.ajustar_tamanio()
         self.excel_data = None
+    # Reemplaza 'self.table' con 'self.data_table'
+    def ajustar_tamanio(self):
+        self.data_table.resizeColumnsToContents()
+        total_width = sum(self.data_table.columnWidth(col) for col in range(self.data_table.columnCount()))
+        min_width = max(self.width(), total_width)
+        self.setMinimumWidth(min_width + 0)
+        self.adjustSize()
+
 
     def uploadExcel(self):
         file_name, _ = QFileDialog.getOpenFileName(self, "Selecciona un archivo Excel", "", "Excel Files (*.xlsx);;All Files (*)")
@@ -84,20 +92,18 @@ class ExcelToDatabaseApp(QMainWindow):
             cursor = db_connection.cursor()
 
             for row_idx in range(self.data_table.rowCount()):
-                numjui= self.table.item(row_idx, 0).text()
-                nombTribunal= self.table.item(row_idx, 1).text()
-                nombdemandante= self.table.item(row_idx, 2).text()
-                apellidemandante= self.table.item(row_idx, 3).text()
-                nombdemandado= self.table.item(row_idx, 4).text()
-                apellidemandado= self.table.item(row_idx, 5).text()
-                nombmandante= self.table.item(row_idx, 6).text()
-                apellimandante= self.table.item(row_idx, 7).text()
-                repre= self.table.item(row_idx, 8).text()
-                domicilio= self.table.item(row_idx, 9).text()
-                comuna= self.table.item(row_idx, 10).text()
-                solicitante= self.table.item(row_idx, 11).text()
-                encargo= self.table.item(row_idx, 12).text()
-                arancel= self.table.item(row_idx, 13).text()
+                numjui = self.table.item(row_idx, 1).text()
+                nombTribunal = self.table.item(row_idx, 2).text()
+                nombdemandante = self.table.item(row_idx, 3).text()
+                apellidemandante = self.table.item(row_idx, 4).text()
+                demandado = self.table.item(row_idx, 5).text()
+                repre = self.table.item(row_idx, 6).text()
+                mandante = self.table.item(row_idx, 7).text()
+                domicilio = self.table.item(row_idx, 8).text()
+                comuna = self.table.item(row_idx, 9).text()
+                encargo = self.table.item(row_idx, 10).text()
+                soli = self.table.item(row_idx, 11).text()
+                arancel = self.table.item(row_idx, 12).text()
 
                 arancel_text = self.table.item(row_idx, 13).text()
                 print(arancel_text)
@@ -110,8 +116,8 @@ class ExcelToDatabaseApp(QMainWindow):
         
 
             # Insertar datos de la demanda en la tabla "demanda"
-            insert_query = "INSERT INTO demanda (numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,soli,encargo,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            cursor.execute(insert_query, (numjui,nombTribunal,nombdemandante,apellidemandante,nombdemandado,apellidemandado,nombmandante,apellimandante,repre,domicilio,comuna,solicitante,encargo,arancel))
+            insert_query = "INSERT INTO demanda (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel))
             db_connection.commit()
             db_connection.close()
             
