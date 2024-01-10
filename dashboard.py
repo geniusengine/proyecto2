@@ -55,7 +55,7 @@ class DashboardApp(QMainWindow):
 
         # Configuraciones finales del diseño
         self.central_widget.setLayout(self.layout_vertical)
-        self.ajustar_tamanio()
+        #self.ajustar_tamanio()
 
         # Llama automáticamente a acceder_base_de_datos y mostrar_clicked al iniciar la aplicación
         self.establecer_conexion_base_de_datos()
@@ -213,7 +213,7 @@ class DashboardApp(QMainWindow):
                     item = QTableWidgetItem(str(value))
                     self.table.setItem(row_index, col_index, item)
                     self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
-        self.ajustar_tamanio()
+        #self.ajustar_tamanio()
 # abre la ventana de insertar excel
     def Insertar_excel_clicked(self):
         # Lógica para insertar desde Excel
@@ -332,12 +332,12 @@ class DashboardApp(QMainWindow):
         QMessageBox.information(self, "Éxito", "Causa notificada correctamente.")
         
 # ajusta el tamaño de la tabla ajustandose al contenido
-    def ajustar_tamanio(self):
-        self.table.resizeColumnsToContents()
-        total_width = sum(self.table.columnWidth(col) for col in range(self.table.columnCount()))
-        min_width = max(self.width(), total_width)
-        self.setMinimumWidth(min_width+10)
-        self.adjustSize()
+    #def ajustar_tamanio(self):
+       # self.table.resizeColumnsToContents()
+       # total_width = sum(self.table.columnWidth(col) for col in range(self.table.columnCount()))
+        #min_width = max(self.width(), total_width)
+        #self.setMinimumWidth(min_width+10)
+        #self.adjustSize()
 # actualiza el color de la fila        
     # función para actualizar el color de la fila
     def actualizar_color_fila(self, row):
