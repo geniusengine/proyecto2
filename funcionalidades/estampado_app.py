@@ -127,7 +127,6 @@ class Estampadoxd(QMainWindow):
         self.arancel = arancel
         #comentarios ver si se pone
 ####################HHasta aqui hizo el bastian 1:30 am 05/01/2023-----------------------------------------------------------------------------------------------------------------------------
-    
 
     #1 
     def negativa52(self):
@@ -164,7 +163,6 @@ class Estampadoxd(QMainWindow):
         #desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
         #doc.save(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'))
 
-
     #2
     def negativaP(self):
 
@@ -195,7 +193,6 @@ class Estampadoxd(QMainWindow):
          # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
-
     #3
     def positivaP(self):
         
@@ -212,7 +209,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.nombdemandado} {self.apellidemandado}, a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de {self.soli}.DOY FE."
+        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.nombdemandante} {self.apellidemandado}, a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de {self.soli}.DOY FE."
         doc.add_paragraph(busqueda_positiva)
 
         # Agrega la firma al final del documento
