@@ -19,6 +19,8 @@ from PyQt6.QtWidgets import QLineEdit  # Agregado para importar QLineEdit
 
 import pymssql
 
+import funcionalidades
+
 class MiApp(QMainWindow):
     
 
@@ -87,26 +89,34 @@ class MiApp(QMainWindow):
                 encargo= self.table.item(row_idx, 9).text()
                 soli= self.table.item(row_idx, 10).text()
                 arancel= self.table.item(row_idx, 11).text()
-                
+                observacion= self.table.item(row_idx, 12).text()  
                 print(arancel)
                 try:
                         arancel = (arancel)
                 except ValueError:
                         arancel = 0  # Valor predeterminado si la conversión falla
 
-                if all([numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel]):
+            """ if all([numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel]):
                     insert_query = "INSERT INTO demanda (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                     cursor.execute(insert_query, (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel))
                 else:
                     QMessageBox.critical(self, "Error", "No se permiten celdas vacías en la fila {}".format(row_idx + 1))
                     db_connection.rollback()
                     break
-
+"""
             db_connection.commit()
             db_connection.close()
 
             self.clear_table()
             QMessageBox.information(self, "Éxito", "Datos guardados correctamente")
+            respuesta = QMessageBox.question(self, 'Confirmación', '¿Desea hacer seguimiento de la causa?', QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+
+            if respuesta == QMessageBox.StandardButton.Yes:
+                # El usuario hizo clic en 'Sí', abrir Dashboard_actuacionesApp
+                self.abrir_dashboard_actuaciones()
+            else:
+                # El usuario hizo clic en 'No', hacer nada o manejar según sea necesario
+                pass
         except Exception as e:
             print(e)
             QMessageBox.critical(self, "Error", "Error al guardar los datos")
@@ -114,6 +124,16 @@ class MiApp(QMainWindow):
             
              # Emitir la señal cuando se guardan los datos
             self.datos_guardados_signal.emit()
+
+    def abrir_dashboard_actuaciones(self):
+        # Puedes implementar el código para abrir Dashboard_actuacionesApp y enviar datos aquí
+        # Por ahora, simplemente imprimimos un mensaje
+        print("Abriendo Dashboard_actuacionesApp y enviando datos...")
+
+        # Ejemplo: Crear y mostrar Dashboard_actuacionesApp
+        ventana_dashboard = dashboard_actuaciones()
+        ventana_dashboard.show()
+    
     def ajustar_tamanio(self):
         # Ajustar automáticamente el tamaño de las columnas
         self.table.resizeColumnsToContents()
