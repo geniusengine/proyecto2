@@ -19,7 +19,7 @@ from PyQt6.QtWidgets import QLineEdit  # Agregado para importar QLineEdit
 
 import pymssql
 
-import funcionalidades
+import dashboard_actuaciones
 
 class MiApp(QMainWindow):
     

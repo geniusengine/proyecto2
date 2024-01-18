@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
-    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel
+    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel,QComboBox
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
@@ -40,7 +40,6 @@ class Dashboard_actuacionesApp(QMainWindow):
 
         # Configuraciones finales del diseño
         self.central_widget.setLayout(self.layout_vertical)
-        #self.ajustar_tamanio()
 
         # Llama automáticamente a acceder_base_de_datos y mostrar_clicked al iniciar la aplicación
         self.establecer_conexion_base_de_datos()
@@ -91,43 +90,64 @@ class Dashboard_actuacionesApp(QMainWindow):
         # Formatear la fecha y hora
         formato_fecha = fecha_actual.toString('yyyy-MM-dd HH:mm:ss')
         return formato_fecha
+# ajusta el tamaño de la tabla ajustándose al contenido
+    def ajustar_tamanio(self):
+        self.table.resizeColumnsToContents()
+        total_width = sum(self.table.columnWidth(col) for col in range(self.table.columnCount()))
+        min_width = max(self.width(), total_width)
+        
+        # Establecer un ancho máximo para la ventana
+        max_width = 800  # Puedes ajustar este valor según tus necesidades
+        min_width = min(min_width, max_width)
+        
+        self.setMinimumWidth(min_width - 375)
+        self.setMaximumWidth(max_width)  # Establecer un ancho máximo para la ventana
+        self.adjustSize()
 # muestra los datos en la tabla
     def mostrar_tabla(self):
         causa = {"fecha": "FechaPrueba",
                 "rol": "Rolprueba",
                 "tribunal": "Tribunalprueba",
                 "actuacion": "Actuacionprueba",
+                "tipojuicio": "Tipojuicioprueba",
                 "Estampada": "Estampada"}
         print(causa)
         self.causas = []
         self.causas.append(causa)
-        self.table.setColumnCount(5)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal','Actuacion','Estampar'])
+        self.table.setColumnCount(6)
+        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal','Actuacion','Tipo de juicio','Estampar'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
             for col_index, (key, value) in enumerate(causa.items()):
                 if key == "Estampada":
                     button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
+                elif key == "actuacion":
+                    # Crear un objeto QComboBox para las celdas de actuaciones
+                    combo_box = QComboBox()
+                    opciones_actuaciones = ["Opción 1", "Opción 2", "Opción 3"]  # Puedes personalizar las opciones
+                    combo_box.addItems(opciones_actuaciones)
+                    combo_box.setCurrentText(value)
+                    self.table.setCellWidget(row_index, col_index, combo_box)
+                elif key == "tipojuicio":
+                    # Crear un objeto QComboBox para las celdas de tipo de juicio
+                    combo_box = QComboBox()
+                    opciones_tipojuicio = ["Opción 1", "Opción 2", "Opción 3"]
+                    combo_box.addItems(opciones_tipojuicio)
+                    combo_box.setCurrentText(value)
+                    self.table.setCellWidget(row_index, col_index, combo_box)
                 else:
                     # Crea un objeto QTableWidgetItem para las otras columnas
                     item = QTableWidgetItem(str(value))
+                    #establece el color de la celda
+                    item.setBackground(QColor(26, 26, 255))
                     self.table.setItem(row_index, col_index, item)  
                     print(key, value)
         self.ajustar_tamanio()
-
 # Función para ordenar la tabla según la columna clicada
     def ordenar_tabla(self, logicalIndex):
         self.table.sortItems(logicalIndex, Qt.SortOrder.AscendingOrder if self.table.horizontalHeader().sortIndicatorOrder() == Qt.SortOrder.DescendingOrder else Qt.SortOrder.DescendingOrder)
-# abre la ventana de buscar
         
-# ajusta el tamaño de la tabla ajustandose al contenido
-    def ajustar_tamanio(self):
-        self.table.resizeColumnsToContents()
-        total_width = sum(self.table.columnWidth(col) for col in range(self.table.columnCount()))
-        min_width = max(self.width(), total_width)
-        self.setMinimumWidth(min_width+10)
-        self.adjustSize()
 # abre la ventana de estampado
     def estampar_clicked(self):
         # Obtener la fila seleccionada
