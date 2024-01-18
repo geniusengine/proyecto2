@@ -19,6 +19,7 @@ class DashboardApp(QMainWindow):
     def initUI(self):
         self.setWindowTitle('Dashboard App')
         self.setGeometry(100, 100, 1280, 720)
+        
 
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
