@@ -19,7 +19,9 @@ from PyQt6.QtWidgets import QLineEdit  # Agregado para importar QLineEdit
 
 import pymssql
 
-import dashboard_actuaciones
+from .dashboard_actuaciones import Dashboard_actuacionesApp
+from .estampado_app import Estampadoxd
+
 
 class MiApp(QMainWindow):
     
@@ -131,8 +133,8 @@ class MiApp(QMainWindow):
         print("Abriendo Dashboard_actuacionesApp y enviando datos...")
 
         # Ejemplo: Crear y mostrar Dashboard_actuacionesApp
-        ventana_dashboard = dashboard_actuaciones()
-        ventana_dashboard.show()
+        self.dashact = Dashboard_actuacionesApp()
+        self.dashact.show()
     
     def ajustar_tamanio(self):
         # Ajustar automáticamente el tamaño de las columnas
@@ -154,8 +156,16 @@ class MiApp(QMainWindow):
     def clear_table(self):
         self.table.setRowCount(0)
 
-if __name__ == '__main__':
+# Función principal
+def main():
     app = QApplication(sys.argv)
-    window = MiApp()
+    window = Dashboard_actuacionesApp()
+    
+
     window.show()
     sys.exit(app.exec())
+    
+# Ejecuta la función principal
+if __name__ == '__main__':
+    main()
+    

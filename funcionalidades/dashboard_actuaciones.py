@@ -1,11 +1,13 @@
 import sys
+import time
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
     QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel,QComboBox
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
 
-from estampado_app import Estampadoxd
+from .estampado_app import Estampadoxd
+
 
 
 class Dashboard_actuacionesApp(QMainWindow):
@@ -13,6 +15,7 @@ class Dashboard_actuacionesApp(QMainWindow):
         super().__init__()
         self.db_connection = None
         self.initUI()
+        print("Dashboard Actuaciones")
     
     def initUI(self):
         self.setWindowTitle('Dashboard App')
@@ -209,14 +212,9 @@ class Dashboard_actuacionesApp(QMainWindow):
         self.actualizar_color_fila(row)
         # Proporciona un mensaje de éxito al usuario
 # Función principal
-def main():
-    app = QApplication(sys.argv)
-    window = Dashboard_actuacionesApp()
-    
-
-    window.show()
-    sys.exit(app.exec())
-    
 # Ejecuta la función principal
 if __name__ == '__main__':
-    main()
+    app = QApplication(sys.argv)
+    window = Dashboard_actuacionesApp()
+    window.show()
+    sys.exit(app.exec())
