@@ -6,12 +6,16 @@ from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
 
-from .estampado_app import Estampadoxd
+from .estampado_act import EstampadoActuaciones
 
 
 
 class Dashboard_actuacionesApp(QMainWindow):
-    def __init__(self):
+    def __init__(self,numjui, nombTribunal, fecha):
+        self.numjui = numjui
+        self.nombTribunal = nombTribunal
+        self.fecha = fecha
+
         super().__init__()
         self.db_connection = None
         self.initUI()
@@ -21,12 +25,17 @@ class Dashboard_actuacionesApp(QMainWindow):
         self.setWindowTitle('Dashboard App')
         self.setGeometry(100, 100, 1280, 720)
 
+        # Agrega un botón para guardar datos
+        self.save_button = QPushButton("Guardar Datos")
+        self.save_button.clicked.connect(self.guardar_datos)
+
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
         self.layout_vertical = QVBoxLayout()  # Crea un layout vertical
         self.layout_horizontal = QHBoxLayout()  # Crea un layout horizontal
    
-        self.layout_vertical.addLayout(self.layout_horizontal)
+        self.layout_horizontal.addLayout(self.layout_vertical)# Agrega el layout vertical al layout horizontal
+        self.layout_horizontal.addWidget(self.save_button)# Agrega el botón de guardar al layout horizontal
 
         # Crea una tabla y un botón de guardar
         self.table = QTableWidget()
@@ -36,19 +45,38 @@ class Dashboard_actuacionesApp(QMainWindow):
         "QTableCornerButton::section { background-color: #d3d3d3; border: 1px solid black; }"
         "QHeaderView::section { background-color: #d3d3d3; border: 1px solid black; }"
         )
-        self.layout_vertical.addWidget(self.table)
+        self.layout_vertical.addWidget(self.table)# Agrega la tabla al layout vertical
     
         # Conectar la señal de clic en el encabezado de la columna para ordenar
         self.table.horizontalHeader().sectionClicked.connect(self.ordenar_tabla)
 
         # Configuraciones finales del diseño
-        self.central_widget.setLayout(self.layout_vertical)
+        self.central_widget.setLayout(self.layout_horizontal)
 
         # Llama automáticamente a acceder_base_de_datos y mostrar_clicked al iniciar la aplicación
         self.establecer_conexion_base_de_datos()
         self.mostrar_tabla()
 
         self.setGeometry(100, 100, 400, 300)
+    def guardar_datos(self):
+        print ("Guardando datos...")
+        # Lógica para guardar datos desde la tabla
+        db_connection = pymssql.connect(
+            server='vps-3697915-x.dattaweb.com',
+            user='daniel',
+            password='LOLxdsas--',
+            database='micau5a')
+        try:
+            cursor = db_connection.cursor()
+            insert_query = "INSERT INTO actuaciones (numjui, nombTribunal, tipojuicio,actuacion,fecha) VALUES (%s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (self.numjui, self.nombTribunal, self.tipojuicio, self.actuacion, self.fecha))
+            db_connection.commit()
+            db_connection.close()
+            QMessageBox.information(self, "Éxito", "Datos guardados correctamente")
+        except Exception as e:
+            print(e)
+            QMessageBox.critical(self, "Error", "Error al guardar los datos")
+            db_connection.rollback()# Limpia la tabla
 
     # crea cada boton que se necesite
     def crear_boton(self, texto, funcion):
@@ -108,9 +136,9 @@ class Dashboard_actuacionesApp(QMainWindow):
         self.adjustSize()
 # muestra los datos en la tabla
     def mostrar_tabla(self):
-        causa = {"fecha": "FechaPrueba",
-                "rol": "Rolprueba",
-                "tribunal": "Tribunalprueba",
+        causa = {"fecha": self.fecha,
+                "rol": self.numjui,
+                "tribunal": self.nombTribunal,
                 "actuacion": "Actuacionprueba",
                 "tipojuicio": "Tipojuicioprueba",
                 "Estampada": "Estampada"}
@@ -128,17 +156,19 @@ class Dashboard_actuacionesApp(QMainWindow):
                 elif key == "actuacion":
                     # Crear un objeto QComboBox para las celdas de actuaciones
                     combo_box = QComboBox()
-                    opciones_actuaciones = ["Opción 1", "Opción 2", "Opción 3"]  # Puedes personalizar las opciones
+                    opciones_actuaciones = ["Actuación 1","Actuación 2","Actuación 3","Actuación 4" ,"Actuación 5"  ]  # Puedes personalizar las opciones
                     combo_box.addItems(opciones_actuaciones)
                     combo_box.setCurrentText(value)
                     self.table.setCellWidget(row_index, col_index, combo_box)
+                    combo_box.currentIndexChanged.connect(lambda index, row=row_index, col=col_index: self.combo_box_changed(row, col, index))# obtiene el valor del combo box seleccionado
                 elif key == "tipojuicio":
                     # Crear un objeto QComboBox para las celdas de tipo de juicio
                     combo_box = QComboBox()
-                    opciones_tipojuicio = ["Opción 1", "Opción 2", "Opción 3"]
+                    opciones_tipojuicio = ["Ejecutivo", "Ordinario"]
                     combo_box.addItems(opciones_tipojuicio)
                     combo_box.setCurrentText(value)
                     self.table.setCellWidget(row_index, col_index, combo_box)
+                    combo_box.currentIndexChanged.connect(lambda index, row=row_index, col=col_index: self.combo_box_changed(row, col, index))
                 else:
                     # Crea un objeto QTableWidgetItem para las otras columnas
                     item = QTableWidgetItem(str(value))
@@ -147,6 +177,16 @@ class Dashboard_actuacionesApp(QMainWindow):
                     self.table.setItem(row_index, col_index, item)  
                     print(key, value)
         self.ajustar_tamanio()
+    def combo_box_changed(self, row, col, index):
+        # Esta función se llama cuando cambia la selección en un QComboBox
+        combo_box = self.table.cellWidget(row, col)
+        selected_value = combo_box.currentText()
+        if col == 3:  # Col 3 es la columna de actuación
+            self.actuacion = selected_value
+        elif col == 4:  # Col 4 es la columna de tipo de juicio
+            self.tipojuicio = selected_value
+
+        print(f"En la fila {row}, columna {col}, se seleccionó: {selected_value}")
 # Función para ordenar la tabla según la columna clicada
     def ordenar_tabla(self, logicalIndex):
         self.table.sortItems(logicalIndex, Qt.SortOrder.AscendingOrder if self.table.horizontalHeader().sortIndicatorOrder() == Qt.SortOrder.DescendingOrder else Qt.SortOrder.DescendingOrder)
@@ -157,26 +197,12 @@ class Dashboard_actuacionesApp(QMainWindow):
         selected_row = self.table.currentRow()
         # Verificar si se seleccionó una fila
         if selected_row != -1:
-            # Obtener datos de la fila seleccionada
-            fechaNotificacion = self.table.item(selected_row, 0).text()
-            numjui = self.table.item(selected_row, 1).text()
-            nombTribunal = self.table.item(selected_row, 2).text()
-            nombdemandante = self.table.item(selected_row, 3).text()
-            apellidemandante = self.table.item(selected_row, 4).text()
-            demandado = self.table.item(selected_row, 5).text()
-            repre = self.table.item(selected_row, 6).text()
-            mandante = self.table.item(selected_row, 7).text()
-            domicilio = self.table.item(selected_row, 8).text()
-            comuna = self.table.item(selected_row, 9).text()
-            encargo = self.table.item(selected_row, 10).text()
-            soli = self.table.item(selected_row, 11).text()
-            arancel = self.table.item(selected_row, 12).text()
+            # Obtener los datos de la columna actuacion
     
             #observacion = self.table.item(selected_row, 17).text()
-            #########################################################################################Observacion agreagr ??????????????
             # Importa Estampadoxd localmente
-            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
-            self.ex3.show()
+            self.exEstampado = EstampadoActuaciones(self.numjui, self.nombTribunal, self.fecha)
+            self.exEstampado.show()
         
         button = self.sender()
         index = self.table.indexAt(button.pos())
@@ -218,3 +244,5 @@ if __name__ == '__main__':
     window = Dashboard_actuacionesApp()
     window.show()
     sys.exit(app.exec())
+
+   

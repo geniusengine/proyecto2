@@ -16,7 +16,7 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import QLineEdit  # Agregado para importar QLineEdit
-
+from datetime import datetime
 import pymssql
 
 from .dashboard_actuaciones import Dashboard_actuacionesApp
@@ -58,6 +58,16 @@ class MiApp(QMainWindow):
         layout.addLayout(layout_vertical)
         self.central_widget.setLayout(layout)
         self.ajustar_tamanio()
+
+        # Conecta el evento itemChanged a la función de validación
+        self.table.itemChanged.connect(self.validar_arancel)
+    def validar_arancel(self, item):
+        # Verifica si la columna es la correspondiente a arancel
+        if item.column() == 11:
+            # Verifica si el contenido no es un número
+            if not item.text().replace('.', '', 1).isdigit():
+                QMessageBox.warning(self, "Advertencia", "Solo se permiten números en la celda de Arancel.")
+                item.setText("0")  # Establece un valor predeterminado si no es un número
     def add_row(self):
         self.table.insertRow(self.table.rowCount())
         
@@ -70,61 +80,72 @@ class MiApp(QMainWindow):
 
 
     def save_data(self):
+        if self.table.rowCount() == 0:
+            QMessageBox.warning(self, "Advertencia", "No se ha agregado ninguna fila.")
+            return
+        for row_idx in range(self.table.rowCount()):
+                for col_idx in range(self.table.columnCount()):
+                    item = self.table.item(row_idx, col_idx)
+                    if item is None or item.text().strip() == "":
+                        QMessageBox.critical(self, "Error", "Todas las celdas deben estar llenas.")
+                        return
         db_connection = pymssql.connect(
             server='vps-3697915-x.dattaweb.com',
             user='daniel',
             password='LOLxdsas--',
             database='micau5a')
+
         try:
             cursor = db_connection.cursor()
+            fecha_actual = datetime.now()
+            self.fecha_hora_formateada = fecha_actual.strftime("%Y-%m-%d %H:%M:%S")
+            print("Fecha y hora actuales:", self.fecha_hora_formateada)
 
             for row_idx in range(self.table.rowCount()):
-                numjui= self.table.item(row_idx, 0).text()
-                nombTribunal= self.table.item(row_idx, 1).text()
-                nombdemandante= self.table.item(row_idx, 2).text()
-                apellidemandante= self.table.item(row_idx, 3).text()
-                demandado= self.table.item(row_idx, 4).text()
-                repre= self.table.item(row_idx, 5).text()
-                mandante= self.table.item(row_idx, 6).text()
-                domicilio= self.table.item(row_idx, 7).text()
-                comuna= self.table.item(row_idx, 8).text()
-                encargo= self.table.item(row_idx, 9).text()
-                soli= self.table.item(row_idx, 10).text()
-                arancel= self.table.item(row_idx, 11).text()
-                observacion= self.table.item(row_idx, 12).text()  
-                print(arancel)
+                self.numjui = self.table.item(row_idx, 0).text()
+                self.nombTribunal = self.table.item(row_idx, 1).text()
+                self.nombdemandante = self.table.item(row_idx, 2).text()
+                self.apellidemandante = self.table.item(row_idx, 3).text()
+                self.demandado = self.table.item(row_idx, 4).text()
+                self.repre = self.table.item(row_idx, 5).text()
+                self.mandante = self.table.item(row_idx, 6).text()
+                self.domicilio = self.table.item(row_idx, 7).text()
+                self.comuna = self.table.item(row_idx, 8).text()
+                self.encargo = self.table.item(row_idx, 9).text()
+                self.soli = self.table.item(row_idx, 10).text()
+                self.arancel = self.table.item(row_idx, 11).text()
+                print(self.arancel)
                 try:
-                        arancel = (arancel)
+                    arancel = float(self.arancel)
                 except ValueError:
-                        arancel = 0  # Valor predeterminado si la conversión falla
+                    arancel = 0  # Valor predeterminado si la conversión falla
 
-            """ if all([numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel]):
-                    insert_query = "INSERT INTO demanda (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                    cursor.execute(insert_query, (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel))
-                else:
+                if any([not cell for cell in [self.numjui, self.nombTribunal, self.nombdemandante,
+                                            self.apellidemandante, self.demandado, self.repre,
+                                            self.mandante, self.domicilio, self.comuna, self.encargo,
+                                            self.soli, self.arancel]]):
                     QMessageBox.critical(self, "Error", "No se permiten celdas vacías en la fila {}".format(row_idx + 1))
                     db_connection.rollback()
-                    break
-"""
+                    return
+                insert_query = "INSERT INTO demanda (numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                cursor.execute(insert_query, (self.numjui, self.nombTribunal, self.nombdemandante,
+                                            self.apellidemandante, self.demandado, self.repre,
+                                            self.mandante, self.domicilio, self.comuna, self.encargo,
+                                            self.soli, arancel))
             db_connection.commit()
             db_connection.close()
-
             self.clear_table()
             QMessageBox.information(self, "Éxito", "Datos guardados correctamente")
-            respuesta = QMessageBox.question(self, 'Confirmación', '¿Desea hacer seguimiento de la causa?', QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-
+            respuesta = QMessageBox.question(self, 'Confirmación', '¿Desea hacer seguimiento de la causa?',QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if respuesta == QMessageBox.StandardButton.Yes:
-                # El usuario hizo clic en 'Sí', abrir Dashboard_actuacionesApp
                 self.abrir_dashboard_actuaciones()
             else:
-                # El usuario hizo clic en 'No', hacer nada o manejar según sea necesario
                 pass
         except Exception as e:
             print(e)
             QMessageBox.critical(self, "Error", "Error al guardar los datos")
             db_connection.rollback()
-            
-             # Emitir la señal cuando se guardan los datos
+            # Emitir la señal cuando se guardan los datos
             self.datos_guardados_signal.emit()
 
     def abrir_dashboard_actuaciones(self):
@@ -133,7 +154,7 @@ class MiApp(QMainWindow):
         print("Abriendo Dashboard_actuacionesApp y enviando datos...")
 
         # Ejemplo: Crear y mostrar Dashboard_actuacionesApp
-        self.dashact = Dashboard_actuacionesApp()
+        self.dashact = Dashboard_actuacionesApp(self.numjui,self.nombTribunal,self.fecha_hora_formateada)
         self.dashact.show()
     
     def ajustar_tamanio(self):

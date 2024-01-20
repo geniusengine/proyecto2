@@ -110,6 +110,7 @@ class DashboardApp(QMainWindow):
 
         # Agrega la leyenda de colores al layout vertical existente
         self.layout_vertical.addLayout(color_legend_layout)
+
     # crea los botones de la interfaz
     def crear_botones(self):
         self.btn_buscar = self.crear_boton('Buscar', self.buscar_clicked)
@@ -337,7 +338,7 @@ class DashboardApp(QMainWindow):
         self.table.resizeColumnsToContents()
         total_width = sum(self.table.columnWidth(col) for col in range(self.table.columnCount()))
         min_width = max(self.width(), total_width)
-        self.setMinimumWidth(min_width+10)
+        self.setMinimumWidth(min_width+270)
         self.adjustSize()
 # actualiza el color de la fila        
     # función para actualizar el color de la fila
