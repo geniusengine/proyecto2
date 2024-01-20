@@ -8,7 +8,7 @@ from funcionalidades.buscado import BuscadorDatosCausaApp
 from funcionalidades.insertar_excel import ExcelToDatabaseApp
 from funcionalidades.insertar_manual import MiApp
 from funcionalidades.estampado_app import Estampadoxd
-
+from funcionalidades.dashboard_historial_actuaciones import DashboardHistorialActuaciones
 class DashboardApp(QMainWindow):
     datos_actualizados_signal = pyqtSignal()
     def __init__(self):
@@ -39,6 +39,7 @@ class DashboardApp(QMainWindow):
         self.layout_horizontal.addWidget(self.btn_buscar)
         self.layout_horizontal.addWidget(self.btn_Insertar_excel)
         self.layout_horizontal.addWidget(self.btn_Insertar_manual)
+        self.layout_horizontal.addWidget(self.btn_historial_actuaciones)
         self.layout_vertical.addLayout(self.layout_horizontal)
 
         # Crea una tabla y un botón de guardar
@@ -116,6 +117,7 @@ class DashboardApp(QMainWindow):
         self.btn_buscar = self.crear_boton('Buscar', self.buscar_clicked)
         self.btn_Insertar_excel = self.crear_boton('Insertar Excel', self.Insertar_excel_clicked)
         self.btn_Insertar_manual = self.crear_boton('Insertar Manual', self.Insertar_manual_clicked)
+        self.btn_historial_actuaciones = self.crear_boton('Historial Actuaciones', self.historial_actuaciones_clicked)
     # crea cada boton que se necesite
     def crear_boton(self, texto, funcion):
         boton = QPushButton(texto, self)
@@ -192,6 +194,8 @@ class DashboardApp(QMainWindow):
         # Formatear la fecha y hora
         formato_fecha = fecha_actual.toString('yyyy-MM-dd HH:mm:ss')
         return formato_fecha
+
+
 # muestra los datos en la tabla
     def mostrar_clicked(self):
         self.table.setColumnCount(15)
@@ -199,9 +203,7 @@ class DashboardApp(QMainWindow):
                                             'Notificar','Estampar'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
-            print(causa["Notificada"])    
             notificada = causa["Notificada"]
-            print(notificada)
             estampada = causa["estadoCausa"]
             for col_index, (key, value) in enumerate(causa.items()):
                 if key == "Notificar":
@@ -216,6 +218,10 @@ class DashboardApp(QMainWindow):
                     self.table.setItem(row_index, col_index, item)
                     self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
         #self.ajustar_tamanio()
+    def historial_actuaciones_clicked(self):
+        print("Historial de actuaciones")
+        self.exchistorial = DashboardHistorialActuaciones()
+        self.exchistorial.show()
 # abre la ventana de insertar excel
     def Insertar_excel_clicked(self):
         # Lógica para insertar desde Excel
