@@ -1,8 +1,9 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QMessageBox, QInputDialog
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QMessageBox, QInputDialog,QWidget
 from login.login import LoginApp
 from login.registro import RegisterApp
-
+from PyQt6.QtGui import QIcon
+from PyQt6.QtCore import Qt
 class MainMenu(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -13,7 +14,12 @@ class MainMenu(QMainWindow):
     def init_ui(self):
         # Configura la ventana principal
         self.setWindowTitle("Menú Principal")
+        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
         self.setGeometry(100, 100, 300, 200)
+         # Desactiva la redimensión de la ventana 
+        self.setFixedSize(300, 200)
+
+        
 
         # Configura el widget central y el diseño vertical
         self.central_widget = QWidget()
@@ -32,7 +38,7 @@ class MainMenu(QMainWindow):
 
         # Establece el diseño en el widget central
         self.central_widget.setLayout(self.layout)
-
+        # Centrar la ventana en la pantalla
     def open_login(self):
         # Abre la ventana de inicio de sesión
         self.login_app = LoginApp()

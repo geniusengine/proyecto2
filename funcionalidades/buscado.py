@@ -10,6 +10,7 @@ class BuscadorDatosCausaApp(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Buscador de Datos de Causa")
+        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
         self.setGeometry(100, 100, 600, 400)
 
         self.initUI()

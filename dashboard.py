@@ -18,6 +18,7 @@ class DashboardApp(QMainWindow):
     
     def initUI(self):
         self.setWindowTitle('Dashboard App')
+        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
         self.setGeometry(100, 100, 1280, 720)
         
 
@@ -217,7 +218,7 @@ class DashboardApp(QMainWindow):
                     item = QTableWidgetItem(str(value))
                     self.table.setItem(row_index, col_index, item)
                     self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
-        #self.ajustar_tamanio()
+        self.ajustar_tamanio()
     def historial_actuaciones_clicked(self):
         print("Historial de actuaciones")
         self.exchistorial = DashboardHistorialActuaciones()
@@ -344,7 +345,7 @@ class DashboardApp(QMainWindow):
         self.table.resizeColumnsToContents()
         total_width = sum(self.table.columnWidth(col) for col in range(self.table.columnCount()))
         min_width = max(self.width(), total_width)
-        self.setMinimumWidth(min_width+270)
+        self.setMinimumWidth(min_width+70)
         self.adjustSize()
 # actualiza el color de la fila        
     # función para actualizar el color de la fila

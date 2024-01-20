@@ -17,7 +17,7 @@ import sys
 import pymssql
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog, QTableWidget, QTableWidgetItem, QLineEdit, QVBoxLayout, QWidget, QMessageBox
 import openpyxl
-
+from PyQt6.QtGui import QIcon
 class ExcelToDatabaseApp(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -25,7 +25,8 @@ class ExcelToDatabaseApp(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle("Excel to Database App")
+        self.setWindowTitle("Insertar Excel")
+        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
         self.setGeometry(100, 100, 800, 400)
 
         self.upload_button = QPushButton("Cargar Excel", self)

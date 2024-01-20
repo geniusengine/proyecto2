@@ -3,6 +3,7 @@ from passlib.hash import bcrypt
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
 from PyQt6.QtSql import QSqlDatabase, QSqlQuery
 from PyQt6.QtCore import QTimer
+from PyQt6.QtGui import QIcon
 import pymssql
 from dashboard import DashboardApp
 
@@ -15,11 +16,13 @@ class LoginApp(QMainWindow):
 
     def init_ui(self):
         self.setWindowTitle("Inicio de Sesión")
+        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
         self.setGeometry(100, 100, 300, 200)
 
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
-
+         # Desactiva la redimensión de la ventana 
+        self.setFixedSize(300, 200)
         self.layout = QVBoxLayout()
 
         self.username_label = QLabel("Usuario:")

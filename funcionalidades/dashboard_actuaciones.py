@@ -23,6 +23,7 @@ class Dashboard_actuacionesApp(QMainWindow):
     
     def initUI(self):
         self.setWindowTitle('Dashboard App')
+        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
         self.setGeometry(100, 100, 1280, 720)
 
         # Agrega un botón para guardar datos

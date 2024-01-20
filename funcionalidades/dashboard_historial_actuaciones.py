@@ -21,6 +21,7 @@ class DashboardHistorialActuaciones(QMainWindow):
     
     def initUI(self):
         self.setWindowTitle('Historial Actuaciones')
+        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
         self.setGeometry(100, 100, 1280, 720)
 
         self.central_widget = QWidget(self)

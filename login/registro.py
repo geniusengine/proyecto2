@@ -16,7 +16,7 @@ import sys
 import pymssql
 from passlib.hash import bcrypt
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
-
+from PyQt6.QtGui import QIcon
 from PyQt6.QtSql import QSqlDatabase, QSqlQuery
 
 class RegisterApp(QMainWindow):
@@ -28,13 +28,15 @@ class RegisterApp(QMainWindow):
 
     def init_ui(self):
         self.setWindowTitle("Registro de Usuario")
+        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
         self.setGeometry(100, 100, 300, 250)
 
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
 
         self.layout = QVBoxLayout()
-        
+         # Desactiva la redimensión de la ventana 
+        self.setFixedSize(300, 200)
         self.name_label = QLabel("Nombre:")
         self.name_input = QLineEdit()
         self.apellido_label = QLabel("Apellido:")

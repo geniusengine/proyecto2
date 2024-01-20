@@ -15,6 +15,7 @@ Dernière modification : mardi 16 janvier 2024 à 1:02:13
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout
 from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QLineEdit  # Agregado para importar QLineEdit
 from datetime import datetime
 import pymssql
@@ -30,6 +31,7 @@ class MiApp(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Ingreso de Datos")
+        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
         self.setGeometry(100, 100, 800, 400)
 
         self.central_widget = QWidget(self)
