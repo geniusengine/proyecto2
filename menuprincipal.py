@@ -43,6 +43,9 @@ class MainMenu(QMainWindow):
         # Abre la ventana de inicio de sesión
         self.login_app = LoginApp()
         self.login_app.show()
+        
+        # Cerrar la ventana de inicio de sesión
+        self.close()
 
     def open_registro(self):
         # Define un usuario y contraseña designados
