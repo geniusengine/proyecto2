@@ -93,7 +93,6 @@ class BuscadorDatosCausaApp(QMainWindow):
             )
             cursor = connection.cursor()
             if search_by_numjui:#si se selecciono numjui para buscar se ejecuta esta query
-                print ("se metio a buscar por rol")
                 query = """
                 SELECT fechaNotificacion, numjui, nombTribunal
                 FROM notificacion
@@ -101,7 +100,6 @@ class BuscadorDatosCausaApp(QMainWindow):
                 """
                 cursor.execute(query, (numjui))
             elif search_by_tribunal:#si se selecciono tribunal para buscar se ejecuta esta query
-                print ("se metio a buscar por tribunal")
                 query = """
                 SELECT fechaNotificacion, numjui, nombTribunal
                 FROM notificacion
@@ -109,7 +107,6 @@ class BuscadorDatosCausaApp(QMainWindow):
                 """
                 cursor.execute(query, (tribunal))
             elif search_by_numjui and search_by_tribunal:#si se selecciono ambos para buscar se ejecuta esta query
-                print ("se metio a buscar por ambos")
                 query = """
                 SELECT fechaNotificacion, numjui, nombTribunal
                 FROM notificacion
@@ -117,7 +114,6 @@ class BuscadorDatosCausaApp(QMainWindow):
                 """
                 cursor.execute(query, (numjui,tribunal))
             resultado = cursor.fetchall()
-            print("linea 115 resultado:",resultado)
             connection.close()
             self.limpiar_tabla()
             if resultado:#si hay datos en la base de datos los muestra en la lista
@@ -188,7 +184,6 @@ class BuscadorDatosCausaApp(QMainWindow):
                                             'Notificar','Estampar'])
         try:
             if self.causa_seleccionada :#si se selecciono una causa para buscar se ejecuta esta query
-                print("causa_seleccionada")
                 try:
                     connection = pymssql.connect(
                         server='vps-3697915-x.dattaweb.com',
@@ -203,7 +198,6 @@ class BuscadorDatosCausaApp(QMainWindow):
                     self.causas_seleccionadas = []
 
                     if numjui:#si se selecciono numjui para buscar se ejecuta esta query
-                        print ("se metio a buscar por rol 2")
                         query = """
                         SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
                         FROM notificacion
@@ -211,7 +205,6 @@ class BuscadorDatosCausaApp(QMainWindow):
                         """
                         cursor.execute(query, (numjui))
                     elif nombTribunal:#si se selecciono tribunal para buscar se ejecuta esta query
-                        print ("se metio a buscar por tribunal 2")
                         query = """
                         SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
                         FROM notificacion
@@ -219,7 +212,6 @@ class BuscadorDatosCausaApp(QMainWindow):
                         """
                         cursor.execute(query, (nombTribunal))
                     elif numjui and nombTribunal:#si se selecciono ambos para buscar se ejecuta esta query
-                        print ("se metio a buscar por ambos 2")
                         query = """
                         SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
                         FROM notificacion
@@ -284,9 +276,7 @@ class BuscadorDatosCausaApp(QMainWindow):
         self.limpiar_tabla()
         for row_index, causa in enumerate(self.causas_seleccionadas):# row_index es el indice de la fila y causa es el diccionario con los datos de la causa
             self.table.insertRow(row_index)
-            print(causa)    
             notificada = causa["Notificada"]
-            print(notificada)
             estampada = causa["estadoCausa"]
             for col_index, (key, value) in enumerate(causa.items()):
                 if key == "Notificar":
@@ -419,6 +409,33 @@ class BuscadorDatosCausaApp(QMainWindow):
         # Actualiza la celda en la tabla y el color de la fila
         self.actualizar_color_fila(row)
         # Proporciona un mensaje de éxito al usuario
+    # establece la conexion con la base de datos
+    def establecer_conexion_base_de_datos(self):
+        self.db_connection = pymssql.connect(
+            server='vps-3697915-x.dattaweb.com',
+            user='daniel',
+            password='LOLxdsas--',
+            database='micau5a'
+        )
+    # cierra la conexion con la base de datos
+    def cerrar_conexion_base_de_datos(self):
+        if self.db_connection:
+            self.db_connection.close()
+     # función para actualizar el color de la fila
+    def actualizar_color_fila(self, row):
+        causa = self.causas_seleccionadas[row]
+        print(causa)
+        notificada = causa["Notificada"]
+        estampada = causa["estadoCausa"]
+        
+        for col_index in range(self.table.columnCount()):
+            item = self.table.item(row, col_index)
+            if item is not None:
+                # Llamas a la función que establece el color para cada celda
+                self.color_y_etiqueta_celda(item, notificada, estampada)
+
+        # Actualiza la vista de la tabla
+        self.table.viewport().update()
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = BuscadorDatosCausaApp()
