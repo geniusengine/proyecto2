@@ -161,21 +161,25 @@ class DashboardHistorialActuaciones(QMainWindow):
         # Verificar si se seleccionó una fila
         if selected_row != -1:
             # Obtener los datos de la columna actuacion
-    
+            self.rol = self.table.item(selected_row, 1).text()
+            self.nombTribunal = self.table.item(selected_row, 2).text()
+            self.fecha = self.table.item(selected_row, 0).text()
+            self.tipoJuicio = self.table.item(selected_row, 3).text()
+            self.actuacion = self.table.item(selected_row, 4).text()
             #observacion = self.table.item(selected_row, 17).text()
             # Importa Estampadoxd localmente
-            self.exEstampado = EstampadoActuaciones(self.numjui, self.nombTribunal, self.fecha)
-            self.exEstampado.show()
+            #self.exEstampado = EstampadoActuaciones(self.rol, self.nombTribunal, self.fecha)
+            #self.exEstampado.show()
         
         button = self.sender()
         index = self.table.indexAt(button.pos())
         row, col = index.row(), index.column()
-        causa = self.causas[row]
+        causa = self.datos[row]
         color = QColor(250, 193, 114)
 
         # Verifica si la causa ya ha sido notificada
         if causa["Estampada"] == 1:
-            QMessageBox.warning(self, "Advertencia", "Esta causa ya ha sido notificada.")
+            QMessageBox.warning(self, "Advertencia", "Esta causa ya ha sido estampada.")
             return
         
         # Actualiza la información localmente
@@ -197,9 +201,18 @@ class DashboardHistorialActuaciones(QMainWindow):
             raise  # Re-levanta la excepción para que el programa no continúe si hay un error desconocido
         finally:
             self.cerrar_conexion_base_de_datos()
-        # Actualiza la celda en la tabla y el color de la fila
-        self.actualizar_color_fila(row)
         # Proporciona un mensaje de éxito al usuario
+    def establecer_conexion_base_de_datos(self):
+        self.db_connection = pymssql.connect(
+            server='vps-3697915-x.dattaweb.com',
+            user='daniel',
+            password='LOLxdsas--',
+            database='micau5a'
+        )
+    # cierra la conexion con la base de datos
+    def cerrar_conexion_base_de_datos(self):
+        if self.db_connection:
+            self.db_connection.close()
 # Función principal
 # Ejecuta la función principal
 if __name__ == '__main__':

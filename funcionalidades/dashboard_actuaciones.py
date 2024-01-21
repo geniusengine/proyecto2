@@ -199,7 +199,11 @@ class Dashboard_actuacionesApp(QMainWindow):
         # Verificar si se seleccionó una fila
         if selected_row != -1:
             # Obtener los datos de la columna actuacion
-    
+            self.rol = self.table.item(selected_row, 1).text()
+            self.nombTribunal = self.table.item(selected_row, 2).text()
+            self.fecha = self.table.item(selected_row, 0).text()
+            self.tipoJuicio = self.table.item(selected_row, 3).text()
+            self.actuacion = self.table.item(selected_row, 4).text()
             #observacion = self.table.item(selected_row, 17).text()
             # Importa Estampadoxd localmente
             self.exEstampado = EstampadoActuaciones(self.numjui, self.nombTribunal, self.fecha)
@@ -238,6 +242,32 @@ class Dashboard_actuacionesApp(QMainWindow):
         # Actualiza la celda en la tabla y el color de la fila
         self.actualizar_color_fila(row)
         # Proporciona un mensaje de éxito al usuario
+    def establecer_conexion_base_de_datos(self):
+        self.db_connection = pymssql.connect(
+            server='vps-3697915-x.dattaweb.com',
+            user='daniel',
+            password='LOLxdsas--',
+            database='micau5a'
+        )
+    # cierra la conexion con la base de datos
+    def cerrar_conexion_base_de_datos(self):
+        if self.db_connection:
+            self.db_connection.close()
+     # función para actualizar el color de la fila
+    def actualizar_color_fila(self, row):
+        causa = self.causas_seleccionadas[row]
+        print(causa)
+        notificada = causa["Notificada"]
+        estampada = causa["estadoCausa"]
+        
+        for col_index in range(self.table.columnCount()):
+            item = self.table.item(row, col_index)
+            if item is not None:
+                # Llamas a la función que establece el color para cada celda
+                self.color_y_etiqueta_celda(item, notificada, estampada)
+
+        # Actualiza la vista de la tabla
+        self.table.viewport().update()
 # Función principal
 # Ejecuta la función principal
 if __name__ == '__main__':

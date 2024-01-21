@@ -274,7 +274,7 @@ class DashboardApp(QMainWindow):
 
         # Verifica si la causa ya ha sido notificada
         if causa["Estampada"] == 1:
-            QMessageBox.warning(self, "Advertencia", "Esta causa ya ha sido notificada.")
+            QMessageBox.warning(self, "Advertencia", "Esta causa ya ha sido estampada.")
             return
         
         # Actualiza la información localmente
