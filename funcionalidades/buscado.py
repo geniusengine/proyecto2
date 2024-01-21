@@ -5,6 +5,8 @@ from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtWidgets import QMessageBox,QApplication,QRadioButton, QButtonGroup, QMainWindow, QPushButton, QLabel, QLineEdit,QTableWidgetItem ,QVBoxLayout, QHBoxLayout, QWidget, QCheckBox, QListWidget, QListWidgetItem,QTableWidget
 from PyQt6.QtCore import Qt
 from funcionalidades import estampado_app
+import pymssql
+
 class BuscadorDatosCausaApp(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -74,6 +76,23 @@ class BuscadorDatosCausaApp(QMainWindow):
     def limpiar_tabla(self):
         self.table.clearContents()
         self.table.setRowCount(0)
+
+    # establece la conexion con la base de datos
+    def establecer_conexion_base_de_datos(self):
+        self.db_connection = pymssql.connect(
+            server='vps-3697915-x.dattaweb.com',
+            user='daniel',
+            password='LOLxdsas--',
+            database='micau5a'
+        )
+
+    # cierra la conexion con la base de datos
+    def cerrar_conexion_base_de_datos(self):
+        if self.db_connection:
+            self.db_connection.close()
+
+    
+
 #busca los datos en la base de datos en base al rol o tribunal
     def search_data(self):
         search_by_numjui = self.check_numjui.isChecked()
@@ -276,20 +295,24 @@ class BuscadorDatosCausaApp(QMainWindow):
         self.limpiar_tabla()
         for row_index, causa in enumerate(self.causas_seleccionadas):# row_index es el indice de la fila y causa es el diccionario con los datos de la causa
             self.table.insertRow(row_index)
-            notificada = causa["Notificada"]
-            estampada = causa["estadoCausa"]
-            for col_index, (key, value) in enumerate(causa.items()):
-                if key == "Notificar":
-                    button = self.crear_boton_con_icono("static/icons/notificar.png", self.notificar_clicked)
-                    self.table.setCellWidget(row_index, col_index, button)
-                elif key == "Estampada":
-                    button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
-                    self.table.setCellWidget(row_index, col_index, button)
-                else:
-                    # Crea un objeto QTableWidgetItem para las otras columnas
-                    item = QTableWidgetItem(str(value))
-                    self.table.setItem(row_index, col_index, item)
-                    self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
+            print(causa)    
+            if 'Notificada' in causa and 'estadoCausa' in causa:  # Verifica si las claves existen en el diccionario
+                notificada = causa["Notificada"]
+                estampada = causa["estadoCausa"]
+                for col_index, (key, value) in enumerate(causa.items()):
+                    if key == "Notificar":
+                        button = self.crear_boton_con_icono("static/icons/notificar.png", self.notificar_clicked)
+                        self.table.setCellWidget(row_index, col_index, button)
+                    elif key == "Estampada":
+                        button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
+                        self.table.setCellWidget(row_index, col_index, button)
+                    else:
+                        # Crea un objeto QTableWidgetItem para las otras columnas
+                        item = QTableWidgetItem(str(value))
+                        self.table.setItem(row_index, col_index, item)
+                        self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
+            else:
+                print("Las claves 'Notificada' y 'estadoCausa' no existen en el diccionario.")
         self.ajustar_tamanio()
 
  #define el color de la las filas de la tabla
@@ -314,6 +337,7 @@ class BuscadorDatosCausaApp(QMainWindow):
         boton.setIcon(icono)
         boton.clicked.connect(funcion)
         return boton
+    
     # al notificar cambia el estado de la causa
     def notificar_clicked(self):
         button = self.sender()
