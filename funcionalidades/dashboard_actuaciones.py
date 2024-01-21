@@ -157,7 +157,7 @@ class Dashboard_actuacionesApp(QMainWindow):
                 elif key == "actuacion":
                     # Crear un objeto QComboBox para las celdas de actuaciones
                     combo_box = QComboBox()
-                    opciones_actuaciones = ["Actuación 1","Actuación 2","Actuación 3","Actuación 4" ,"Actuación 5"  ]  # Puedes personalizar las opciones
+                    opciones_actuaciones = ["Elija actuacion","Actuación 1","Actuación 2","Actuación 3","Actuación 4" ,"Actuación 5"  ]  # Puedes personalizar las opciones
                     combo_box.addItems(opciones_actuaciones)
                     combo_box.setCurrentText(value)
                     self.table.setCellWidget(row_index, col_index, combo_box)
@@ -165,7 +165,7 @@ class Dashboard_actuacionesApp(QMainWindow):
                 elif key == "tipojuicio":
                     # Crear un objeto QComboBox para las celdas de tipo de juicio
                     combo_box = QComboBox()
-                    opciones_tipojuicio = ["Ejecutivo", "Ordinario"]
+                    opciones_tipojuicio = ["Elija tipo de juicio","Ejecutivo", "Ordinario"]
                     combo_box.addItems(opciones_tipojuicio)
                     combo_box.setCurrentText(value)
                     self.table.setCellWidget(row_index, col_index, combo_box)
@@ -223,8 +223,8 @@ class Dashboard_actuacionesApp(QMainWindow):
         try:
             self.establecer_conexion_base_de_datos()
             with self.db_connection.cursor() as cursor:
-                query = f"UPDATE notificacion SET estadoCausa = 1"
-                cursor.execute(query)
+                query = "UPDATE notificacion SET estadoCausa = 1 WHERE numjui = %s"
+                cursor.execute(query, (causa['rol'],))
             self.db_connection.commit()
         except pymssql.Error as db_error:
             print(f"Error al ejecutar la consulta SQL: {db_error}")

@@ -185,8 +185,8 @@ class DashboardHistorialActuaciones(QMainWindow):
         try:
             self.establecer_conexion_base_de_datos()
             with self.db_connection.cursor() as cursor:
-                query = f"UPDATE notificacion SET estadoCausa = 1"
-                cursor.execute(query)
+                query = "UPDATE notificacion SET estadoCausa = 1 WHERE numjui = %s"
+                cursor.execute(query, (causa['Rol'],))
             self.db_connection.commit()
         except pymssql.Error as db_error:
             print(f"Error al ejecutar la consulta SQL: {db_error}")
