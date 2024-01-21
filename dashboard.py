@@ -20,7 +20,8 @@ class DashboardApp(QMainWindow):
         self.setWindowTitle('Dashboard App')
         self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
         self.setGeometry(100, 100, 1280, 720)
-        
+        #verifica si es la primera vez que mostrara los datos
+        self.primer_mostrado = True
 
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)
@@ -218,7 +219,7 @@ class DashboardApp(QMainWindow):
                     item = QTableWidgetItem(str(value))
                     self.table.setItem(row_index, col_index, item)
                     self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
-        self.ajustar_tamanio()
+        self.primera_vez()
     def historial_actuaciones_clicked(self):
         print("Historial de actuaciones")
         self.exchistorial = DashboardHistorialActuaciones()
@@ -278,8 +279,8 @@ class DashboardApp(QMainWindow):
         try:
             self.establecer_conexion_base_de_datos()
             with self.db_connection.cursor() as cursor:
-                query = f"UPDATE notificacion SET estadoCausa = 1"
-                cursor.execute(query)
+                query = "UPDATE notificacion SET estadoCausa = 1 WHERE numjui = %s"
+                cursor.execute(query, (causa['Rol'],))
             self.db_connection.commit()
         except pymssql.Error as db_error:
             print(f"Error al ejecutar la consulta SQL: {db_error}")
@@ -322,8 +323,8 @@ class DashboardApp(QMainWindow):
         try:
             self.establecer_conexion_base_de_datos()
             with self.db_connection.cursor() as cursor:
-                query = f"UPDATE notificacion SET estadoNoti = 1"
-                cursor.execute(query)
+                query = "UPDATE notificacion SET estadoNoti = 1 WHERE numjui = %s"
+                cursor.execute(query, (causa['Rol'],))
             self.db_connection.commit()
         except pymssql.Error as db_error:
             print(f"Error al ejecutar la consulta SQL: {db_error}")
@@ -384,12 +385,14 @@ class DashboardApp(QMainWindow):
             print(f"Error al actualizar datos: {e}")
         finally:
             self.cerrar_conexion_base_de_datos()
-
+    def primera_vez(self):
+        if self.primer_mostrado:
+            self.ajustar_tamanio()
+            self.primer_mostrado = False
 # Función principal
 def main():
     app = QApplication(sys.argv)
     window = DashboardApp()
-    
 
     window.show()
     sys.exit(app.exec())
