@@ -4,11 +4,16 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout,
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
+import logging
 from funcionalidades.buscado import BuscadorDatosCausaApp
 from funcionalidades.insertar_excel import ExcelToDatabaseApp
 from funcionalidades.insertar_manual import MiApp
 from funcionalidades.estampado_app import Estampadoxd
 from funcionalidades.dashboard_historial_actuaciones import DashboardHistorialActuaciones
+
+# Configurar el sistema de registro
+logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 class DashboardApp(QMainWindow):
     datos_actualizados_signal = pyqtSignal()
     def __init__(self):
@@ -274,6 +279,8 @@ class DashboardApp(QMainWindow):
         
         # Actualiza la información localmente
         causa["Estampada"] = 1
+
+        numjui = self.table.item(selected_row, 1).text()
         
         # Actualiza el valor en la base de datos
         try:
@@ -293,7 +300,9 @@ class DashboardApp(QMainWindow):
             self.cerrar_conexion_base_de_datos()
         # Actualiza la celda en la tabla y el color de la fila
         self.actualizar_color_fila(row)
-        # Proporciona un mensaje de éxito al usuario
+
+        # Configurar el sistema de registro
+        logging.info(f'Se ejecutó la función estampar_clicked correctamente para la causa con numjui: {numjui}')
 
 
 # Función para ordenar la tabla según la columna clicada
@@ -311,6 +320,8 @@ class DashboardApp(QMainWindow):
         row, col = index.row(), index.column()
         causa = self.causas[row]
         
+        selected_row = self.table.currentRow()
+
         # Verifica si la causa ya ha sido notificada
         if causa["Notificada"] == 1:
             QMessageBox.warning(self, "Advertencia", "Esta causa ya ha sido notificada.")
@@ -318,6 +329,8 @@ class DashboardApp(QMainWindow):
         
         # Actualiza la información localmente
         causa["Notificada"] = 1
+
+        numjui_notificado = self.table.item(selected_row, 1).text()
         
         # Actualiza el valor en la base de datos
         try:
@@ -340,6 +353,8 @@ class DashboardApp(QMainWindow):
         self.actualizar_color_fila(row)
         # Proporciona un mensaje de éxito al usuario
         QMessageBox.information(self, "Éxito", "Causa notificada correctamente.")
+
+        logging.info(f'Se ejecutó la función notificar_clicked correctamente para la causa con numjui: {numjui_notificado}')
         
 # ajusta el tamaño de la tabla ajustandose al contenido
     def ajustar_tamanio(self):

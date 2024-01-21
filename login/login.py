@@ -5,7 +5,11 @@ from PyQt6.QtSql import QSqlDatabase, QSqlQuery
 from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QIcon
 import pymssql
+import logging
 from dashboard import DashboardApp
+
+# Configurar el sistema de registro
+logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class LoginApp(QMainWindow):
     def __init__(self):
@@ -75,16 +79,21 @@ class LoginApp(QMainWindow):
                 # Cerrar la ventana de inicio de sesión
                 self.close()
 
+                # Agregar información al registro
+                logging.info(f'Inicio de sesión exitoso para el usuario: {username}')
+
                 # Abrir la ventana del dashboard
                 self.dashboard_window = DashboardApp()
                 self.dashboard_window.show()
+
             else:
                 # Contraseña incorrecta
                 QMessageBox.warning(self, "Inicio de Sesión", "Contraseña incorrecta.")
-
+                logging.warning(f'Inicio de sesión fallido')
         else:
             # Usuario no encontrado
             QMessageBox.warning(self, "Inicio de Sesión", "Usuario no encontrado.")
+            logging.warning(f'Inicio de secion erroneo')
 
     def close_db_connection(self):
         self.cursor.close()
