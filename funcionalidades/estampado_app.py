@@ -5,6 +5,11 @@ from docx2pdf import convert
 from datetime import datetime
 import tkinter as tk
 from tkinter import filedialog
+import logging
+
+# Configurar el sistema de registro
+logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 class Estampadoxd(QMainWindow):
     def __init__(self, fechaNotificacion, numjui, nombTribunal, nombdemandante,  apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, parent=None):
         super().__init__(parent)
@@ -159,6 +164,8 @@ class Estampadoxd(QMainWindow):
          # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
+
         # Guarda el documento
         #desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
         #doc.save(os.path.join(desktop_path, f'{self.numjui} {self.rolCausa}.docx'))
@@ -193,6 +200,8 @@ class Estampadoxd(QMainWindow):
          # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
+
     #3
     def positivaP(self):
         
@@ -222,6 +231,8 @@ class Estampadoxd(QMainWindow):
 
          # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
 
     #4
@@ -254,6 +265,8 @@ class Estampadoxd(QMainWindow):
          # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
+
 
     #5
     def notificacionP(self):
@@ -284,6 +297,8 @@ class Estampadoxd(QMainWindow):
 
          # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
     #6
     def embargoV(self):
@@ -323,6 +338,8 @@ class Estampadoxd(QMainWindow):
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
+
     #7
     def actaEmbargo(self):
         # Variables de tiempo
@@ -352,6 +369,8 @@ class Estampadoxd(QMainWindow):
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
+
     
     def EmbargoBan(self):
         # Variables de tiempo
@@ -380,6 +399,8 @@ class Estampadoxd(QMainWindow):
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
+
     def EmbargoMue(self):
         # Variables de tiempo
         now = datetime.now()
@@ -405,6 +426,8 @@ class Estampadoxd(QMainWindow):
 
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
     def EntregaMaterial(self):
         # Variables de tiempo
@@ -433,6 +456,8 @@ class Estampadoxd(QMainWindow):
 
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
     
     def actaLanzamiento(self):
         # Variables de tiempo
@@ -459,6 +484,8 @@ class Estampadoxd(QMainWindow):
 
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
     def actaRequerimientoPago(self):
         # Variables de tiempo
@@ -489,6 +516,8 @@ class Estampadoxd(QMainWindow):
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
+
     def actaEmbargoFrustrado(self):
         # Variables de tiempo
         now = datetime.now()
@@ -516,6 +545,8 @@ class Estampadoxd(QMainWindow):
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
+
     def inscripcionEmbargo(self):
         # Variables de tiempo
         now = datetime.now()
@@ -541,6 +572,8 @@ class Estampadoxd(QMainWindow):
 
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
     def notificacionDesahucio(self):
         # Variables de tiempo
@@ -568,6 +601,8 @@ class Estampadoxd(QMainWindow):
 
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
     
     def notificacionPersonalSubsidiaria(self):
         # Variables de tiempo
@@ -600,6 +635,8 @@ class Estampadoxd(QMainWindow):
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
+
     def notificacionPorCedula(self):
             # Variables de tiempo
             now = datetime.now()
@@ -626,6 +663,8 @@ class Estampadoxd(QMainWindow):
             # Guarda el documento en el directorio seleccionado
             doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
+            logging.info(f'A estamapado {self.numjui}-{self.encargo}')
+
     def notificacionConsevador(self):
         # Variables de tiempo
         now = datetime.now()
@@ -651,6 +690,8 @@ class Estampadoxd(QMainWindow):
 
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
         
     def actaOposicionEmbargo(self):
         # Variables de tiempo
@@ -677,6 +718,8 @@ class Estampadoxd(QMainWindow):
 
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
     def requerimientoPagoOposicionEmbargo(self):
         # Variables de tiempo
@@ -706,6 +749,8 @@ class Estampadoxd(QMainWindow):
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
+
     def retiroVehiculo(self):
         # Variables de tiempo
         now = datetime.now()
@@ -734,6 +779,8 @@ class Estampadoxd(QMainWindow):
 
         # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+
+        logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
     # Botones enlazados con sus opciones correspindientes    
     def estampar_1(self):

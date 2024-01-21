@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : mardi 16 janvier 2024 à 1:02:13
+Dernière modification : dimanche 21 janvier 2024 à 20:38:04
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout
@@ -19,10 +19,12 @@ from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QLineEdit  # Agregado para importar QLineEdit
 from datetime import datetime
 import pymssql
-
 from .dashboard_actuaciones import Dashboard_actuacionesApp
 from .estampado_app import Estampadoxd
+import logging
 
+# Configurar el sistema de registro
+logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class MiApp(QMainWindow):
     
@@ -138,6 +140,9 @@ class MiApp(QMainWindow):
             db_connection.close()
             self.clear_table()
             QMessageBox.information(self, "Éxito", "Datos guardados correctamente")
+
+            logging.info(f'Insercion de causa {self.numjui}-{self.encargo}')
+
             respuesta = QMessageBox.question(self, 'Confirmación', '¿Desea hacer seguimiento de la causa?',QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if respuesta == QMessageBox.StandardButton.Yes:
                 self.abrir_dashboard_actuaciones()

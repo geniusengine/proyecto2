@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 insertar.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 16:15:10 
-Dernière modification : vendredi 29 décembre 2023 à 23:50:27
+Dernière modification : dimanche 21 janvier 2024 à 20:51:06
 """
 
 import sys
@@ -18,6 +18,11 @@ import pymssql
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog, QTableWidget, QTableWidgetItem, QLineEdit, QVBoxLayout, QWidget, QMessageBox
 import openpyxl
 from PyQt6.QtGui import QIcon
+import logging
+
+# Configurar el sistema de registro
+logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 class ExcelToDatabaseApp(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -93,35 +98,31 @@ class ExcelToDatabaseApp(QMainWindow):
             cursor = db_connection.cursor()
 
             for row_idx in range(self.data_table.rowCount()):
-                numjui = self.table.item(row_idx, 1).text()
-                nombTribunal = self.table.item(row_idx, 2).text()
-                nombdemandante = self.table.item(row_idx, 3).text()
-                apellidemandante = self.table.item(row_idx, 4).text()
-                demandado = self.table.item(row_idx, 5).text()
-                repre = self.table.item(row_idx, 6).text()
-                mandante = self.table.item(row_idx, 7).text()
-                domicilio = self.table.item(row_idx, 8).text()
-                comuna = self.table.item(row_idx, 9).text()
-                encargo = self.table.item(row_idx, 10).text()
-                soli = self.table.item(row_idx, 11).text()
-                arancel = self.table.item(row_idx, 12).text()
+                numjui = self.data_table.item(row_idx, 1).text()
+                nombTribunal = self.data_table.item(row_idx, 2).text()
+                nombdemandante = self.data_table.item(row_idx, 3).text()
+                apellidemandante = self.data_table.item(row_idx, 4).text()
+                demandado = self.data_table.item(row_idx, 5).text()
+                repre = self.data_table.item(row_idx, 6).text()
+                mandante = self.data_table.item(row_idx, 7).text()
+                domicilio = self.data_table.item(row_idx, 8).text()
+                comuna = self.data_table.item(row_idx, 9).text()
+                encargo = self.data_table.item(row_idx, 10).text()
+                soli = self.data_table.item(row_idx, 11).text()
 
-                arancel_text = self.table.item(row_idx, 13).text()
+                arancel_text = self.data_table.item(row_idx, 12).text()
                 print(arancel_text)
                 try:
                         arancel = (arancel_text)
                 except ValueError:
                         arancel = 0  # Valor predeterminado si la conversión falla
                 
-
-        
-
             # Insertar datos de la demanda en la tabla "demanda"
             insert_query = "INSERT INTO demanda (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             cursor.execute(insert_query, (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel))
             db_connection.commit()
             db_connection.close()
-            
+        
              # Mensaje de éxito y limpiar la ventana
             QMessageBox.information(self, "Éxito", "Datos guardados correctamente.")
             self.data_table.clearContents()  # Limpiar datos de la tabla
