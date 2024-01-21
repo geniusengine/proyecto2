@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 insertar.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 16:15:10 
-Dernière modification : samedi 20 janvier 2024 à 16:31:53
+Dernière modification : vendredi 29 décembre 2023 à 23:50:27
 """
 
 import sys
@@ -73,9 +73,9 @@ class ExcelToDatabaseApp(QMainWindow):
                 for col_idx, cell_value in enumerate(row):
                     item = QTableWidgetItem(str(cell_value))
                     self.data_table.setItem(row_idx, col_idx, item)
-                    if col_idx == 12:  # Columna "Arancel"
+                    if col_idx == 13:  # Columna "Arancel"
                         arancel_input = QLineEdit()
-                        self.data_table.setCellWidget(row_idx, 12, arancel_input)
+                        self.data_table.setCellWidget(row_idx, 13, arancel_input)
                     
 
     def saveData(self):
@@ -93,29 +93,33 @@ class ExcelToDatabaseApp(QMainWindow):
             cursor = db_connection.cursor()
 
             for row_idx in range(self.data_table.rowCount()):
-                numjui = self.data_table.item(row_idx, 0).text()
-                nombTribunal = self.data_table.item(row_idx, 1).text()
-                nombdemandante = self.data_table.item(row_idx, 2).text()
-                apellidemandante = self.data_table.item(row_idx, 3).text()
-                demandado = self.data_table.item(row_idx, 4).text()
-                repre = self.data_table.item(row_idx, 5).text()
-                mandante = self.data_table.item(row_idx, 6).text()
-                domicilio = self.data_table.item(row_idx, 7).text()
-                comuna = self.data_table.item(row_idx, 8).text()
-                encargo = self.data_table.item(row_idx, 9).text()
-                soli = self.data_table.item(row_idx, 10).text()
-                arancel = self.data_table.item(row_idx, 11).text()
-                print(arancel)
+                numjui = self.table.item(row_idx, 1).text()
+                nombTribunal = self.table.item(row_idx, 2).text()
+                nombdemandante = self.table.item(row_idx, 3).text()
+                apellidemandante = self.table.item(row_idx, 4).text()
+                demandado = self.table.item(row_idx, 5).text()
+                repre = self.table.item(row_idx, 6).text()
+                mandante = self.table.item(row_idx, 7).text()
+                domicilio = self.table.item(row_idx, 8).text()
+                comuna = self.table.item(row_idx, 9).text()
+                encargo = self.table.item(row_idx, 10).text()
+                soli = self.table.item(row_idx, 11).text()
+                arancel = self.table.item(row_idx, 12).text()
+
+                arancel_text = self.table.item(row_idx, 13).text()
+                print(arancel_text)
                 try:
-                        arancel = (arancel)
+                        arancel = (arancel_text)
                 except ValueError:
                         arancel = 0  # Valor predeterminado si la conversión falla
-
-                # Insertar datos de la demanda en la tabla "demanda"
-                insert_query = "INSERT INTO demanda (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                cursor.execute(insert_query, (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel))
-                db_connection.commit()
                 
+
+        
+
+            # Insertar datos de la demanda en la tabla "demanda"
+            insert_query = "INSERT INTO demanda (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel))
+            db_connection.commit()
             db_connection.close()
             
              # Mensaje de éxito y limpiar la ventana
