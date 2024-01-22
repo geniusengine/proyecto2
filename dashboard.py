@@ -302,7 +302,7 @@ class DashboardApp(QMainWindow):
         self.actualizar_color_fila(row)
 
         # Configurar el sistema de registro
-        logging.info(f'Se ejecutó la función estampar_clicked correctamente para la causa con numjui: {numjui}')
+        logging.info(f'Se estampo causa: {numjui}')
 
 
 # Función para ordenar la tabla según la columna clicada
@@ -354,7 +354,7 @@ class DashboardApp(QMainWindow):
         # Proporciona un mensaje de éxito al usuario
         QMessageBox.information(self, "Éxito", "Causa notificada correctamente.")
 
-        logging.info(f'Se ejecutó la función notificar_clicked correctamente para la causa con numjui: {numjui_notificado}')
+        logging.info(f'Se notifico causa: {numjui_notificado}')
         
 # ajusta el tamaño de la tabla ajustandose al contenido
     def ajustar_tamanio(self):

@@ -6,6 +6,10 @@ from PyQt6.QtWidgets import QMessageBox,QApplication,QRadioButton, QButtonGroup,
 from PyQt6.QtCore import Qt
 from funcionalidades import estampado_app
 import pymssql
+import logging
+
+# Configurar el sistema de registro
+logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class BuscadorDatosCausaApp(QMainWindow):
     def __init__(self):
@@ -163,6 +167,7 @@ class BuscadorDatosCausaApp(QMainWindow):
                             self.table.setCellWidget(row_index, column_index, checkbox)
                         item = QTableWidgetItem(str(value))  
                         self.table.setItem(row_index, column_index, item)
+                        logging.info(f'Busqueda de causa {self.numjui}-{self.nombTribunal}')
 
                             
             else:#si no hay datos en la base de datos muestra un mensaje
@@ -344,6 +349,8 @@ class BuscadorDatosCausaApp(QMainWindow):
         index = self.table.indexAt(button.pos())
         row, col = index.row(), index.column()
         causa = self.causas_seleccionadas[row]
+
+        selected_row = self.table.currentRow()
         
         # Verifica si la causa ya ha sido notificada
         if causa["Notificada"] == 1:
@@ -352,6 +359,8 @@ class BuscadorDatosCausaApp(QMainWindow):
         
         # Actualiza la información localmente
         causa["Notificada"] = 1
+
+        numjui_notificado = self.table.item(selected_row, 1).text()
         
         # Actualiza el valor en la base de datos
         try:
@@ -374,6 +383,8 @@ class BuscadorDatosCausaApp(QMainWindow):
         self.actualizar_color_fila(row)
         # Proporciona un mensaje de éxito al usuario
         QMessageBox.information(self, "Éxito", "Causa notificada correctamente.")
+
+        logging.info(f'Se notifico causa: {numjui_notificado}')
 
      # abre la ventana de estampado
     def estampar_clicked(self):
@@ -413,6 +424,8 @@ class BuscadorDatosCausaApp(QMainWindow):
         
         # Actualiza la información localmente
         causa["Estampada"] = 1
+
+        numjui = self.table.item(selected_row, 1).text()
         
         # Actualiza el valor en la base de datos
         try:
@@ -432,7 +445,10 @@ class BuscadorDatosCausaApp(QMainWindow):
             self.cerrar_conexion_base_de_datos()
         # Actualiza la celda en la tabla y el color de la fila
         self.actualizar_color_fila(row)
-        # Proporciona un mensaje de éxito al usuario
+        
+        # Configurar el sistema de registro
+        logging.info(f'Se estampo causa: {numjui}')
+
     # establece la conexion con la base de datos
     def establecer_conexion_base_de_datos(self):
         self.db_connection = pymssql.connect(

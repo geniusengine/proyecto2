@@ -7,7 +7,10 @@ from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
 
 from .estampado_act import EstampadoActuaciones
+import logging
 
+# Configurar el sistema de registro
+logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 class Dashboard_actuacionesApp(QMainWindow):
@@ -74,6 +77,9 @@ class Dashboard_actuacionesApp(QMainWindow):
             db_connection.commit()
             db_connection.close()
             QMessageBox.information(self, "Éxito", "Datos guardados correctamente")
+
+            logging.info(f'Insercion-seguimiento de causa {self.numjui}-{self.nombTribunal}')
+
         except Exception as e:
             print(e)
             QMessageBox.critical(self, "Error", "Error al guardar los datos")

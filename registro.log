@@ -1,17 +1,14 @@
 2024-01-21 18:28:27,212 - WARNING - Inicio de secion erroneo
-2024-01-21 18:28:46,525 - INFO - Inicio de sesión exitoso para el usuario: admin
-2024-01-21 18:58:35,858 - INFO - Se ejecutó la función notificar_clicked correctamente para la causa con numjui: 19312
-2024-01-21 18:58:46,505 - INFO - Se ejecutó la función estampar_clicked correctamente para la causa con numjui: 19312
-2024-01-21 19:34:19,820 - INFO - Se ejecutó la función estampar_clicked correctamente para la causa con numjui: 1932
-2024-01-21 20:15:02,120 - INFO - Se ejecutó la función estampar_clicked correctamente para la causa con numjui: ggg
-<<<<<<< Updated upstream
-2024-01-21 20:43:52,856 - INFO - Se ejecutó la función notificar_clicked correctamente para la causa con numjui: 123
-2024-01-21 20:49:08,311 - INFO - Se ejecutó la función notificar_clicked correctamente para la causa con numjui: 121
-=======
-2024-01-21 20:23:30,100 - INFO - Se ejecutó la función estampar_clicked correctamente para la causa con numjui: asda
-2024-01-21 20:24:27,290 - INFO - Se ejecutó la función estampar_clicked correctamente para la causa con numjui: asda
+2024-01-21 18:28:46,525 - INFO - Inicio de sesiï¿½n exitoso para el usuario: admin
+2024-01-21 18:58:35,858 - INFO - Se ejecutï¿½ la funciï¿½n notificar_clicked correctamente para la causa con numjui: 19312
+2024-01-21 18:58:46,505 - INFO - Se ejecutï¿½ la funciï¿½n estampar_clicked correctamente para la causa con numjui: 19312
+2024-01-21 19:34:19,820 - INFO - Se ejecutï¿½ la funciï¿½n estampar_clicked correctamente para la causa con numjui: 1932
+2024-01-21 20:15:02,120 - INFO - Se ejecutï¿½ la funciï¿½n estampar_clicked correctamente para la causa con numjui: ggg
+2024-01-21 20:43:52,856 - INFO - Se ejecutï¿½ la funciï¿½n notificar_clicked correctamente para la causa con numjui: 123
+2024-01-21 20:49:08,311 - INFO - Se ejecutï¿½ la funciï¿½n notificar_clicked correctamente para la causa con numjui: 121
+2024-01-21 20:23:30,100 - INFO - Se ejecutï¿½ la funciï¿½n estampar_clicked correctamente para la causa con numjui: asda
+2024-01-21 20:24:27,290 - INFO - Se ejecutï¿½ la funciï¿½n estampar_clicked correctamente para la causa con numjui: asda
 2024-01-21 20:24:30,943 - INFO - A estamapado asda-asd
 2024-01-21 20:38:42,225 - INFO - Insercion de causa ss-ss
-2024-01-21 20:38:54,003 - INFO - Se ejecutó la función notificar_clicked correctamente para la causa con numjui: ss
-2024-01-21 20:38:56,120 - INFO - Se ejecutó la función estampar_clicked correctamente para la causa con numjui: ss
->>>>>>> Stashed changes
+2024-01-21 20:38:54,003 - INFO - Se ejecutï¿½ la funciï¿½n notificar_clicked correctamente para la causa con numjui: ss
+2024-01-21 20:38:56,120 - INFO - Se ejecutï¿½ la funciï¿½n estampar_clicked correctamente para la causa con numjui: ss
