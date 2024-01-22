@@ -396,6 +396,7 @@ class DashboardApp(QMainWindow):
             self.establecer_conexion_base_de_datos()
             self.acceder_base_de_datos()
             self.mostrar_clicked()
+            
         except Exception as e:
             print(f"Error al actualizar datos: {e}")
         finally:

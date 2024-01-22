@@ -6,7 +6,7 @@ from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
 
-from .estampado_act import EstampadoActuaciones
+from .estampado_app import Estampadoxd
 
 
 
@@ -135,7 +135,7 @@ class DashboardHistorialActuaciones(QMainWindow):
 # muestra los datos en la tabla
     def mostrar_tabla(self):
         self.table.setColumnCount(6)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal','Actuacion','Tipo de juicio','Estampar'])
+        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal','Tipo de juicio','Actuacion','Estampar'])
         for row_index, causa in enumerate(self.datos):
             self.table.insertRow(row_index)
             for col_index, (key, value) in enumerate(causa.items()):

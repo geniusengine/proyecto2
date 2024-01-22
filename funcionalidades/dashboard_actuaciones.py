@@ -6,7 +6,7 @@ from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
 
-from .estampado_act import EstampadoActuaciones
+from funcionalidades.estampado_app import Estampadoxd
 import logging
 
 # Configurar el sistema de registro
@@ -115,8 +115,6 @@ class Dashboard_actuacionesApp(QMainWindow):
     def cerrar_conexion_base_de_datos(self):
         if self.db_connection:
             self.db_connection.close()
-
-
 # limpia la tabla
     def limpiar_tabla(self):
         self.table.clearContents()
@@ -144,7 +142,7 @@ class Dashboard_actuacionesApp(QMainWindow):
 # muestra los datos en la tabla
     def mostrar_tabla(self):
         causa = {"fecha": self.fecha,
-                "rol": self.numjui,
+                "numjui": self.numjui,
                 "tribunal": self.nombTribunal,
                 "actuacion": "Actuacionprueba",
                 "tipojuicio": "Tipojuicioprueba",
@@ -184,6 +182,7 @@ class Dashboard_actuacionesApp(QMainWindow):
                     self.table.setItem(row_index, col_index, item)  
                     print(key, value)
         self.ajustar_tamanio()
+    
     def combo_box_changed(self, row, col, index):
         # Esta función se llama cuando cambia la selección en un QComboBox
         combo_box = self.table.cellWidget(row, col)
@@ -197,6 +196,21 @@ class Dashboard_actuacionesApp(QMainWindow):
 # Función para ordenar la tabla según la columna clicada
     def ordenar_tabla(self, logicalIndex):
         self.table.sortItems(logicalIndex, Qt.SortOrder.AscendingOrder if self.table.horizontalHeader().sortIndicatorOrder() == Qt.SortOrder.DescendingOrder else Qt.SortOrder.DescendingOrder)
+
+    def obtener_datos_causa(self, numjui):
+        try:
+            with self.db_connection.cursor() as cursor:
+                query = "SELECT fechaNotificacion, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel FROM notificacion WHERE numjui = %s"
+                cursor.execute(query, (numjui,))
+                resultado = cursor.fetchone()
+
+            if resultado:
+                return resultado
+            else:
+                return None
+        except Exception as e:
+            print(f"Error al obtener datos de la base de datos: {e}")
+            return None
         
 # abre la ventana de estampado
     def estampar_clicked(self):
@@ -204,16 +218,22 @@ class Dashboard_actuacionesApp(QMainWindow):
         selected_row = self.table.currentRow()
         # Verificar si se seleccionó una fila
         if selected_row != -1:
-            # Obtener los datos de la columna actuacion
-            self.rol = self.table.item(selected_row, 1).text()
-            self.nombTribunal = self.table.item(selected_row, 2).text()
-            self.fecha = self.table.item(selected_row, 0).text()
-            self.tipoJuicio = self.table.item(selected_row, 3).text()
-            self.actuacion = self.table.item(selected_row, 4).text()
-            #observacion = self.table.item(selected_row, 17).text()
-            # Importa Estampadoxd localmente
-            self.exEstampado = EstampadoActuaciones(self.numjui, self.nombTribunal, self.fecha)
-            self.exEstampado.show()
+        # Obtener datos de la fila seleccionada
+            numjui = self.table.item(selected_row, 0).text()
+
+            # Recuperar datos de la base de datos para el numjui seleccionado
+            datos_causa = self.obtener_datos_causa(numjui)
+
+            # Verificar si se recuperaron los datos
+            if datos_causa:
+                # Desempaquetar los datos recuperados
+                fechaNotificacion, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel = datos_causa
+
+                # Importar Estampadoxd localmente
+                self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
+                self.ex3.show()
+            else:
+                QMessageBox.warning(self, "Advertencia", f"No se encontraron datos para el numjui {numjui}.")
         
         button = self.sender()
         index = self.table.indexAt(button.pos())

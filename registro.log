@@ -12,3 +12,31 @@
 2024-01-21 20:38:42,225 - INFO - Insercion de causa ss-ss
 2024-01-21 20:38:54,003 - INFO - Se ejecutï¿½ la funciï¿½n notificar_clicked correctamente para la causa con numjui: ss
 2024-01-21 20:38:56,120 - INFO - Se ejecutï¿½ la funciï¿½n estampar_clicked correctamente para la causa con numjui: ss
+2024-01-21 21:27:09,559 - INFO - Insercion de causa hh-hh
+2024-01-21 21:27:26,851 - INFO - Se notifico causa: hh
+2024-01-21 21:27:28,521 - INFO - Se estampo causa: hh
+2024-01-21 21:34:50,455 - INFO - Se estampo causa: asda
+2024-01-21 21:35:21,178 - INFO - Se estampo causa: asda
+2024-01-21 21:35:23,973 - INFO - Se notifico causa: asda
+2024-01-22 08:59:07,172 - INFO - Inicio de sesión exitoso para el usuario: admin
+2024-01-22 09:01:32,936 - INFO - Se estampo causa: matias
+2024-01-22 09:04:10,377 - INFO - Se estampo causa: matias
+2024-01-22 09:04:17,268 - INFO - Se estampo causa: matias
+2024-01-22 09:04:26,411 - INFO - A estamapado matias-pepe
+2024-01-22 09:05:03,380 - INFO - Insercion de causa el-e
+2024-01-22 09:05:21,416 - INFO - Insercion-seguimiento de causa el-e
+2024-01-22 09:16:49,848 - INFO - Se estampo causa: no has
+2024-01-22 09:17:12,473 - INFO - Se estampo causa: no has
+2024-01-22 09:17:17,531 - INFO - A estamapado no has-pepe
+2024-01-22 09:17:24,377 - INFO - Se notifico causa: la noche 
+2024-01-22 09:18:18,576 - INFO - Se estampo causa: la noche 
+2024-01-22 09:23:04,980 - INFO - Insercion de causa aa-a
+2024-01-22 09:24:19,835 - INFO - Insercion de causa f-f
+2024-01-22 09:24:47,920 - INFO - Insercion de causa 2-3
+2024-01-22 14:53:30,668 - INFO - Se estampo causa: matias
+2024-01-22 14:53:33,750 - INFO - Se estampo causa: sigue el
+2024-01-22 14:53:35,730 - INFO - Se estampo causa: el
+2024-01-22 14:57:15,774 - INFO - Se estampo causa: matias
+2024-01-22 15:21:18,177 - INFO - Insercion de causa j7-j7
+2024-01-22 15:23:24,517 - INFO - Se notifico causa: j7
+2024-01-22 15:23:25,680 - INFO - Se estampo causa: j7

@@ -167,7 +167,7 @@ class BuscadorDatosCausaApp(QMainWindow):
                             self.table.setCellWidget(row_index, column_index, checkbox)
                         item = QTableWidgetItem(str(value))  
                         self.table.setItem(row_index, column_index, item)
-                        logging.info(f'Busqueda de causa {self.numjui}-{self.nombTribunal}')
+                        #logging.info(f'Busqueda de causa {self.numjui}-{self.nombTribunal}')
 
                             
             else:#si no hay datos en la base de datos muestra un mensaje
