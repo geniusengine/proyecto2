@@ -54,6 +54,11 @@ class DashboardHistorialActuaciones(QMainWindow):
 
         self.setGeometry(100, 100, 400, 300)
 
+
+    def combo_box_changed(self, row, col, index):
+        # Aquí deberías escribir el código que se ejecutará cuando cambie el índice del combo box
+        pass
+
     # crea cada boton que se necesite
     def crear_boton(self, texto, funcion):
         boton = QPushButton(texto, self)
