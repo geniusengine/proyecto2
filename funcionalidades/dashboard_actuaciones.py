@@ -200,7 +200,7 @@ class Dashboard_actuacionesApp(QMainWindow):
     def obtener_datos_causa(self, numjui):
         try:
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel FROM notificacion WHERE numjui = %s"
+                query = "SELECT nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel FROM demanda WHERE numjui = %s"
                 cursor.execute(query, (numjui,))
                 resultado = cursor.fetchone()
 
@@ -227,10 +227,10 @@ class Dashboard_actuacionesApp(QMainWindow):
             # Verificar si se recuperaron los datos
             if datos_causa:
                 # Desempaquetar los datos recuperados
-                fechaNotificacion, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel = datos_causa
+                nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel = datos_causa
 
                 # Importar Estampadoxd localmente
-                self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
+                self.ex3 = Estampadoxd(numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
                 self.ex3.show()
             else:
                 QMessageBox.warning(self, "Advertencia", f"No se encontraron datos para el numjui {numjui}.")
@@ -253,8 +253,8 @@ class Dashboard_actuacionesApp(QMainWindow):
         try:
             self.establecer_conexion_base_de_datos()
             with self.db_connection.cursor() as cursor:
-                query = "UPDATE notificacion SET estadoCausa = 1 WHERE numjui = %s"
-                cursor.execute(query, (causa['rol'],))
+                query = "UPDATE demanda SET estadoCausa = 1 WHERE numjui = %s"
+                cursor.execute(query, (causa['numjui'],))
             self.db_connection.commit()
         except pymssql.Error as db_error:
             print(f"Error al ejecutar la consulta SQL: {db_error}")

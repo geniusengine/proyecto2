@@ -288,8 +288,6 @@ class DashboardApp(QMainWindow):
             soli = self.table.item(selected_row, 11).text()
             arancel = self.table.item(selected_row, 12).text()
     
-            #observacion = self.table.item(selected_row, 17).text()
-            #########################################################################################Observacion agreagr ??????????????
             # Importa Estampadoxd localmente
             self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
             self.ex3.show()
