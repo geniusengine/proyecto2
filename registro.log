@@ -58,3 +58,15 @@
 2024-01-23 12:34:46,900 - INFO - Insercion de causa hh-hh
 2024-01-23 12:36:24,785 - INFO - Insercion de causa vv-v
 2024-01-23 12:44:27,259 - INFO - Insercion de causa c-c
+2024-01-23 15:14:41,076 - INFO - Se estampo causa: pe
+2024-01-23 15:15:32,104 - INFO - Insercion de causa y-y
+2024-01-23 15:15:40,699 - INFO - Insercion-seguimiento de causa y-y
+2024-01-23 15:16:04,066 - INFO - Insercion de causa sds-sd
+2024-01-23 15:34:28,423 - INFO - Se estampo causa: pe
+2024-01-23 15:34:33,782 - INFO - Se notifico causa: pe
+2024-01-23 15:54:55,602 - INFO - Insercion de causa ok-ok
+2024-01-23 15:55:08,207 - INFO - Insercion-seguimiento de causa ok-ok
+2024-01-23 15:55:20,602 - INFO - Se notifico causa: ok
+2024-01-23 15:55:22,277 - INFO - Se estampo causa: ok
+2024-01-23 15:55:26,161 - INFO - A estamapado ok-ok
+2024-01-23 16:10:26,909 - INFO - Insercion de causa rtrtyu-rtrtyu

@@ -1,7 +1,7 @@
 import sys
 import time
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
-    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel,QComboBox
+    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel,QComboBox, QToolButton, QMenu
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
@@ -124,7 +124,7 @@ class DashboardHistorialActuaciones(QMainWindow):
                         "Rol": fila[0],
                         "Tribunal": fila[1],
                         "Tipo de juicio": fila[2],
-                        "Actuacion": fila[3],
+                        "actuacion": "Actuacionprueba",
                         "Estampada": "Estampar"
                 }
                 self.datos.append(causa)
