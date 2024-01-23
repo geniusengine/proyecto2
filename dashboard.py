@@ -123,7 +123,7 @@ class DashboardApp(QMainWindow):
         self.timer_eliminar_respaldo = QTimer(self)
 
         self.timer_eliminar_respaldo.timeout.connect(self.eliminar_y_respaldo)
-        self.timer_eliminar_respaldo.start(60000)  # 600000 milisegundos = 10 minutos
+        self.timer_eliminar_respaldo.start(1800000)  # 600000 milisegundos = 10 minutos
 
 
 
