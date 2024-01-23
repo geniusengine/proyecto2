@@ -142,6 +142,22 @@ class DashboardHistorialActuaciones(QMainWindow):
                 if key == "Estampada":
                     button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
+                elif key == "actuacion":
+                    # Crear un objeto QComboBox para las celdas de actuaciones
+                    combo_box = QComboBox()
+                    opciones_actuaciones = ["Elija actuacion","Búsqueda Negativa","Búsqueda Positiva","Not. por cédula","Not. Art. 44" ,"Req. de pago en Oficina", "Op. al Embargo" ,"Not. Personal" ,"Not. Personal/ Req. de Pago" ,"Not. art. 52" ,"Embargo con Fuerza Pública" ,"Embargo Frustrado" ,"Embargo Banco" ,"Embargo Vehículo" ,"Retiro de Vehículo" ,"Retiro Frustrado" ,"Retiro de Especies "  ,"OtrO"  ]  # Puedes personalizar las opciones
+                    combo_box.addItems(opciones_actuaciones)
+                    combo_box.setCurrentText(value)
+                    self.table.setCellWidget(row_index, col_index, combo_box)
+                    combo_box.currentIndexChanged.connect(lambda index, row=row_index, col=col_index: self.combo_box_changed(row, col, index))# obtiene el valor del combo box seleccionado
+                elif key == "tipojuicio":
+                    # Crear un objeto QComboBox para las celdas de tipo de juicio
+                    combo_box = QComboBox()
+                    opciones_tipojuicio = ["Elija tipo de juicio","Ejecutivo", "Ordinario"]
+                    combo_box.addItems(opciones_tipojuicio)
+                    combo_box.setCurrentText(value)
+                    self.table.setCellWidget(row_index, col_index, combo_box)
+                    combo_box.currentIndexChanged.connect(lambda index, row=row_index, col=col_index: self.combo_box_changed(row, col, index))
                 else:
                     # Crea un objeto QTableWidgetItem para las otras columnas
                     item = QTableWidgetItem(str(value))

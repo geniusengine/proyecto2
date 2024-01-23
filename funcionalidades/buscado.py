@@ -95,8 +95,6 @@ class BuscadorDatosCausaApp(QMainWindow):
         if self.db_connection:
             self.db_connection.close()
 
-    
-
 #busca los datos en la base de datos en base al rol o tribunal
     def search_data(self):
         search_by_numjui = self.check_numjui.isChecked()
@@ -118,21 +116,21 @@ class BuscadorDatosCausaApp(QMainWindow):
             if search_by_numjui:#si se selecciono numjui para buscar se ejecuta esta query
                 query = """
                 SELECT fechaNotificacion, numjui, nombTribunal
-                FROM notificacion
+                FROM AUD_notificacion
                 WHERE numjui = %s
                 """
                 cursor.execute(query, (numjui))
             elif search_by_tribunal:#si se selecciono tribunal para buscar se ejecuta esta query
                 query = """
                 SELECT fechaNotificacion, numjui, nombTribunal
-                FROM notificacion
+                FROM AUD_notificacion
                 WHERE nombtribunal = %s
                 """
                 cursor.execute(query, (tribunal))
             elif search_by_numjui and search_by_tribunal:#si se selecciono ambos para buscar se ejecuta esta query
                 query = """
                 SELECT fechaNotificacion, numjui, nombTribunal
-                FROM notificacion
+                FROM AUD_notificacion
                 WHERE numjui = %s OR nombtribunal = %s
                 """
                 cursor.execute(query, (numjui,tribunal))
@@ -224,21 +222,21 @@ class BuscadorDatosCausaApp(QMainWindow):
                     if numjui:#si se selecciono numjui para buscar se ejecuta esta query
                         query = """
                         SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
-                        FROM notificacion
+                        FROM AUD_notificacion
                         WHERE numjui = %s
                         """
                         cursor.execute(query, (numjui))
                     elif nombTribunal:#si se selecciono tribunal para buscar se ejecuta esta query
                         query = """
                         SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
-                        FROM notificacion
+                        FROM AUD_notificacion
                         WHERE nombtribunal = %s
                         """
                         cursor.execute(query, (nombTribunal))
                     elif numjui and nombTribunal:#si se selecciono ambos para buscar se ejecuta esta query
                         query = """
                         SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
-                        FROM notificacion
+                        FROM AUD_notificacion
                         WHERE numjui = %s OR nombtribunal = %s
                         """
                     causas = cursor.fetchall()
@@ -366,7 +364,7 @@ class BuscadorDatosCausaApp(QMainWindow):
         try:
             self.establecer_conexion_base_de_datos()
             with self.db_connection.cursor() as cursor:
-                query = f"UPDATE notificacion SET estadoNoti = 1"
+                query = f"UPDATE AUD_notificacion SET estadoNoti = 1"
                 cursor.execute(query)
             self.db_connection.commit()
         except pymssql.Error as db_error:
@@ -431,7 +429,7 @@ class BuscadorDatosCausaApp(QMainWindow):
         try:
             self.establecer_conexion_base_de_datos()
             with self.db_connection.cursor() as cursor:
-                query = f"UPDATE notificacion SET estadoCausa = 1"
+                query = f"UPDATE AUD_notificacion SET estadoCausa = 1"
                 cursor.execute(query)
             self.db_connection.commit()
         except pymssql.Error as db_error:

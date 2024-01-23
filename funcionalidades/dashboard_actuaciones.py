@@ -161,7 +161,7 @@ class Dashboard_actuacionesApp(QMainWindow):
                 elif key == "actuacion":
                     # Crear un objeto QComboBox para las celdas de actuaciones
                     combo_box = QComboBox()
-                    opciones_actuaciones = ["Elija actuacion","Actuación 1","Actuación 2","Actuación 3","Actuación 4" ,"Actuación 5"  ]  # Puedes personalizar las opciones
+                    opciones_actuaciones = ["Elija actuacion","Búsqueda Negativa","Búsqueda Positiva","Not. por cédula","Not. Art. 44" ,"Req. de pago en Oficina", "Op. al Embargo" ,"Not. Personal" ,"Not. Personal/ Req. de Pago" ,"Not. art. 52" ,"Embargo con Fuerza Pública" ,"Embargo Frustrado" ,"Embargo Banco" ,"Embargo Vehículo" ,"Retiro de Vehículo" ,"Retiro Frustrado" ,"Retiro de Especies "  ,"OtrO"  ]  # Puedes personalizar las opciones
                     combo_box.addItems(opciones_actuaciones)
                     combo_box.setCurrentText(value)
                     self.table.setCellWidget(row_index, col_index, combo_box)
@@ -200,7 +200,7 @@ class Dashboard_actuacionesApp(QMainWindow):
     def obtener_datos_causa(self, numjui):
         try:
             with self.db_connection.cursor() as cursor:
-                query = "SELECT nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel FROM demanda WHERE numjui = %s"
+                query = "SELECT nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel FROM AUD_notificacion WHERE numjui = %s"
                 cursor.execute(query, (numjui,))
                 resultado = cursor.fetchone()
 
@@ -219,7 +219,7 @@ class Dashboard_actuacionesApp(QMainWindow):
         # Verificar si se seleccionó una fila
         if selected_row != -1:
         # Obtener datos de la fila seleccionada
-            numjui = self.table.item(selected_row, 0).text()
+            numjui = self.table.item(selected_row, 1).text()
 
             # Recuperar datos de la base de datos para el numjui seleccionado
             datos_causa = self.obtener_datos_causa(numjui)
@@ -233,7 +233,7 @@ class Dashboard_actuacionesApp(QMainWindow):
                 self.ex3 = Estampadoxd(numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
                 self.ex3.show()
             else:
-                QMessageBox.warning(self, "Advertencia", f"No se encontraron datos para el numjui {numjui}.")
+                QMessageBox.warning(self, "Advertencia", f"No puede estampar datos, datos no encontrados {numjui}.")
         
         button = self.sender()
         index = self.table.indexAt(button.pos())
@@ -243,7 +243,6 @@ class Dashboard_actuacionesApp(QMainWindow):
 
         # Verifica si la causa ya ha sido notificada
         if causa["Estampada"] == 1:
-            QMessageBox.warning(self, "Advertencia", "Esta causa ya ha sido notificada.")
             return
         
         # Actualiza la información localmente
@@ -253,7 +252,7 @@ class Dashboard_actuacionesApp(QMainWindow):
         try:
             self.establecer_conexion_base_de_datos()
             with self.db_connection.cursor() as cursor:
-                query = "UPDATE demanda SET estadoCausa = 1 WHERE numjui = %s"
+                query = "UPDATE AUD_notificacion SET estadoCausa = 1 WHERE numjui = %s"
                 cursor.execute(query, (causa['numjui'],))
             self.db_connection.commit()
         except pymssql.Error as db_error:
@@ -268,6 +267,7 @@ class Dashboard_actuacionesApp(QMainWindow):
         # Actualiza la celda en la tabla y el color de la fila
         self.actualizar_color_fila(row)
         # Proporciona un mensaje de éxito al usuario
+
     def establecer_conexion_base_de_datos(self):
         self.db_connection = pymssql.connect(
             server='vps-3697915-x.dattaweb.com',
@@ -283,14 +283,14 @@ class Dashboard_actuacionesApp(QMainWindow):
     def actualizar_color_fila(self, row):
         causa = self.causas_seleccionadas[row]
         print(causa)
-        notificada = causa["Notificada"]
+        #notificada = causa["Notificada"]
         estampada = causa["estadoCausa"]
         
         for col_index in range(self.table.columnCount()):
             item = self.table.item(row, col_index)
             if item is not None:
                 # Llamas a la función que establece el color para cada celda
-                self.color_y_etiqueta_celda(item, notificada, estampada)
+                self.color_y_etiqueta_celda(item, estampada)
 
         # Actualiza la vista de la tabla
         self.table.viewport().update()
