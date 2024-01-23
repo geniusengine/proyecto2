@@ -171,7 +171,7 @@ class DashboardApp(QMainWindow):
 
             # Elimina los datos de la tabla notificacion donde estadoNoti = 1
             with self.db_connection.cursor() as cursor:
-                delete_query = "DELETE FROM notificacion WHERE estadoNoti = 1"
+                delete_query = "DELETE FROM notificacion WHERE estadoNoti = 1 and estadoCausa = 1"
                 cursor.execute(delete_query)
 
             self.db_connection.commit()
