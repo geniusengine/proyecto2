@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : lundi 22 janvier 2024 à 15:25:09
+Dernière modification : lundi 22 janvier 2024 à 22:48:44
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout
@@ -148,8 +148,6 @@ class MiApp(QMainWindow):
             respuesta = QMessageBox.question(self, 'Confirmación', '¿Desea hacer seguimiento de la causa?',QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if respuesta == QMessageBox.StandardButton.Yes:
                 self.abrir_dashboard_actuaciones()
-                self.UltimaActualizacionEstadoNoti()
-
             else:
                 pass
         except Exception as e:

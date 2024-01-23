@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 insertar.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 16:15:10 
-Dernière modification : dimanche 21 janvier 2024 à 20:51:06
+Dernière modification : lundi 22 janvier 2024 à 22:47:07
 """
 
 import sys

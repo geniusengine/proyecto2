@@ -119,6 +119,14 @@ class DashboardApp(QMainWindow):
         # Agrega la leyenda de colores al layout vertical existente
         self.layout_vertical.addLayout(color_legend_layout)
 
+        # Crea un temporizador para realizar la eliminación y respaldo cada 10 minutos
+        self.timer_eliminar_respaldo = QTimer(self)
+
+        self.timer_eliminar_respaldo.timeout.connect(self.eliminar_y_respaldo)
+        self.timer_eliminar_respaldo.start(60000)  # 600000 milisegundos = 10 minutos
+
+
+
     # crea los botones de la interfaz
     def crear_botones(self):
         self.btn_buscar = self.crear_boton('Buscar', self.buscar_clicked)
@@ -142,7 +150,7 @@ class DashboardApp(QMainWindow):
         # Esta función se llamará cuando se guarden los datos
         self.label.setText("¡Panel Actualizado!")
         
-        
+
     # establece la conexion con la base de datos
     def establecer_conexion_base_de_datos(self):
         self.db_connection = pymssql.connect(
@@ -155,6 +163,26 @@ class DashboardApp(QMainWindow):
     def cerrar_conexion_base_de_datos(self):
         if self.db_connection:
             self.db_connection.close()
+
+
+    def eliminar_y_respaldo(self):
+        try:
+            self.establecer_conexion_base_de_datos()
+
+            # Elimina los datos de la tabla notificacion donde estadoNoti = 1
+            with self.db_connection.cursor() as cursor:
+                delete_query = "DELETE FROM notificacion WHERE estadoNoti = 1"
+                cursor.execute(delete_query)
+
+            self.db_connection.commit()
+
+        except pymssql.Error as db_error:
+            print(f"Error al ejecutar la consulta SQL: {db_error}")
+            self.db_connection.rollback()
+        except Exception as e:
+            print(f"Error desconocido: {e}")
+        finally:
+            self.cerrar_conexion_base_de_datos()
 
     # accede a la base de datos
     def acceder_base_de_datos(self):
