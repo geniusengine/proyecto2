@@ -6,7 +6,7 @@ from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
 
-from .estampado_app import Estampadoxd
+from estampado_app import Estampadoxd
 
 
 
@@ -16,6 +16,7 @@ class DashboardHistorialActuaciones(QMainWindow):
 
         super().__init__()
         self.db_connection = None
+        self.datos = []
         self.initUI()
         print("Dashboard Actuaciones")
     
@@ -109,67 +110,92 @@ class DashboardHistorialActuaciones(QMainWindow):
         min_width = max(self.width(), total_width)
         
         # Establecer un ancho máximo para la ventana
-        max_width = 800  # Puedes ajustar este valor según tus necesidades
+        max_width = 1000  # Puedes ajustar este valor según tus necesidades
         min_width = min(min_width, max_width)
         
         self.setMinimumWidth(min_width - 260)
         self.setMaximumWidth(max_width)  # Establecer un ancho máximo para la ventana
         self.adjustSize()
-    def obtener_datos(self):
+    # ...
+    def establecer_conexion_base_de_datos(self):
         try:
+            self.db_connection = pymssql.connect(
+                server='vps-3697915-x.dattaweb.com',
+                user='daniel',
+                password='LOLxdsas--',
+                database='micau5a'
+            )
+        except Exception as e:
+            print(f"Error al establecer la conexión: {e}")
+
+    def cerrar_conexion_base_de_datos(self):
+        try:
+            if self.db_connection:
+                self.db_connection.close()
+        except Exception as e:
+            print(f"Error al cerrar la conexión: {e}")
+
+    def obtener_datos(self):
+        
+        try:
+            self.establecer_conexion_base_de_datos()
             with self.db_connection.cursor() as cursor:
-                query = "SELECT numjui, nombTribunal,tipoJuicio,actuacion,fecha FROM actuaciones"
+                query = "SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa FROM AUD_notificacion"
+                
+        
+                
                 cursor.execute(query)
                 resultados = cursor.fetchall()
-            self.datos = []
+                
+                
+            self.causas=[]
             for fila in resultados:
-                fecha_formateada = fila[4].strftime("%d-%m-%Y")
-                causa = {
-                    "Fecha notificacion": fecha_formateada,
-                        "Rol": fila[0],
-                        "Tribunal": fila[1],
-                        "Tipo de juicio": fila[2],
-                        "actuacion": "Actuacionprueba",
-                        "Estampada": "Estampar"
-                }
-                self.datos.append(causa)
-            self.cerrar_conexion_base_de_datos()
+                causa = {'fechaNotificacion':fila[0],'numjui':fila[1],'nombtribunal':fila[2],'nomdemandante':fila[3],'apellidemandante':fila[4],'demandado':fila[5],'repre':fila[6],'mandante':fila[7],'domicilio':fila[8],'comuna':fila[9],'encargo':fila[10],'soli':fila[11],'arancel':fila[12],'Estampar':fila[13],}
+                    
+                
+                self.causas.append(causa)
         except Exception as e:
             print(f"Error al acceder a la base de datos: {e}")
+        finally:
+            self.cerrar_conexion_base_de_datos()
 
+# ...
+
+        
 # muestra los datos en la tabla
     def mostrar_tabla(self):
-        self.table.setColumnCount(6)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal','Tipo de juicio','Actuacion','Estampar'])
-        for row_index, causa in enumerate(self.datos):
+        self.table.setColumnCount(15)
+        self.table.setHorizontalHeaderLabels(['fechaNotificacion', 'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandado', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel',  'Estampar','Actuación'])
+        for row_index, causa in enumerate(self.causas):
+            
             self.table.insertRow(row_index)
             for col_index, (key, value) in enumerate(causa.items()):
-                if key == "Estampada":
-                    button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
-                    self.table.setCellWidget(row_index, col_index, button)
-                elif key == "actuacion":
-                    # Crear un objeto QComboBox para las celdas de actuaciones
-                    combo_box = QComboBox()
-                    opciones_actuaciones = ["Elija actuacion","Búsqueda Negativa","Búsqueda Positiva","Not. por cédula","Not. Art. 44" ,"Req. de pago en Oficina", "Op. al Embargo" ,"Not. Personal" ,"Not. Personal/ Req. de Pago" ,"Not. art. 52" ,"Embargo con Fuerza Pública" ,"Embargo Frustrado" ,"Embargo Banco" ,"Embargo Vehículo" ,"Retiro de Vehículo" ,"Retiro Frustrado" ,"Retiro de Especies "  ,"OtrO"  ]  # Puedes personalizar las opciones
-                    combo_box.addItems(opciones_actuaciones)
-                    combo_box.setCurrentText(value)
-                    self.table.setCellWidget(row_index, col_index, combo_box)
-                    combo_box.currentIndexChanged.connect(lambda index, row=row_index, col=col_index: self.combo_box_changed(row, col, index))# obtiene el valor del combo box seleccionado
-                elif key == "tipojuicio":
-                    # Crear un objeto QComboBox para las celdas de tipo de juicio
-                    combo_box = QComboBox()
-                    opciones_tipojuicio = ["Elija tipo de juicio","Ejecutivo", "Ordinario"]
-                    combo_box.addItems(opciones_tipojuicio)
-                    combo_box.setCurrentText(value)
-                    self.table.setCellWidget(row_index, col_index, combo_box)
-                    combo_box.currentIndexChanged.connect(lambda index, row=row_index, col=col_index: self.combo_box_changed(row, col, index))
-                else:
-                    # Crea un objeto QTableWidgetItem para las otras columnas
-                    item = QTableWidgetItem(str(value))
-                    #establece el color de la celda
-                    item.setBackground(QColor(52, 152, 219))
-                    self.table.setItem(row_index, col_index, item)  
-                    print(key, value)
+                        if key == "Estampar":
+                            button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
+                            self.table.setCellWidget(row_index, col_index, button)
+                        elif key == "Actuación":
+                        # Crear un objeto QComboBox para las celdas de actuaciones
+                            combo_box = QComboBox()
+                            opciones_actuaciones = ["Elija actuación", "Búsqueda Negativa", "Búsqueda Positiva", "Not. por cédula", "Not. Art. 44", "Req. de pago en Oficina", "Op. al Embargo", "Not. Personal", "Not. Personal/Req. de Pago", "Not. art. 52", "Embargo con Fuerza Pública", "Embargo Frustrado", "Embargo Banco", "Embargo Vehículo", "Retiro de Vehículo", "Retiro Frustrado", "Retiro de Especies ", "OtrO"]
+                            combo_box.addItems(opciones_actuaciones)
+                            combo_box.setCurrentText(value)
+                            self.table.setCellWidget(row_index, col_index, combo_box)
+                            combo_box.currentIndexChanged.connect(lambda index, row=row_index, col=col_index: self.combo_box_changed(row, col, index))
+                        elif key == "Tipo de Juicio":
+                        # Crear un objeto QComboBox para las celdas de tipo de juicio
+                            combo_box = QComboBox()
+                            opciones_tipojuicio = ["Elija tipo de juicio", "Ejecutivo", "Ordinario"]
+                            combo_box.addItems(opciones_tipojuicio)
+                            combo_box.setCurrentText(value)
+                            self.table.setCellWidget(row_index, col_index, combo_box)
+                            combo_box.currentIndexChanged.connect(lambda index, row=row_index, col=col_index: self.combo_box_changed(row, col, index))
+                        else:
+                        # Crea un objeto QTableWidgetItem para las otras columnas
+                            item = QTableWidgetItem(str(value))
+                        # establece el color de la celda
+                            item.setBackground(QColor(52, 152, 219))
+                            self.table.setItem(row_index, col_index, item)
+                    
         self.ajustar_tamanio()
 # Función para ordenar la tabla según la columna clicada
     def ordenar_tabla(self, logicalIndex):
@@ -181,60 +207,39 @@ class DashboardHistorialActuaciones(QMainWindow):
         selected_row = self.table.currentRow()
         # Verificar si se seleccionó una fila
         if selected_row != -1:
-            # Obtener los datos de la columna actuacion
-            self.rol = self.table.item(selected_row, 1).text()
-            self.nombTribunal = self.table.item(selected_row, 2).text()
-            self.fecha = self.table.item(selected_row, 0).text()
-            self.tipoJuicio = self.table.item(selected_row, 3).text()
-            self.actuacion = self.table.item(selected_row, 4).text()
-            #observacion = self.table.item(selected_row, 17).text()
-            # Importa Estampadoxd localmente
-            #self.exEstampado = EstampadoActuaciones(self.rol, self.nombTribunal, self.fecha)
-            #self.exEstampado.show()
-        
-        button = self.sender()
-        index = self.table.indexAt(button.pos())
-        row, col = index.row(), index.column()
-        causa = self.datos[row]
-        color = QColor(250, 193, 114)
+            # Obtener datos de la fila seleccionada
+            fechaNotificacion = self.table.item(selected_row, 0).text()
+            numjui = self.table.item(selected_row, 1).text()  
+            nombTribunal = self.table.item(selected_row, 2).text()  
+            nombdemandante = self.table.item(selected_row, 3).text()
+            apellidemandante = self.table.item(selected_row,4).text()  
+            demandado = self.table.item(selected_row, 5).text()  
+            repre = self.table.item(selected_row, 6).text()  
+            mandante = self.table.item(selected_row,7).text()  
+            domicilio = self.table.item(selected_row, 8).text()  
+            comuna = self.table.item(selected_row, 9).text()  
+            encargo = self.table.item(selected_row, 10).text() 
+            soli = self.table.item(selected_row, 11).text() 
+            arancel = self.table.item(selected_row, 12).text() 
 
-        # Verifica si la causa ya ha sido notificada
-        if causa["Estampada"] == 1:
-            QMessageBox.warning(self, "Advertencia", "Esta causa ya ha sido estampada.")
-            return
+            # Importa Estampadoxd localmente
+            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
+            self.ex3.show()
+
+            button = self.sender()
+            index = self.table.indexAt(button.pos())
+            row, col = index.row(), index.column()
+            causa = self.causas[row]
+
+            # Verifica si la causa ya ha sido notificada
+            numjui = self.table.item(selected_row, 4).text()
+
+
+       
         
-        # Actualiza la información localmente
-        causa["Estampada"] = 1
-        
-        # Actualiza el valor en la base de datos
-        try:
-            self.establecer_conexion_base_de_datos()
-            with self.db_connection.cursor() as cursor:
-                query = "UPDATE notificacion SET estadoCausa = 1 WHERE numjui = %s"
-                cursor.execute(query, (causa['Rol'],))
-            self.db_connection.commit()
-        except pymssql.Error as db_error:
-            print(f"Error al ejecutar la consulta SQL: {db_error}")
-            self.db_connection.rollback()
-            raise  # Re-levanta la excepción para que el programa no continúe si hay un error grave en la base de datos
-        except Exception as e:
-            print(f"Error desconocido: {e}")
-            raise  # Re-levanta la excepción para que el programa no continúe si hay un error desconocido
-        finally:
-            self.cerrar_conexion_base_de_datos()
-        # Proporciona un mensaje de éxito al usuario
-    def establecer_conexion_base_de_datos(self):
-        self.db_connection = pymssql.connect(
-            server='vps-3697915-x.dattaweb.com',
-            user='daniel',
-            password='LOLxdsas--',
-            database='micau5a'
-        )
-    # cierra la conexion con la base de datos
-    def cerrar_conexion_base_de_datos(self):
-        if self.db_connection:
-            self.db_connection.close()
-# Función principal
+    
+       
+   
 # Ejecuta la función principal
 if __name__ == '__main__':
     app = QApplication(sys.argv)

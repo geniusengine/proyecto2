@@ -218,7 +218,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.nombdemandante} {self.apellidemandado}, a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de {self.soli}.DOY FE."
+        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.nombdemandante} {self.apellidemandante}, a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de {self.soli}.DOY FE."
         doc.add_paragraph(busqueda_positiva)
 
         # Agrega la firma al final del documento
@@ -460,7 +460,7 @@ class Estampadoxd(QMainWindow):
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
     
     def actaLanzamiento(self):
-        # Variables de tiempo
+        # Variables de tiempohg{{´j}}
         now = datetime.now()
         fecha_actual = now.strftime("%d/%m/%Y")
         hora_actual = now.strftime("%H:%M")
