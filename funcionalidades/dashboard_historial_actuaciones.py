@@ -150,7 +150,7 @@ class DashboardHistorialActuaciones(QMainWindow):
                 
             self.causas=[]
             for fila in resultados:
-                causa = {'fechaNotificacion':fila[0],'numjui':fila[1],'nombtribunal':fila[2],'nomdemandante':fila[3],'apellidemandante':fila[4],'demandado':fila[5],'repre':fila[6],'mandante':fila[7],'domicilio':fila[8],'comuna':fila[9],'encargo':fila[10],'soli':fila[11],'arancel':fila[12],'Estampar':fila[13],}
+                causa = {'fechaNotificacion':fila[0],'numjui':fila[1],'nombtribunal':fila[2],'nomdemandante':fila[3],'apellidemandante':fila[4],'demandado':fila[5],'repre':fila[6],'mandante':fila[7],'domicilio':fila[8],'comuna':fila[9],'encargo':fila[10],'soli':fila[11],'arancel':fila[12],'Estampar':fila[13], 'actuacion':'actuacion'}
                     
                 
                 self.causas.append(causa)
@@ -165,7 +165,7 @@ class DashboardHistorialActuaciones(QMainWindow):
 # muestra los datos en la tabla
     def mostrar_tabla(self):
         self.table.setColumnCount(15)
-        self.table.setHorizontalHeaderLabels(['fechaNotificacion', 'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandado', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel',  'Estampar','Actuación'])
+        self.table.setHorizontalHeaderLabels(['fechaNotificacion', 'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandado', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel',  'Estampar', 'Actuación'])
         for row_index, causa in enumerate(self.causas):
             
             self.table.insertRow(row_index)
@@ -173,7 +173,7 @@ class DashboardHistorialActuaciones(QMainWindow):
                         if key == "Estampar":
                             button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
                             self.table.setCellWidget(row_index, col_index, button)
-                        elif key == "Actuación":
+                        elif key == "actuacion":
                         # Crear un objeto QComboBox para las celdas de actuaciones
                             combo_box = QComboBox()
                             opciones_actuaciones = ["Elija actuación", "Búsqueda Negativa", "Búsqueda Positiva", "Not. por cédula", "Not. Art. 44", "Req. de pago en Oficina", "Op. al Embargo", "Not. Personal", "Not. Personal/Req. de Pago", "Not. art. 52", "Embargo con Fuerza Pública", "Embargo Frustrado", "Embargo Banco", "Embargo Vehículo", "Retiro de Vehículo", "Retiro Frustrado", "Retiro de Especies ", "OtrO"]
