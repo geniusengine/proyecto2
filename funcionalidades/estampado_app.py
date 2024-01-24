@@ -203,9 +203,7 @@ class Estampadoxd(QMainWindow):
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
     #3
-    def positivaP(self):
-        
-        # variables de tiempo lel
+    def positivaP(self):# variables de tiempo lel
         now = datetime.now()
         años = now.strftime("%d/%m/%y")
         horas = now.strftime("%H:%M")
@@ -233,7 +231,8 @@ class Estampadoxd(QMainWindow):
         doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
-
+    
+    
 
     #4
     def busquedaN(self):
