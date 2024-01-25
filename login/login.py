@@ -20,7 +20,7 @@ class LoginApp(QMainWindow):
 
     def init_ui(self):
         self.setWindowTitle("Inicio de Sesión")
-        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
+        self.setWindowIcon(QIcon("static/icono-ventana.png"))
         self.setGeometry(100, 100, 300, 200)
 
         self.central_widget = QWidget()

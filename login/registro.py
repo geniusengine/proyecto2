@@ -10,7 +10,7 @@ Auteur: danie(mitchel.dmch@gmail.com)
 registro.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 26 août 2023 à 18:37:13 
-Dernière modification : jeudi 16 novembre 2023 à 1:12:40
+Dernière modification : jeudi 25 janvier 2024 à 13:06:39
 """
 import sys
 import pymssql
@@ -28,7 +28,7 @@ class RegisterApp(QMainWindow):
 
     def init_ui(self):
         self.setWindowTitle("Registro de Usuario")
-        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
+        self.setWindowIcon(QIcon("static/icono-ventana.png"))
         self.setGeometry(100, 100, 300, 250)
 
         self.central_widget = QWidget()
