@@ -26,7 +26,7 @@ class Dashboard_actuacionesApp(QMainWindow):
     
     def initUI(self):
         self.setWindowTitle('Dashboard App')
-        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
+        self.setWindowIcon(QIcon("static/icono-ventana.png"))
         self.setGeometry(100, 100, 1280, 720)
 
         # Agrega un botón para guardar datos
@@ -156,7 +156,7 @@ class Dashboard_actuacionesApp(QMainWindow):
             self.table.insertRow(row_index)
             for col_index, (key, value) in enumerate(causa.items()):
                 if key == "Estampada":
-                    button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
+                    button = self.crear_boton_con_icono("static/firmar.png", self.estampar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
                 elif key == "actuacion":
                     # Crear un objeto QComboBox para las celdas de actuaciones

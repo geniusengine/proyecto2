@@ -1,5 +1,6 @@
 import os
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
+from PyQt6.QtGui import QIcon
 from docx import Document
 from docx2pdf import convert
 from datetime import datetime
@@ -15,7 +16,9 @@ class Estampadoxd(QMainWindow):
         super().__init__(parent)
 
         self.setWindowTitle('Ventana con Botones')
+        self.setWindowIcon(QIcon("static/icono-ventana.png"))
         self.setGeometry(100, 100, 400, 200)
+
 
         self.central_widget = QWidget(self)
         self.setCentralWidget(self.central_widget)

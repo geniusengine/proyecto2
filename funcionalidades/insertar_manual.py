@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : lundi 22 janvier 2024 à 22:48:44
+Dernière modification : jeudi 25 janvier 2024 à 13:02:34
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout
@@ -35,7 +35,7 @@ class MiApp(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Ingreso de Datos")
-        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
+        self.setWindowIcon(QIcon("static/icono-ventana.png"))
         self.setGeometry(100, 100, 800, 400)
 
         self.central_widget = QWidget(self)

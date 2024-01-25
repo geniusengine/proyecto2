@@ -16,7 +16,7 @@ class BuscadorDatosCausaApp(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Buscador de Datos de Causa")
-        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
+        self.setWindowIcon(QIcon("static/icono-ventana.png"))
         self.setGeometry(100, 100, 600, 400)
 
         self.initUI()
@@ -304,10 +304,10 @@ class BuscadorDatosCausaApp(QMainWindow):
                 estampada = causa["estadoCausa"]
                 for col_index, (key, value) in enumerate(causa.items()):
                     if key == "Notificar":
-                        button = self.crear_boton_con_icono("static/icons/notificar.png", self.notificar_clicked)
+                        button = self.crear_boton_con_icono("static/notificar.png", self.notificar_clicked)
                         self.table.setCellWidget(row_index, col_index, button)
                     elif key == "Estampada":
-                        button = self.crear_boton_con_icono("static/icons/firmar.png", self.estampar_clicked)
+                        button = self.crear_boton_con_icono("static/firmar.png", self.estampar_clicked)
                         self.table.setCellWidget(row_index, col_index, button)
                     else:
                         # Crea un objeto QTableWidgetItem para las otras columnas

@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 insertar.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 16:15:10 
-Dernière modification : lundi 22 janvier 2024 à 22:47:07
+Dernière modification : jeudi 25 janvier 2024 à 13:02:20
 """
 
 import sys
@@ -31,7 +31,7 @@ class ExcelToDatabaseApp(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle("Insertar Excel")
-        self.setWindowIcon(QIcon("static/icons/icono-ventana.png"))
+        self.setWindowIcon(QIcon("static/icono-ventana.png"))
         self.setGeometry(100, 100, 800, 400)
 
         self.upload_button = QPushButton("Cargar Excel", self)
