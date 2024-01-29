@@ -10,7 +10,7 @@ Auteur: danie(mitchel.dmch@gmail.com)
 registro.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 26 août 2023 à 18:37:13 
-Dernière modification : jeudi 25 janvier 2024 à 13:06:39
+Dernière modification : dimanche 28 janvier 2024 à 21:23:01
 """
 import sys
 import pymssql
@@ -18,6 +18,7 @@ from passlib.hash import bcrypt
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
 from PyQt6.QtGui import QIcon
 from PyQt6.QtSql import QSqlDatabase, QSqlQuery
+import static_qrc
 
 class RegisterApp(QMainWindow):
     def __init__(self):
