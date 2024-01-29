@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 insertar.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 16:15:10 
-Dernière modification : dimanche 28 janvier 2024 à 21:24:31
+Dernière modification : dimanche 28 janvier 2024 à 21:47:43
 """
 
 import sys
@@ -19,7 +19,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog,
 import openpyxl
 from PyQt6.QtGui import QIcon
 import logging
-import static_qrc
+
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

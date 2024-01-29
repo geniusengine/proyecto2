@@ -12,7 +12,7 @@ from docx import Document
 from docx2pdf import convert
 from tkinter import filedialog
 import tkinter as tk
-import static_qrc
+
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
