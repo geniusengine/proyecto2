@@ -7,6 +7,7 @@ from PyQt6.QtGui import QIcon
 import pymssql
 import logging
 from dashboard import DashboardApp
+import static_qrc
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
