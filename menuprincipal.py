@@ -4,8 +4,6 @@ from login.login import LoginApp
 from login.registro import RegisterApp
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt
-import static_qrc
-
 class MainMenu(QMainWindow):
     def __init__(self):
         super().__init__()
