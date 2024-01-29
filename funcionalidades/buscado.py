@@ -7,6 +7,7 @@ from PyQt6.QtCore import Qt
 from funcionalidades import estampado_app
 import pymssql
 import logging
+import static_qrc
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
