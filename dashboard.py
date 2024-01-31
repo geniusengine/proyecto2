@@ -134,7 +134,7 @@ class DashboardApp(QMainWindow):
     # crea los botones de la interfaz
     def crear_botones(self):
         self.btn_buscar = self.crear_boton('Buscar', self.buscar_clicked)
-        self.btn_Insertar_excel = self.crear_boton('Insertar Excel', self.Insertar_excel_clicked)
+        #self.btn_Insertar_excel = self.crear_boton('Insertar Excel', self.Insertar_excel_clicked)
         self.btn_Insertar_manual = self.crear_boton('Insertar Manual', self.Insertar_manual_clicked)
         self.btn_historial_actuaciones = self.crear_boton('Historial Actuaciones', self.historial_actuaciones_clicked)
         self.btn_exportar = self.crear_boton('Exportar', self.exportar_clicked)
@@ -206,18 +206,18 @@ class DashboardApp(QMainWindow):
                         "Rol": fila[1],
                         "Tribunal": fila[2],
                         "demandante": fila[3],
-                        "demandado": fila[4],
-                        "repre": fila[5],
-                        "mandante": fila[6],
-                        "Domicilio": fila[7],
-                        "Comuna": fila[8],
-                        "Encargo": fila[9],
-                        "Resultado": fila[10],
-                        "Arancel": fila[11],
+                        "demandado": fila[5],
+                        "repre": fila[6],
+                        "mandante": fila[7],
+                        "Domicilio": fila[8],
+                        "Comuna": fila[9],
+                        "Encargo": fila[10],
+                        "Resultado": fila[11],
+                        "Arancel": fila[12],
                         "Notificar": "Notificar",
                         "Estampada": "Estampada",
-                        "Notificada": fila[12],
-                        "estadoCausa": fila[13],
+                        "Notificada": fila[13],
+                        "estadoCausa": fila[14],
                 }
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
@@ -239,7 +239,7 @@ class DashboardApp(QMainWindow):
 # muestra los datos en la tabla
     def mostrar_clicked(self):
         self.table.setColumnCount(14)
-        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'Demandante', 'Demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel',
+        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'demandante', 'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel',
                                             'Notificar','Estampar'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
@@ -263,7 +263,7 @@ class DashboardApp(QMainWindow):
     # Exporta los datos a un archivo Excel
         try:
             df = pd.DataFrame(self.causas)
-            columnas_deseadas = ['fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
+            columnas_deseadas = ['fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
             df_seleccionado = df.loc[:, columnas_deseadas]
             df_seleccionado.to_excel('as.xlsx', index=False)
             QMessageBox.information(self, "Información", "Los datos se han exportado correctamente.")
@@ -275,10 +275,10 @@ class DashboardApp(QMainWindow):
         self.exchistorial = DashboardHistorialActuaciones()
         self.exchistorial.show()
 # abre la ventana de insertar excel
-    def Insertar_excel_clicked(self):
+    #def Insertar_excel_clicked(self):
         # Lógica para insertar desde Excel
-        self.exc = ExcelToDatabaseApp()
-        self.exc.show()
+       # self.exc = ExcelToDatabaseApp()
+       # self.exc.show()
 # abre la ventana de insertar manualmente
     def Insertar_manual_clicked(self):
         # Lógica para insertar manualmente
