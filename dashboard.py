@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout,
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
+import pandas as pd
 import logging
 from funcionalidades.buscado import BuscadorDatosCausaApp
 from funcionalidades.insertar_excel import ExcelToDatabaseApp
@@ -48,7 +49,9 @@ class DashboardApp(QMainWindow):
         self.layout_horizontal.addWidget(self.btn_Insertar_excel)
         self.layout_horizontal.addWidget(self.btn_Insertar_manual)
         self.layout_horizontal.addWidget(self.btn_historial_actuaciones)
+        self.layout_vertical.addWidget(self.btn_exportar)
         self.layout_vertical.addLayout(self.layout_horizontal)
+
 
         # Crea una tabla y un botón de guardar
         self.table = QTableWidget()
@@ -134,6 +137,8 @@ class DashboardApp(QMainWindow):
         self.btn_Insertar_excel = self.crear_boton('Insertar Excel', self.Insertar_excel_clicked)
         self.btn_Insertar_manual = self.crear_boton('Insertar Manual', self.Insertar_manual_clicked)
         self.btn_historial_actuaciones = self.crear_boton('Historial Actuaciones', self.historial_actuaciones_clicked)
+        self.btn_exportar = self.crear_boton('Exportar', self.exportar_clicked)
+
     # crea cada boton que se necesite
     def crear_boton(self, texto, funcion):
         boton = QPushButton(texto, self)
@@ -235,7 +240,7 @@ class DashboardApp(QMainWindow):
 # muestra los datos en la tabla
     def mostrar_clicked(self):
         self.table.setColumnCount(15)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel',
+        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel',
                                             'Notificar','Estampar'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
@@ -254,6 +259,18 @@ class DashboardApp(QMainWindow):
                     self.table.setItem(row_index, col_index, item)
                     self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
         self.primera_vez()
+
+    def exportar_clicked(self):
+    # Exporta los datos a un archivo Excel
+        try:
+            df = pd.DataFrame(self.causas)
+            columnas_deseadas = ['fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
+            df_seleccionado = df.loc[:, columnas_deseadas]
+            df_seleccionado.to_excel('as.xlsx', index=False)
+            QMessageBox.information(self, "Información", "Los datos se han exportado correctamente.")
+        except Exception as e:
+            QMessageBox.warning(self, "Advertencia", f"Error al exportar a Excel: {e}")
+
     def historial_actuaciones_clicked(self):
         print("Historial de actuaciones")
         self.exchistorial = DashboardHistorialActuaciones()
@@ -274,6 +291,13 @@ class DashboardApp(QMainWindow):
         selected_row = self.table.currentRow()
         # Verificar si se seleccionó una fila
         if selected_row != -1:
+
+            notificada = self.causas[selected_row]["Notificada"]
+
+            if not notificada:
+                QMessageBox.warning(self, "Advertencia", "La causa debe ser notificada primero antes de estampar.")
+                return
+
             # Obtener datos de la fila seleccionada
             fechaNotificacion = self.table.item(selected_row, 0).text()
             numjui = self.table.item(selected_row, 1).text()
