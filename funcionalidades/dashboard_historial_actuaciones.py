@@ -299,7 +299,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
          # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{numjui} {encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {numjui}-{encargo}')  
     
@@ -343,7 +343,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
          # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{numjui} {encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {numjui}-{encargo}')
 
@@ -386,7 +386,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{numjui} {encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
@@ -434,7 +434,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{numjui} {encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
@@ -480,7 +480,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{numjui} {encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
@@ -522,7 +522,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{numjui} {encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
@@ -564,7 +564,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
          # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{numjui} {encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {numjui}-{encargo}')
 
@@ -610,7 +610,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{numjui} {encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}') 
 
@@ -655,7 +655,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{numjui} {encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
@@ -701,7 +701,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{numjui} {encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
@@ -746,7 +746,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{numjui} {encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
      
@@ -790,7 +790,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{numjui} {encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
@@ -834,7 +834,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{numjui} {encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
