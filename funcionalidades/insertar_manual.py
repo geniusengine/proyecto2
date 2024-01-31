@@ -10,10 +10,10 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : mercredi 31 janvier 2024 à 11:21:30
+Dernière modification : mercredi 31 janvier 2024 à 12:00:31
 """
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout,QComboBox
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QLineEdit  # Agregado para importar QLineEdit
@@ -44,10 +44,10 @@ class MiApp(QMainWindow):
 
         layout = QHBoxLayout()
         layout_vertical = QVBoxLayout()
-
+        
         self.table = QTableWidget()
         self.table.setColumnCount(12)
-        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'Solicitud', 'Arancel'])
+        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'resultado', 'Arancel'])
         layout.addWidget(self.table)
 
         self.add_row_button = QPushButton("Agregar Fila")
@@ -77,6 +77,46 @@ class MiApp(QMainWindow):
                 item.setText("0")  # Establece un valor predeterminado si no es un número
     def add_row(self):
         self.table.insertRow(self.table.rowCount())
+        tribunal_combobox = QComboBox()
+        tribunal_combobox.addItems(['1° Juzgado de Letras La Serena',
+                                    '2° Juzgado de Letras La Serena',
+                                    '3° Juzgado de Letras La Serena',
+                                    'Juzgado de Letras del Trabajo de La Serena',
+                                    'Juzgado de Garantía La Serena',
+                                    'Juzgado de Juicio Oral en lo Penal La Serena',
+                                    'Juzgado de Familia La Serena',
+                                    'Corte de Apelaciones de La Serena'])
+        
+        # Configura el nuevo QComboBox en la celda correspondiente
+        item = QTableWidgetItem()
+        self.table.setItem(self.table.rowCount() - 1, 1, item)
+        self.table.setCellWidget(self.table.rowCount() - 1, 1, tribunal_combobox)
+        
+    def combo_box_changed(self, row, col, index):
+    # Obtén el valor actual del combo box
+        combo_box = self.table.cellWidget(row, col)
+        selected_value = combo_box.currentText()  # Agrega los paréntesis para obtener el texto actual
+
+    # Lista de tribunales
+        tribunales = ['1° Juzgado de Letras La Serena',
+                  '2° Juzgado de Letras La Serena',
+                  '3° Juzgado de Letras La Serena',
+                  'Juzgado de Letras del Trabajo de La Serena',
+                  'Juzgado de Garantía La Serena',
+                  'Juzgado de Juicio Oral en lo Penal La Serena',
+                  'Juzgado de Familia La Serena',
+                  'Corte de Apelaciones de La Serena']
+
+    # Llena el QComboBox con los tribunales
+        combo_box.clear()
+        combo_box.addItems(tribunales)
+
+    # Asigna el valor seleccionado actualmente
+        combo_box.setCurrentText(selected_value)
+
+           
+
+
 
     def delete_row(self):
         selected_row = self.table.currentRow()
@@ -90,12 +130,8 @@ class MiApp(QMainWindow):
         if self.table.rowCount() == 0:
             QMessageBox.warning(self, "Advertencia", "No se ha agregado ninguna fila.")
             return
-        for row_idx in range(self.table.rowCount()):
-                for col_idx in range(self.table.columnCount()):
-                    item = self.table.item(row_idx, col_idx)
-                    if item is None or item.text().strip() == "":
-                        QMessageBox.critical(self, "Error", "Todas las celdas deben estar llenas.")
-                        return
+     
+                       
         db_connection = pymssql.connect(
             server='vps-3697915-x.dattaweb.com',
             user='daniel',
@@ -127,7 +163,7 @@ class MiApp(QMainWindow):
                 except ValueError:
                     arancel = 0  # Valor predeterminado si la conversión falla
 
-                if any([not cell for cell in [self.numjui, self.nombTribunal, self.nombdemandante,
+                if any([not cell for cell in [self.numjui,self.nombdemandante,
                                             self.apellidemandante, self.demandado, self.repre,
                                             self.mandante, self.domicilio, self.comuna, self.encargo,
                                             self.soli, self.arancel]]):

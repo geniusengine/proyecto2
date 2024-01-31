@@ -6,7 +6,6 @@ from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
 
-
 from funcionalidades.estampado_app import Estampadoxd
 import logging
 
