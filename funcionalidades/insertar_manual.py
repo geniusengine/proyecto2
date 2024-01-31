@@ -46,8 +46,8 @@ class MiApp(QMainWindow):
         layout_vertical = QVBoxLayout()
         
         self.table = QTableWidget()
-        self.table.setColumnCount(12)
-        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Demandante', 'Demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel'])
+        self.table.setColumnCount(10)
+        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Demandante', 'Demandando', 'Representante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel'])
         layout.addWidget(self.table)
 
         self.add_row_button = QPushButton("Agregar Fila")
