@@ -194,7 +194,7 @@ class DashboardApp(QMainWindow):
     def acceder_base_de_datos(self):
         try:
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa FROM notificacion"
+                query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa FROM notificacion"
                 cursor.execute(query)
                 resultados = cursor.fetchall()
 
@@ -205,9 +205,8 @@ class DashboardApp(QMainWindow):
                     "Fecha notificacion": fecha_formateada,
                         "Rol": fila[1],
                         "Tribunal": fila[2],
-                        "Nombre demandante": fila[3],
-                        "Apellido demandante": fila[4],
-                        "Nombre demandado": fila[5],
+                        "demandante": fila[3],
+                        "demandado": fila[5],
                         "repre": fila[6],
                         "mandante": fila[7],
                         "Domicilio": fila[8],
@@ -240,7 +239,7 @@ class DashboardApp(QMainWindow):
 # muestra los datos en la tabla
     def mostrar_clicked(self):
         self.table.setColumnCount(15)
-        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel',
+        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'demandante', 'demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel',
                                             'Notificar','Estampar'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
