@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : mercredi 31 janvier 2024 à 17:08:35
+Dernière modification : mercredi 31 janvier 2024 à 17:09:53
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout,QComboBox

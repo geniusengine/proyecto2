@@ -13,7 +13,7 @@ import logging
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class Estampadoxd(QMainWindow):
-    def __init__(self, fechaNotificacion, numjui, nombTribunal, nombdemandante,   demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, parent=None):
+    def __init__(self, fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, parent=None):
         super().__init__(parent)
 
         self.setWindowTitle('Ventana con Botones')
@@ -124,7 +124,7 @@ class Estampadoxd(QMainWindow):
         self.fechaNotificacion = fechaNotificacion
         self.numjui = numjui
         self.nombTribunal = nombTribunal
-        self.nombdemandante = nombdemandante
+        self.demandante = demandante
         self.demandado = demandado
         self.repre = repre
         self.mandante = mandante
@@ -136,20 +136,19 @@ class Estampadoxd(QMainWindow):
         #comentarios ver si se pone
 ####################Hasta aqui hizo el bastian 1:30 am 05/01/2023-----------------------------------------------------------------------------------------------------------------------------
 
-    #1 
-    def negativa52(self):
+    #1 en este codigo cámbiame {self.nombdemandante} por {self.demandante} y los {self.apellidemandante} eliminalos
+    def negativa52(self): 
 
         # variables de tiempo lel
         now = datetime.now()
         años = now.strftime("%d/%m/%y")
         horas = now.strftime("%H:%M")
 
-
         # Crea un nuevo documento de Word
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo}\n {self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo}\n {self.demandante} CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
@@ -164,10 +163,11 @@ class Estampadoxd(QMainWindow):
         root.withdraw()  # Oculta la ventana de Tkinter
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
-         # Guarda el documento en el directorio seleccionado
+        # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
+
 
         # Guarda el documento
         #desktop_path = os.path.expanduser('~')  # Obtiene el directorio del escritorio
@@ -185,7 +185,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.encargo}\n {self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.encargo}\n {self.demandante} CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
@@ -200,7 +200,7 @@ class Estampadoxd(QMainWindow):
         root.withdraw()  # Oculta la ventana de Tkinter
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
-         # Guarda el documento en el directorio seleccionado
+        # Guarda el documento en el directorio seleccionado
         doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
@@ -215,11 +215,11 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.encargo}\n {self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.encargo}\n {self.demandante} CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.nombdemandante} {self.apellidemandante}, a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de {self.soli}.DOY FE."
+        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.demandante}, a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de una persona adulta, sexo masculino, vecino del lugar, se constató que este es el domicilio del demandado, y que se encuentra en el lugar del juicio. DOY FE. "
         doc.add_paragraph(busqueda_positiva)
 
         # Agrega la firma al final del documento
@@ -249,7 +249,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.encargo}\n {self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.encargo}\n {self.demandante}CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
@@ -282,7 +282,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.encargo}\n {self.nombmandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.encargo}\n {self.demandante} CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
@@ -312,11 +312,11 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui} \n {self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui} \n {self.demandante} CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de embargo
-        acta_embargo = f"ACTA DE EMBARGO: En La Serena, a {fecha_actual} siendo las {hora_actual} horas, en mi oficio ubicado en calle Av. Del Mar, N° 5.700, of. N° 47 La Serena, a petición verbal del abogado doña NOMBRES APELLIDOS ABOGADA en representación de la parte ejecutante {self.nombdemandante} RUT **, de conformidad a lo dispuesto en el artículo 447 del Código de Procedimiento Civil, procedo a trabar embargo sobre el(los) siguiente(s) bien(es) de propiedad del demandado {self.demandado}\n\n"
+        acta_embargo = f"ACTA DE EMBARGO: En La Serena, a {fecha_actual} siendo las {hora_actual} horas, en mi oficio ubicado en calle Av. Del Mar, N° 5.700, of. N° 47 La Serena, a petición verbal del abogado doña NOMBRES APELLIDOS ABOGADA en representación de la parte ejecutante {self.demandante} RUT **, de conformidad a lo dispuesto en el artículo 447 del Código de Procedimiento Civil, procedo a trabar embargo sobre el(los) siguiente(s) bien(es) de propiedad del demandado {self.demandado}\n\n"
         acta_embargo += f"Tipo vehículo: \n"
         acta_embargo += f"Marca: \n"
         acta_embargo += f"Modelo: \n"
@@ -353,7 +353,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.encargo}  \n {self.demandado} / {self.nombdemandante} {self.apellidemandante} "
+        encabezado = f"{self.nombTribunal}\n{self.encargo}  \n {self.demandado} / {self.demandante} "
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de embargo
@@ -412,7 +412,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\nCAUSA ROL= {self.encargo}\nCARATULA= {self.nombdemandante} {self.apellidemandante} / {self.demandado}"
+        encabezado = f"{self.nombTribunal}\nCAUSA ROL= {self.encargo}\nCARATULA= {self.demandante}/ {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de embargo
@@ -441,7 +441,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\nCAUSA ROL: {self.numjui} / {self.encargo}\nCARATULADO: {self.demandado} / {self.nombdemandante} {self.apellidemandante}"
+        encabezado = f"{self.nombTribunal}\nCAUSA ROL: {self.numjui} / {self.encargo}\nCARATULADO: {self.demandado} / {self.demandante}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de entrega material de inmueble
@@ -471,7 +471,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\nCAUSA ROL: {self.encargo}\nCARÁTULA: {self.nombdemandante} {self.apellidemandante} / {self.demandado}"
+        encabezado = f"{self.nombTribunal}\nCAUSA ROL: {self.encargo}\nCARÁTULA: {self.demandante} / {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de lanzamiento
@@ -499,7 +499,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui}: {self.encargo}\n{self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui}: {self.encargo}\n {self.demandante} CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de requerimiento de pago en rebeldía
@@ -530,7 +530,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal} \n {self.numjui} : {self.encargo} \n {self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal} \n {self.numjui} : {self.encargo} \n {self.demandante} CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de embargo frustrado
@@ -559,7 +559,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal} \n{self.numjui} : {self.encargo }\n {self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal} \n{self.numjui} : {self.encargo }\n CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de notificación de embargo
