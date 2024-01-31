@@ -7,12 +7,13 @@ from datetime import datetime
 import tkinter as tk
 from tkinter import filedialog
 import logging
+from dashboard_actuaciones 
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class Estampadoxd(QMainWindow):
-    def __init__(self, fechaNotificacion, numjui, nombTribunal, nombdemandante,  apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, parent=None):
+    def __init__(self, fechaNotificacion, numjui, nombTribunal, nombdemandante,  apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, actuacion, parent=None):
         super().__init__(parent)
 
         self.setWindowTitle('Ventana con Botones')
@@ -165,7 +166,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
          # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -201,7 +202,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
          # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -231,7 +232,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
          # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
     
@@ -265,7 +266,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
          # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -298,7 +299,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
          # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -338,7 +339,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -369,7 +370,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -399,7 +400,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -427,7 +428,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -457,7 +458,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
     
@@ -485,7 +486,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -516,7 +517,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -545,7 +546,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -573,7 +574,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -602,7 +603,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
     
@@ -635,7 +636,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -663,7 +664,7 @@ class Estampadoxd(QMainWindow):
             save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
             # Guarda el documento en el directorio seleccionado
-            doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+            doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
             logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -691,7 +692,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
         
@@ -719,7 +720,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -749,7 +750,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 
@@ -780,7 +781,7 @@ class Estampadoxd(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.encargo}.docx'))
+        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
 
         logging.info(f'A estamapado {self.numjui}-{self.encargo}')
 

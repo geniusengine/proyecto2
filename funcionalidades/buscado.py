@@ -116,21 +116,21 @@ class BuscadorDatosCausaApp(QMainWindow):
             if search_by_numjui:#si se selecciono numjui para buscar se ejecuta esta query
                 query = """
                 SELECT fechaNotificacion, numjui, nombTribunal
-                FROM AUD_notificacion
+                FROM buscar_historico
                 WHERE numjui = %s
                 """
                 cursor.execute(query, (numjui))
             elif search_by_tribunal:#si se selecciono tribunal para buscar se ejecuta esta query
                 query = """
                 SELECT fechaNotificacion, numjui, nombTribunal
-                FROM AUD_notificacion
+                FROM buscar_historico
                 WHERE nombtribunal = %s
                 """
                 cursor.execute(query, (tribunal))
             elif search_by_numjui and search_by_tribunal:#si se selecciono ambos para buscar se ejecuta esta query
                 query = """
                 SELECT fechaNotificacion, numjui, nombTribunal
-                FROM AUD_notificacion
+                FROM buscar_historico
                 WHERE numjui = %s OR nombtribunal = %s
                 """
                 cursor.execute(query, (numjui,tribunal))
@@ -222,21 +222,21 @@ class BuscadorDatosCausaApp(QMainWindow):
                     if numjui:#si se selecciono numjui para buscar se ejecuta esta query
                         query = """
                         SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
-                        FROM AUD_notificacion
+                        FROM buscar_historico
                         WHERE numjui = %s
                         """
                         cursor.execute(query, (numjui))
                     elif nombTribunal:#si se selecciono tribunal para buscar se ejecuta esta query
                         query = """
                         SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
-                        FROM AUD_notificacion
+                        FROM buscar_historico
                         WHERE nombtribunal = %s
                         """
                         cursor.execute(query, (nombTribunal))
                     elif numjui and nombTribunal:#si se selecciono ambos para buscar se ejecuta esta query
                         query = """
                         SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
-                        FROM AUD_notificacion
+                        FROM buscar_historico
                         WHERE numjui = %s OR nombtribunal = %s
                         """
                     causas = cursor.fetchall()
