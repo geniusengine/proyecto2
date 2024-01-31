@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : mercredi 31 janvier 2024 à 16:45:12
+Dernière modification : mercredi 31 janvier 2024 à 17:08:35
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout,QComboBox
@@ -33,7 +33,10 @@ class MiApp(QMainWindow):
     
 
     def __init__(self):
+
+        datos_guardados_signal = pyqtSignal()
         super().__init__()
+
 
         self.setWindowTitle("Ingreso de Datos")
         self.setWindowIcon(QIcon("static/icono-ventana.png"))
@@ -46,8 +49,8 @@ class MiApp(QMainWindow):
         layout_vertical = QVBoxLayout()
         
         self.table = QTableWidget()
-        self.table.setColumnCount(10)
-        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Demandante', 'Demandando', 'Representante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel'])
+        self.table.setColumnCount(11)
+        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Demandante', 'Demandando', 'Representante', 'mandante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel'])
         layout.addWidget(self.table)
 
         self.add_row_button = QPushButton("Agregar Fila")
@@ -70,7 +73,7 @@ class MiApp(QMainWindow):
         self.table.itemChanged.connect(self.validar_arancel)
     def validar_arancel(self, item):
         # Verifica si la columna es la correspondiente a arancel
-        if item.column() == 11:
+        if item.column() == 10:
             # Verifica si el contenido no es un número
             if not item.text().replace('.', '', 1).isdigit():
                 QMessageBox.warning(self, "Advertencia", "Solo se permiten números en la celda de Arancel.")
@@ -114,7 +117,6 @@ class MiApp(QMainWindow):
     # Asigna el valor seleccionado actualmente
         combo_box.setCurrentText(selected_value)
 
-           
 
 
 
@@ -147,7 +149,7 @@ class MiApp(QMainWindow):
             for row_idx in range(self.table.rowCount()):
                 self.numjui = self.table.item(row_idx, 0).text()
                 self.nombTribunal = self.table.item(row_idx, 1).text()
-                self.nombdemandante = self.table.item(row_idx, 2).text()
+                self.demandante = self.table.item(row_idx, 2).text()
                 self.demandado = self.table.item(row_idx, 3).text()
                 self.repre = self.table.item(row_idx, 4).text()
                 self.mandante = self.table.item(row_idx, 5).text()
@@ -162,15 +164,15 @@ class MiApp(QMainWindow):
                 except ValueError:
                     arancel = 0  # Valor predeterminado si la conversión falla
 
-                if any([not cell for cell in [self.numjui,self.nombdemandante,
+                if any([not cell for cell in [self.numjui, self.nombTribunal,self.demandante,
                                              self.demandado, self.repre,
                                             self.mandante, self.domicilio, self.comuna, self.encargo,
                                             self.soli, self.arancel]]):
                     QMessageBox.critical(self, "Error", "No se permiten celdas vacías en la fila {}".format(row_idx + 1))
                     db_connection.rollback()
                     return
-                insert_query = "INSERT INTO demanda (numjui, nombTribunal,demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                cursor.execute(insert_query, (self.numjui, self.nombTribunal, self.nombdemandante,
+                insert_query = "INSERT INTO demanda (numjui, nombTribunal,demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                cursor.execute(insert_query, (self.numjui, self.nombTribunal, self.demandante,
                                              self.demandado, self.repre,
                                             self.mandante, self.domicilio, self.comuna, self.encargo,
                                             self.soli, arancel))

@@ -263,7 +263,7 @@ class DashboardApp(QMainWindow):
     # Exporta los datos a un archivo Excel
         try:
             df = pd.DataFrame(self.causas)
-            columnas_deseadas = ['fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
+            columnas_deseadas = ['fecha',  'Rol', 'Tribunal', 'Nombre demandante', 'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
             df_seleccionado = df.loc[:, columnas_deseadas]
             df_seleccionado.to_excel('as.xlsx', index=False)
             QMessageBox.information(self, "Información", "Los datos se han exportado correctamente.")
