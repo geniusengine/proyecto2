@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : mercredi 31 janvier 2024 à 16:39:49
+Dernière modification : mercredi 31 janvier 2024 à 16:45:12
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout,QComboBox
@@ -171,7 +171,7 @@ class MiApp(QMainWindow):
                     return
                 insert_query = "INSERT INTO demanda (numjui, nombTribunal,demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 cursor.execute(insert_query, (self.numjui, self.nombTribunal, self.nombdemandante,
-                                            self.apellidemandante, self.demandado, self.repre,
+                                             self.demandado, self.repre,
                                             self.mandante, self.domicilio, self.comuna, self.encargo,
                                             self.soli, arancel))
             db_connection.commit()
