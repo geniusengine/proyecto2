@@ -141,7 +141,7 @@ class DashboardApp(QMainWindow):
     # crea un boton con un icono
     def crear_boton_con_icono(self, icono_path, funcion):
         boton = QPushButton(self)
-        icono = QIcon(static_qrc)
+        icono = QIcon()
         boton.setIcon(icono)
         boton.clicked.connect(funcion)
         return boton
@@ -207,7 +207,7 @@ class DashboardApp(QMainWindow):
                         "Domicilio": fila[8],
                         "Comuna": fila[9],
                         "Encargo": fila[10],
-                        "Solicitud": fila[11],
+                        "Resultado": fila[11],
                         "Arancel": fila[12],
                         "Notificar": "Notificar",
                         "Estampada": "Estampada",
