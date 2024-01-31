@@ -47,7 +47,7 @@ class MiApp(QMainWindow):
         
         self.table = QTableWidget()
         self.table.setColumnCount(12)
-        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'resultado', 'Arancel'])
+        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Demandante', 'Demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel'])
         layout.addWidget(self.table)
 
         self.add_row_button = QPushButton("Agregar Fila")
@@ -170,7 +170,7 @@ class MiApp(QMainWindow):
                     QMessageBox.critical(self, "Error", "No se permiten celdas vacías en la fila {}".format(row_idx + 1))
                     db_connection.rollback()
                     return
-                insert_query = "INSERT INTO demanda (numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                insert_query = "INSERT INTO demanda (numjui, nombTribunal,demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 cursor.execute(insert_query, (self.numjui, self.nombTribunal, self.nombdemandante,
                                             self.apellidemandante, self.demandado, self.repre,
                                             self.mandante, self.domicilio, self.comuna, self.encargo,
