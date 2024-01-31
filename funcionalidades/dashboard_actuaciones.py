@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout,
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
-import static_qrc
+
 
 from funcionalidades.estampado_app import Estampadoxd
 import logging
