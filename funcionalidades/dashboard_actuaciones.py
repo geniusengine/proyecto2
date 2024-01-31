@@ -200,7 +200,7 @@ class Dashboard_actuacionesApp(QMainWindow):
     def obtener_datos_causa(self, numjui):
         try:
             with self.db_connection.cursor() as cursor:
-                query = "SELECT nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel FROM AUD_notificacion WHERE numjui = %s"
+                query = "SELECT nombTribunal,demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel FROM AUD_notificacion WHERE numjui = %s"
                 cursor.execute(query, (numjui,))
                 resultado = cursor.fetchone()
 
@@ -227,10 +227,10 @@ class Dashboard_actuacionesApp(QMainWindow):
             # Verificar si se recuperaron los datos
             if datos_causa:
                 # Desempaquetar los datos recuperados
-                nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel = datos_causa
+                nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel = datos_causa
 
                 # Importar Estampadoxd localmente
-                self.ex3 = Estampadoxd(numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
+                self.ex3 = Estampadoxd(numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
                 self.ex3.show()
             else:
                 QMessageBox.warning(self, "Advertencia", f"No puede estampar datos, datos no encontrados {numjui}.")
