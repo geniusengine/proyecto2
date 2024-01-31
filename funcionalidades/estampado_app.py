@@ -7,13 +7,13 @@ from datetime import datetime
 import tkinter as tk
 from tkinter import filedialog
 import logging
-from dashboard_actuaciones 
+ 
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class Estampadoxd(QMainWindow):
-    def __init__(self, fechaNotificacion, numjui, nombTribunal, nombdemandante,  apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, actuacion, parent=None):
+    def __init__(self, fechaNotificacion, numjui, nombTribunal, nombdemandante,  apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, parent=None):
         super().__init__(parent)
 
         self.setWindowTitle('Ventana con Botones')
