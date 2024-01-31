@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : dimanche 28 janvier 2024 à 21:47:47
+Dernière modification : dimanche 28 janvier 2024 à 21:24:27
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout
@@ -24,7 +24,7 @@ from .estampado_app import Estampadoxd
 import logging
 import pyodbc
 import time
-
+import static_qrc
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

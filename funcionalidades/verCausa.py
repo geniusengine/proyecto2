@@ -3,6 +3,7 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QTextEdit, QFileDialog, QLabel,QCheckBox
 from docx import Document
 from reportlab.pdfgen import canvas
+import static_qrc
 
 class VerCausaApp(QMainWindow):
     def __init__(self, causa):

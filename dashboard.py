@@ -10,6 +10,7 @@ from funcionalidades.insertar_excel import ExcelToDatabaseApp
 from funcionalidades.insertar_manual import MiApp
 from funcionalidades.estampado_app import Estampadoxd
 from funcionalidades.dashboard_historial_actuaciones import DashboardHistorialActuaciones
+import static_qrc
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
