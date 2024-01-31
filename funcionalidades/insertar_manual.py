@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : mercredi 31 janvier 2024 à 12:00:31
+Dernière modification : mercredi 31 janvier 2024 à 13:33:20
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout,QComboBox
@@ -46,8 +46,8 @@ class MiApp(QMainWindow):
         layout_vertical = QVBoxLayout()
         
         self.table = QTableWidget()
-        self.table.setColumnCount(12)
-        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'resultado', 'Arancel'])
+        self.table.setColumnCount(11)
+        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Nombre demandante', 'Nombre demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'resultado', 'Arancel'])
         layout.addWidget(self.table)
 
         self.add_row_button = QPushButton("Agregar Fila")
@@ -108,15 +108,38 @@ class MiApp(QMainWindow):
                   'Corte de Apelaciones de La Serena']
 
     # Llena el QComboBox con los tribunales
-        combo_box.clear()
-        combo_box.addItems(tribunales)
+        if selected_value == '1° Juzgado de Letras La Serena':
+            combo_box.clear()
+            combo_box.addItem('1° Juzgado de Letras La Serena')
+            
 
-    # Asigna el valor seleccionado actualmente
-        combo_box.setCurrentText(selected_value)
+        elif selected_value == '2° Juzgado de Letras La Serena':
+            combo_box.clear()
+            combo_box.addItem('2° Juzgado de Letras La Serena')
 
-           
+        elif selected_value == '3° Juzgado de Letras La Serena':
+            combo_box.clear()
+            combo_box.addItem('3° Juzgado de Letras La Serena')
 
+        elif selected_value == 'Juzgado de Letras del Trabajo de La Serena':
+            combo_box.clear()
+            combo_box.addItem('Juzgado de Letras del Trabajo de La Serena')
 
+        elif selected_value == 'Juzgado de Garantía La Serena':
+            combo_box.clear()
+            combo_box.addItem('Juzgado de Garantía La Serena')
+
+        elif selected_value == 'Juzgado de Juicio Oral en lo Penal La Serena':
+            combo_box.clear()
+            combo_box.addItem('Juzgado de Juicio Oral en lo Penal La Serena')
+
+        elif selected_value == 'Juzgado de Familia La Serena':
+            combo_box.clear()
+            combo_box.addItem('Juzgado de Familia La Serena')
+
+        elif selected_value == 'Corte de Apelaciones de La Serena':
+            combo_box.clear()
+            combo_box.addItem('Corte de Apelaciones de La Serena')
 
     def delete_row(self):
         selected_row = self.table.currentRow()
@@ -147,32 +170,31 @@ class MiApp(QMainWindow):
             for row_idx in range(self.table.rowCount()):
                 self.numjui = self.table.item(row_idx, 0).text()
                 self.nombTribunal = self.table.item(row_idx, 1).text()
-                self.nombdemandante = self.table.item(row_idx, 2).text()
-                self.apellidemandante = self.table.item(row_idx, 3).text()
-                self.demandado = self.table.item(row_idx, 4).text()
-                self.repre = self.table.item(row_idx, 5).text()
-                self.mandante = self.table.item(row_idx, 6).text()
-                self.domicilio = self.table.item(row_idx, 7).text()
-                self.comuna = self.table.item(row_idx, 8).text()
-                self.encargo = self.table.item(row_idx, 9).text()
-                self.soli = self.table.item(row_idx, 10).text()
-                self.arancel = self.table.item(row_idx, 11).text()
+                self.demandante = self.table.item(row_idx, 2).text()
+                self.demandado = self.table.item(row_idx, 3).text()
+                self.repre = self.table.item(row_idx, 4).text()
+                self.mandante = self.table.item(row_idx, 5).text()
+                self.domicilio = self.table.item(row_idx, 6).text()
+                self.comuna = self.table.item(row_idx, 7).text()
+                self.encargo = self.table.item(row_idx, 8).text()
+                self.soli = self.table.item(row_idx, 9).text()
+                self.arancel = self.table.item(row_idx, 10).text()
                 print(self.arancel)
                 try:
                     arancel = float(self.arancel)
                 except ValueError:
                     arancel = 0  # Valor predeterminado si la conversión falla
 
-                if any([not cell for cell in [self.numjui,self.nombdemandante,
-                                            self.apellidemandante, self.demandado, self.repre,
+                if any([not cell for cell in [self.numjui,self.demandante,
+                                             self.demandado, self.repre,
                                             self.mandante, self.domicilio, self.comuna, self.encargo,
                                             self.soli, self.arancel]]):
                     QMessageBox.critical(self, "Error", "No se permiten celdas vacías en la fila {}".format(row_idx + 1))
                     db_connection.rollback()
                     return
-                insert_query = "INSERT INTO demanda (numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                cursor.execute(insert_query, (self.numjui, self.nombTribunal, self.nombdemandante,
-                                            self.apellidemandante, self.demandado, self.repre,
+                insert_query = "INSERT INTO demanda (numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                cursor.execute(insert_query, (self.numjui, self.nombTribunal, self.demandante,
+                                            self.demandado, self.repre,
                                             self.mandante, self.domicilio, self.comuna, self.encargo,
                                             self.soli, arancel))
             db_connection.commit()
