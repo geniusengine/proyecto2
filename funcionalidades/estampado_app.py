@@ -13,7 +13,7 @@ import logging
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class Estampadoxd(QMainWindow):
-    def __init__(self, fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, parent=None):
+    def __init__(self, fechaNotificacion, numjui, nombTribunal, nombdemandante,   demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, parent=None):
         super().__init__(parent)
 
         self.setWindowTitle('Ventana con Botones')
@@ -124,7 +124,7 @@ class Estampadoxd(QMainWindow):
         self.fechaNotificacion = fechaNotificacion
         self.numjui = numjui
         self.nombTribunal = nombTribunal
-        self.demandante = demandante
+        self.nombdemandante = nombdemandante
         self.demandado = demandado
         self.repre = repre
         self.mandante = mandante
