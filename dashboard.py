@@ -206,18 +206,18 @@ class DashboardApp(QMainWindow):
                         "Rol": fila[1],
                         "Tribunal": fila[2],
                         "demandante": fila[3],
-                        "demandado": fila[5],
-                        "repre": fila[6],
-                        "mandante": fila[7],
-                        "Domicilio": fila[8],
-                        "Comuna": fila[9],
-                        "Encargo": fila[10],
-                        "Resultado": fila[11],
-                        "Arancel": fila[12],
+                        "demandado": fila[4],
+                        "repre": fila[5],
+                        "mandante": fila[6],
+                        "Domicilio": fila[7],
+                        "Comuna": fila[8],
+                        "Encargo": fila[9],
+                        "Resultado": fila[10],
+                        "Arancel": fila[11],
                         "Notificar": "Notificar",
                         "Estampada": "Estampada",
-                        "Notificada": fila[13],
-                        "estadoCausa": fila[14],
+                        "Notificada": fila[12],
+                        "estadoCausa": fila[13],
                 }
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
@@ -301,19 +301,18 @@ class DashboardApp(QMainWindow):
             fechaNotificacion = self.table.item(selected_row, 0).text()
             numjui = self.table.item(selected_row, 1).text()
             nombTribunal = self.table.item(selected_row, 2).text()
-            nombdemandante = self.table.item(selected_row, 3).text()
-            apellidemandante = self.table.item(selected_row, 4).text()
-            demandado = self.table.item(selected_row, 5).text()
-            repre = self.table.item(selected_row, 6).text()
-            mandante = self.table.item(selected_row, 7).text()
-            domicilio = self.table.item(selected_row, 8).text()
-            comuna = self.table.item(selected_row, 9).text()
-            encargo = self.table.item(selected_row, 10).text()
-            soli = self.table.item(selected_row, 11).text()
-            arancel = self.table.item(selected_row, 12).text()
+            demandante = self.table.item(selected_row, 3).text()
+            demandado = self.table.item(selected_row, 4).text()
+            repre = self.table.item(selected_row, 5).text()
+            mandante = self.table.item(selected_row, 6).text()
+            domicilio = self.table.item(selected_row, 7).text()
+            comuna = self.table.item(selected_row, 8).text()
+            encargo = self.table.item(selected_row, 9).text()
+            soli = self.table.item(selected_row, 10).text()
+            arancel = self.table.item(selected_row, 11).text()
     
             # Importa Estampadoxd localmente
-            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
+            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
             self.ex3.show()
         
         button = self.sender()
