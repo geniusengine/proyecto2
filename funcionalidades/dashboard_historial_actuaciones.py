@@ -336,7 +336,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {domicilio} {comuna}, busqué a {nombdemandante} {apellidemandante}, a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de {soli}.DOY FE."
+        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {domicilio} {comuna}, busqué a {demandante} , a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de {soli}.DOY FE."
         doc.add_paragraph(busqueda_positiva)
 
         # Agrega la firma al final del documento
@@ -838,17 +838,25 @@ class DashboardHistorialActuaciones(QMainWindow):
 
         if selected_row >= 0:
             # Obtener los datos de la fila
-            data_to_save = [self.table.item(selected_row, col,("")) for col in range(self.table.columnCount())]
+            data_to_save = tuple([self.table.item(selected_row, col).text() if self.table.item(selected_row, col) is not None else '' for col in range(14)])
 
+             # Formatear la fecha en el formato esperado por la base de datos (YYYY-MM-DD HH:MI:SS)
+            fecha_notificacion = datetime.strptime(data_to_save[0], '%Y-%m-%d %H:%M:%S.%f').strftime('%Y-%m-%d %H:%M:%S')
+
+
+            # Reemplazar el valor en la tupla
+            data_to_save = (fecha_notificacion,) + data_to_save[1:]
             # Mostrar mensaje de confirmación
             reply = QMessageBox.question(self, 'Confirmar', f'Seguro que quieres devolver estos datos?\n{data_to_save}',
                                          QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
 
             if reply == QMessageBox.StandardButton.Yes:
                 # Guardar los datos en la tabla de notificaciones (base de datos)
-                cursor = self.connection.cursor()
-                cursor.execute('INSERT INTO notificaciones VALUES (?, ?, ?)', data_to_save)
-                self.connection.commit()
+                self.establecer_conexion_base_de_datos()
+                cursor = self.db_connection.cursor()
+                cursor.execute('INSERT INTO notificacion (fechaNotificacion, numjui, nombTribunal, demandante,  demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s )', data_to_save)
+
+                self.db_connection.commit()
 
                 print('Datos guardados en la tabla de notificaciones')
 # Estampar el documento correspondiente y actualizar la tabla de notificaciones
