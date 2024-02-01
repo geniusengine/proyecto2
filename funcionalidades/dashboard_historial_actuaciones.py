@@ -147,7 +147,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         try:
             self.establecer_conexion_base_de_datos()
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante, apellidemandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa FROM AUD_notificacion"
+                query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante,  demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa FROM AUD_notificacion"
                 
         
                 
@@ -157,7 +157,7 @@ class DashboardHistorialActuaciones(QMainWindow):
                 
             self.causas=[]
             for fila in resultados:
-                causa = {'fechaNotificacion':fila[0],'numjui':fila[1],'nombtribunal':fila[2],'nomdemandante':fila[3],'apellidemandante':fila[4],'demandado':fila[5],'repre':fila[6],'mandante':fila[7],'domicilio':fila[8],'comuna':fila[9],'encargo':fila[10],'soli':fila[11],'arancel':fila[12], 'actuacion':'actuacion'}
+                causa = {'fechaNotificacion':fila[0],'numjui':fila[1],'nombtribunal':fila[2],'demandante':fila[3],'demandado':fila[4],'repre':fila[5],'mandante':fila[6],'domicilio':fila[7],'comuna':fila[8],'encargo':fila[9],'soli':fila[10],'arancel':fila[11], 'actuacion':'actuacion'}
                     
                 
                 self.causas.append(causa)
@@ -170,8 +170,8 @@ class DashboardHistorialActuaciones(QMainWindow):
         
 # muestra los datos en la tabla
     def mostrar_tabla(self):
-        self.table.setColumnCount(14)
-        self.table.setHorizontalHeaderLabels(['fechaNotificacion', 'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandado', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel', 'Actuación'])
+        self.table.setColumnCount(13)
+        self.table.setHorizontalHeaderLabels(['fechaNotificacion', 'Rol', 'Tribunal', 'Nombre demandante', 'Nombre demandado', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel', 'Actuación'])
         for row_index, causa in enumerate(self.causas):
             
             self.table.insertRow(row_index)
@@ -263,15 +263,14 @@ class DashboardHistorialActuaciones(QMainWindow):
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
         nombdemandante = self.table.item(row, 3).text()
-        apellidemandante = self.table.item(row, 4).text()  
-        demandado = self.table.item(row, 5).text()  
-        repre = self.table.item(row, 6).text()  
-        mandante = self.table.item(row, 7).text()  
-        domicilio = self.table.item(row, 8).text()  
-        comuna = self.table.item(row, 9).text()  
-        encargo = self.table.item(row, 10).text() 
-        soli = self.table.item(row, 11).text() 
-        arancel = self.table.item(row, 12).text()
+        demandado = self.table.item(row, 4).text()  
+        repre = self.table.item(row, 5).text()  
+        mandante = self.table.item(row, 6).text()  
+        domicilio = self.table.item(row, 7).text()  
+        comuna = self.table.item(row, 8).text()  
+        encargo = self.table.item(row, 9).text() 
+        soli = self.table.item(row, 10).text() 
+        arancel = self.table.item(row, 11).text()
 
         
         # variables de tiempo lel
@@ -283,7 +282,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {nombdemandante} {apellidemandante} CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {nombdemandante} CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
@@ -309,15 +308,14 @@ class DashboardHistorialActuaciones(QMainWindow):
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
         nombdemandante = self.table.item(row, 3).text()
-        apellidemandante = self.table.item(row, 4).text()  
-        demandado = self.table.item(row, 5).text()  
-        repre = self.table.item(row, 6).text()  
-        mandante = self.table.item(row, 7).text()  
-        domicilio = self.table.item(row, 8).text()  
-        comuna = self.table.item(row, 9).text()  
-        encargo = self.table.item(row, 10).text() 
-        soli = self.table.item(row, 11).text() 
-        arancel = self.table.item(row, 12).text()
+        demandado = self.table.item(row, 4).text()  
+        repre = self.table.item(row, 5).text()  
+        mandante = self.table.item(row, 6).text()  
+        domicilio = self.table.item(row, 7).text()  
+        comuna = self.table.item(row, 8).text()  
+        encargo = self.table.item(row, 9).text() 
+        soli = self.table.item(row, 10).text() 
+        arancel = self.table.item(row, 11).text()
 
         now = datetime.now()
         años = now.strftime("%d/%m/%y")
@@ -327,7 +325,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {nombdemandante} {apellidemandante} CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {nombdemandante}  CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
@@ -353,15 +351,14 @@ class DashboardHistorialActuaciones(QMainWindow):
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
         nombdemandante = self.table.item(row, 3).text()
-        apellidemandante = self.table.item(row, 4).text()  
-        demandado = self.table.item(row, 5).text()  
-        repre = self.table.item(row, 6).text()  
-        mandante = self.table.item(row, 7).text()  
-        domicilio = self.table.item(row, 8).text()  
-        comuna = self.table.item(row, 9).text()  
-        encargo = self.table.item(row, 10).text() 
-        soli = self.table.item(row, 11).text() 
-        arancel = self.table.item(row, 12).text()
+        demandado = self.table.item(row, 4).text()  
+        repre = self.table.item(row, 5).text()  
+        mandante = self.table.item(row, 6).text()  
+        domicilio = self.table.item(row, 7).text()  
+        comuna = self.table.item(row, 8).text()  
+        encargo = self.table.item(row, 9).text() 
+        soli = self.table.item(row, 10).text() 
+        arancel = self.table.item(row, 11).text()
 
         # Variables de tiempo
         now = datetime.now()
@@ -372,7 +369,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante} {apellidemandante} CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante}  CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de notificación por cédula
@@ -395,16 +392,15 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()
-        apellidemandante = self.table.item(row, 4).text()  
-        demandado = self.table.item(row, 5).text()  
-        repre = self.table.item(row, 6).text()  
-        mandante = self.table.item(row, 7).text()  
-        domicilio = self.table.item(row, 8).text()  
-        comuna = self.table.item(row, 9).text()  
-        encargo = self.table.item(row, 10).text() 
-        soli = self.table.item(row, 11).text() 
-        arancel = self.table.item(row, 12).text()
+        nombdemandante = self.table.item(row, 3).text() 
+        demandado = self.table.item(row, 4).text()  
+        repre = self.table.item(row, 5).text()  
+        mandante = self.table.item(row, 6).text()  
+        domicilio = self.table.item(row, 7).text()  
+        comuna = self.table.item(row, 8).text()  
+        encargo = self.table.item(row, 9).text() 
+        soli = self.table.item(row, 10).text() 
+        arancel = self.table.item(row, 11).text()
 
         # Variables de tiempo
         now = datetime.now()
@@ -415,7 +411,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante} {apellidemandante} CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante}  CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de notificación personal subsidiaria
@@ -443,16 +439,15 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()
-        apellidemandante = self.table.item(row, 4).text()  
-        demandado = self.table.item(row, 5).text()  
-        repre = self.table.item(row, 6).text()  
-        mandante = self.table.item(row, 7).text()  
-        domicilio = self.table.item(row, 8).text()  
-        comuna = self.table.item(row, 9).text()  
-        encargo = self.table.item(row, 10).text() 
-        soli = self.table.item(row, 11).text() 
-        arancel = self.table.item(row, 12).text()
+        nombdemandante = self.table.item(row, 3).text()  
+        demandado = self.table.item(row, 4).text()  
+        repre = self.table.item(row, 5).text()  
+        mandante = self.table.item(row, 6).text()  
+        domicilio = self.table.item(row, 7).text()  
+        comuna = self.table.item(row, 8).text()  
+        encargo = self.table.item(row, 9).text() 
+        soli = self.table.item(row, 10).text() 
+        arancel = self.table.item(row, 11).text()
 
         # Variables de tiempo
         now = datetime.now()
@@ -463,7 +458,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui}: {encargo}\n{nombdemandante} {apellidemandante} CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui}: {encargo}\n{nombdemandante} CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de requerimiento de pago en rebeldía
@@ -490,15 +485,14 @@ class DashboardHistorialActuaciones(QMainWindow):
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
         nombdemandante = self.table.item(row, 3).text()
-        apellidemandante = self.table.item(row, 4).text()  
-        demandado = self.table.item(row, 5).text()  
-        repre = self.table.item(row, 6).text()  
-        mandante = self.table.item(row, 7).text()  
-        domicilio = self.table.item(row, 8).text()  
-        comuna = self.table.item(row, 9).text()  
-        encargo = self.table.item(row, 10).text() 
-        soli = self.table.item(row, 11).text() 
-        arancel = self.table.item(row, 12).text()
+        demandado = self.table.item(row, 4).text()  
+        repre = self.table.item(row, 5).text()  
+        mandante = self.table.item(row, 6).text()  
+        domicilio = self.table.item(row, 7).text()  
+        comuna = self.table.item(row, 8).text()  
+        encargo = self.table.item(row, 9).text() 
+        soli = self.table.item(row, 10).text() 
+        arancel = self.table.item(row, 11).text()
 
         now = datetime.now()
         fecha_actual = now.strftime("%d/%m/%Y")
@@ -508,7 +502,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante} {apellidemandante} CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante} CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de oposición a embargo
@@ -531,16 +525,15 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()
-        apellidemandante = self.table.item(row, 4).text()  
-        demandado = self.table.item(row, 5).text()  
-        repre = self.table.item(row, 6).text()  
-        mandante = self.table.item(row, 7).text()  
-        domicilio = self.table.item(row, 8).text()  
-        comuna = self.table.item(row, 9).text()  
-        encargo = self.table.item(row, 10).text() 
-        soli = self.table.item(row, 11).text() 
-        arancel = self.table.item(row, 12).text()    
+        nombdemandante = self.table.item(row, 3).text()  
+        demandado = self.table.item(row, 4).text()  
+        repre = self.table.item(row, 5).text()  
+        mandante = self.table.item(row, 6).text()  
+        domicilio = self.table.item(row, 7).text()  
+        comuna = self.table.item(row, 8).text()  
+        encargo = self.table.item(row, 9).text() 
+        soli = self.table.item(row, 10).text() 
+        arancel = self.table.item(row, 11).text()    
         
         # variables de tiempo lel
         now = datetime.now()
@@ -550,7 +543,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         # Crea un nuevo documento de Word
         doc = Document()
 
-        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {nombdemandante} {apellidemandante} CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {nombdemandante}  CON {demandado}"
         doc.add_paragraph(encabezado)
 
         notificacionPeruano = f'NOTIFICACIÓN PERSONAL:En la Comuna de {comuna} a {fecha_actual}, siendo las {hora_actual} horas, en su domicilio ubicado {domicilio}, {comuna}, notifiqué personalmente a {demandado}, representado por {repre},  la demanda  y su respectivo proveído. Le hice entrega de copia íntegra de lo notificado y no firmó. La identidad del notificado/a  se estableció por los datos aportados por el mismo. DOY FE.'
@@ -574,16 +567,15 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()
-        apellidemandante = self.table.item(row, 4).text()  
-        demandado = self.table.item(row, 5).text()  
-        repre = self.table.item(row, 6).text()  
-        mandante = self.table.item(row, 7).text()  
-        domicilio = self.table.item(row, 8).text()  
-        comuna = self.table.item(row, 9).text()  
-        encargo = self.table.item(row, 10).text() 
-        soli = self.table.item(row, 11).text() 
-        arancel = self.table.item(row, 12).text() 
+        nombdemandante = self.table.item(row, 3).text()  
+        demandado = self.table.item(row, 4).text()  
+        repre = self.table.item(row, 5).text()  
+        mandante = self.table.item(row, 6).text()  
+        domicilio = self.table.item(row, 7).text()  
+        comuna = self.table.item(row, 8).text()  
+        encargo = self.table.item(row, 9).text() 
+        soli = self.table.item(row, 10).text() 
+        arancel = self.table.item(row, 11).text() 
 
        # Variables de tiempo
         now = datetime.now()
@@ -594,7 +586,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante} {apellidemandante} CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante}  CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de requerimiento de pago y oposición a embargo
@@ -619,16 +611,15 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()
-        apellidemandante = self.table.item(row, 4).text()  
-        demandado = self.table.item(row, 5).text()  
-        repre = self.table.item(row, 6).text()  
-        mandante = self.table.item(row, 7).text()  
-        domicilio = self.table.item(row, 8).text()  
-        comuna = self.table.item(row, 9).text()  
-        encargo = self.table.item(row, 10).text() 
-        soli = self.table.item(row, 11).text() 
-        arancel = self.table.item(row, 12).text() 
+        nombdemandante = self.table.item(row, 3).text()  
+        demandado = self.table.item(row, 4).text()  
+        repre = self.table.item(row, 5).text()  
+        mandante = self.table.item(row, 6).text()  
+        domicilio = self.table.item(row, 7).text()  
+        comuna = self.table.item(row, 8).text()  
+        encargo = self.table.item(row, 9).text() 
+        soli = self.table.item(row, 10).text() 
+        arancel = self.table.item(row, 11).text() 
 
         # Variables de tiempo
         now = datetime.now()
@@ -639,7 +630,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {nombdemandante} {apellidemandante} CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {nombdemandante}  CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
@@ -664,16 +655,15 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()
-        apellidemandante = self.table.item(row, 4).text()  
-        demandado = self.table.item(row, 5).text()  
-        repre = self.table.item(row, 6).text()  
-        mandante = self.table.item(row, 7).text()  
-        domicilio = self.table.item(row, 8).text()  
-        comuna = self.table.item(row, 9).text()  
-        encargo = self.table.item(row, 10).text() 
-        soli = self.table.item(row, 11).text() 
-        arancel = self.table.item(row, 12).text() 
+        nombdemandante = self.table.item(row, 3).text()  
+        demandado = self.table.item(row, 4).text()  
+        repre = self.table.item(row, 5).text()  
+        mandante = self.table.item(row, 6).text()  
+        domicilio = self.table.item(row, 7).text()  
+        comuna = self.table.item(row, 8).text()  
+        encargo = self.table.item(row, 9).text() 
+        soli = self.table.item(row, 10).text() 
+        arancel = self.table.item(row, 11).text() 
 
         # Variables de tiempo
         now = datetime.now()
@@ -684,7 +674,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante} {apellidemandante} CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante} CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de retiro de vehículo
@@ -711,16 +701,15 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()
-        apellidemandante = self.table.item(row, 4).text()  
-        demandado = self.table.item(row, 5).text()  
-        repre = self.table.item(row, 6).text()  
-        mandante = self.table.item(row, 7).text()  
-        domicilio = self.table.item(row, 8).text()  
-        comuna = self.table.item(row, 9).text()  
-        encargo = self.table.item(row, 10).text() 
-        soli = self.table.item(row, 11).text() 
-        arancel = self.table.item(row, 12).text() 
+        nombdemandante = self.table.item(row, 3).text()  
+        demandado = self.table.item(row, 4).text()  
+        repre = self.table.item(row, 5).text()  
+        mandante = self.table.item(row, 6).text()  
+        domicilio = self.table.item(row, 7).text()  
+        comuna = self.table.item(row, 8).text()  
+        encargo = self.table.item(row, 9).text() 
+        soli = self.table.item(row, 10).text() 
+        arancel = self.table.item(row, 11).text() 
 
         # Variables de tiempo
         now = datetime.now()
@@ -731,7 +720,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal} \n {numjui} : {encargo} \n {nombdemandante} {apellidemandante} CON {demandado}"
+        encabezado = f"{nombTribunal} \n {numjui} : {encargo} \n {nombdemandante}  CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de embargo frustrado
@@ -755,16 +744,15 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()
-        apellidemandante = self.table.item(row, 4).text()  
-        demandado = self.table.item(row, 5).text()  
-        repre = self.table.item(row, 6).text()  
-        mandante = self.table.item(row, 7).text()  
-        domicilio = self.table.item(row, 8).text()  
-        comuna = self.table.item(row, 9).text()  
-        encargo = self.table.item(row, 10).text() 
-        soli = self.table.item(row, 11).text() 
-        arancel = self.table.item(row, 12).text() 
+        nombdemandante = self.table.item(row, 3).text()  
+        demandado = self.table.item(row, 4).text()  
+        repre = self.table.item(row, 5).text()  
+        mandante = self.table.item(row, 6).text()  
+        domicilio = self.table.item(row, 7).text()  
+        comuna = self.table.item(row, 8).text()  
+        encargo = self.table.item(row, 9).text() 
+        soli = self.table.item(row, 10).text() 
+        arancel = self.table.item(row, 11).text() 
 
         # Variables de tiempo
         now = datetime.now()
@@ -799,16 +787,15 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()
-        apellidemandante = self.table.item(row, 4).text()  
-        demandado = self.table.item(row, 5).text()  
-        repre = self.table.item(row, 6).text()  
-        mandante = self.table.item(row, 7).text()  
-        domicilio = self.table.item(row, 8).text()  
-        comuna = self.table.item(row, 9).text()  
-        encargo = self.table.item(row, 10).text() 
-        soli = self.table.item(row, 11).text() 
-        arancel = self.table.item(row, 12).text() 
+        nombdemandante = self.table.item(row, 3).text()  
+        demandado = self.table.item(row, 4).text()  
+        repre = self.table.item(row, 5).text()  
+        mandante = self.table.item(row, 6).text()  
+        domicilio = self.table.item(row, 7).text()  
+        comuna = self.table.item(row, 8).text()  
+        encargo = self.table.item(row, 9).text() 
+        soli = self.table.item(row, 10).text() 
+        arancel = self.table.item(row, 11).text() 
 
         # Variables de tiempo
         now = datetime.now()

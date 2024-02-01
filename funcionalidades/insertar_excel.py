@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 insertar.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 16:15:10 
-Dernière modification : mercredi 31 janvier 2024 à 11:21:14
+Dernière modification : mercredi 31 janvier 2024 à 17:28:09
 """
 
 import sys
@@ -100,17 +100,16 @@ class ExcelToDatabaseApp(QMainWindow):
             for row_idx in range(self.data_table.rowCount()):
                 numjui = self.data_table.item(row_idx, 1).text()
                 nombTribunal = self.data_table.item(row_idx, 2).text()
-                nombdemandante = self.data_table.item(row_idx, 3).text()
-                apellidemandante = self.data_table.item(row_idx, 4).text()
-                demandado = self.data_table.item(row_idx, 5).text()
-                repre = self.data_table.item(row_idx, 6).text()
-                mandante = self.data_table.item(row_idx, 7).text()
-                domicilio = self.data_table.item(row_idx, 8).text()
-                comuna = self.data_table.item(row_idx, 9).text()
-                encargo = self.data_table.item(row_idx, 10).text()
-                soli = self.data_table.item(row_idx, 11).text()
+                demandante = self.data_table.item(row_idx, 3).text()
+                demandado = self.data_table.item(row_idx, 4).text()
+                repre = self.data_table.item(row_idx, 5).text()
+                mandante = self.data_table.item(row_idx, 6).text()
+                domicilio = self.data_table.item(row_idx, 7).text()
+                comuna = self.data_table.item(row_idx, 8).text()
+                encargo = self.data_table.item(row_idx, 9).text()
+                soli = self.data_table.item(row_idx, 10).text()
 
-                arancel_text = self.data_table.item(row_idx, 12).text()
+                arancel_text = self.data_table.item(row_idx, 11).text()
                 print(arancel_text)
                 try:
                         arancel = (arancel_text)
@@ -118,8 +117,8 @@ class ExcelToDatabaseApp(QMainWindow):
                         arancel = 0  # Valor predeterminado si la conversión falla
                 
             # Insertar datos de la demanda en la tabla "demanda"
-            insert_query = "INSERT INTO demanda (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            cursor.execute(insert_query, (numjui,nombTribunal,nombdemandante,apellidemandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel))
+            insert_query = "INSERT INTO demanda (numjui,nombTribunal,demandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (numjui,nombTribunal,demandante,demandado,repre,mandante,domicilio,comuna,encargo,soli,arancel))
             db_connection.commit()
             db_connection.close()
         
