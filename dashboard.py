@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
-    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel
+    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel,QLineEdit
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
@@ -40,13 +40,28 @@ class DashboardApp(QMainWindow):
         self.timer.timeout.connect(self.actualizar_datos)
         self.timer.start(15000)  # 240000 milisegundos = 4 minutos
         
-        
+        # Dentro del método initUI() en tu clase DashboardApp
+        self.txt_filtro_comuna = QLineEdit(self)
+        self.txt_filtro_mandante = QLineEdit(self)
+        self.btn_aplicar_filtro = QPushButton("Aplicar Filtro", self)
+        self.btn_aplicar_filtro.clicked.connect(self.aplicar_filtro)
+
+        # Crear un contenedor para los widgets de filtro
+        filtro_layout = QHBoxLayout()
+        filtro_layout.addWidget(QLabel("Filtrar por Comuna:"))
+        filtro_layout.addWidget(self.txt_filtro_comuna)
+        filtro_layout.addWidget(QLabel("Filtrar por Mandante:"))
+        filtro_layout.addWidget(self.txt_filtro_mandante)
+        filtro_layout.addWidget(self.btn_aplicar_filtro)
+
+        # Añadir el contenedor de filtro al diseño vertical
+        self.layout_vertical.addLayout(filtro_layout)
         # Crea botones
         self.crear_botones()
 
         # Añade botones al layout horizontal y el layout horizontal al layout vertical
         self.layout_horizontal.addWidget(self.btn_buscar)
-        self.layout_horizontal.addWidget(self.btn_Insertar_excel)
+       # self.layout_horizontal.addWidget(self.btn_Insertar_excel)
         self.layout_horizontal.addWidget(self.btn_Insertar_manual)
         self.layout_horizontal.addWidget(self.btn_historial_actuaciones)
         self.layout_vertical.addWidget(self.btn_exportar)
@@ -138,7 +153,15 @@ class DashboardApp(QMainWindow):
         self.btn_Insertar_manual = self.crear_boton('Insertar Manual', self.Insertar_manual_clicked)
         self.btn_historial_actuaciones = self.crear_boton('Historial Actuaciones', self.historial_actuaciones_clicked)
         self.btn_exportar = self.crear_boton('Exportar', self.exportar_clicked)
+    def aplicar_filtro(self):
+        filtro_comuna = self.txt_filtro_comuna.text()
+        filtro_mandante = self.txt_filtro_mandante.text()
 
+        self.limpiar_tabla()
+        self.establecer_conexion_base_de_datos()
+        self.acceder_base_de_datos(filtro_comuna, filtro_mandante)
+        self.mostrar_clicked()
+        self.cerrar_conexion_base_de_datos()
     # crea cada boton que se necesite
     def crear_boton(self, texto, funcion):
         boton = QPushButton(texto, self)
@@ -191,34 +214,45 @@ class DashboardApp(QMainWindow):
             self.cerrar_conexion_base_de_datos()
 
     # accede a la base de datos
-    def acceder_base_de_datos(self):
+    def acceder_base_de_datos(self, filtro_comuna=None, filtro_mandante=None):
         try:
             with self.db_connection.cursor() as cursor:
                 query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa FROM notificacion"
+                
+                # Aplicar filtros si se proporcionan
+                if filtro_comuna:
+                    query += f" WHERE comuna = '{filtro_comuna}'"
+                if filtro_mandante:
+                    query += f" AND mandante = '{filtro_mandante}'" if filtro_comuna else f" WHERE mandante = '{filtro_mandante}'"
                 cursor.execute(query)
                 resultados = cursor.fetchall()
-
+           
             self.causas = []
             for fila in resultados:
-                fecha_formateada = fila[0].strftime("%d-%m-%Y")
+                if len(fila) > 0:
+                    fecha_formateada = fila[0].strftime("%d-%m-%Y")
+                else:
+                    # Manejar la situación donde la tupla está vacía
+                    fecha_formateada = "Fecha no disponible"
                 causa = {
                     "Fecha notificacion": fecha_formateada,
                         "Rol": fila[1],
                         "Tribunal": fila[2],
                         "demandante": fila[3],
-                        "demandado": fila[5],
-                        "repre": fila[6],
-                        "mandante": fila[7],
-                        "Domicilio": fila[8],
-                        "Comuna": fila[9],
-                        "Encargo": fila[10],
-                        "Resultado": fila[11],
-                        "Arancel": fila[12],
+                        "demandado": fila[4],
+                        "repre": fila[5],
+                        "mandante": fila[6],
+                        "Domicilio": fila[7],
+                        "Comuna": fila[8],
+                        "Encargo": fila[9],
+                        "Resultado": fila[10],
+                        "Arancel": fila[11],
                         "Notificar": "Notificar",
                         "Estampada": "Estampada",
-                        "Notificada": fila[13],
-                        "estadoCausa": fila[14],
+                        "Notificada": fila[12],
+                        "estadoCausa": fila[13],
                 }
+                print ("flag 1")
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
         except Exception as e:
@@ -409,8 +443,8 @@ class DashboardApp(QMainWindow):
     def ajustar_tamanio(self):
         self.table.resizeColumnsToContents()
         total_width = sum(self.table.columnWidth(col) for col in range(self.table.columnCount()))
-        min_width = max(self.width(), total_width)
-        self.setMinimumWidth(min_width+70)
+        min_width = max(self.width(), total_width)-70
+        self.setMinimumWidth(min_width)
         self.adjustSize()
 # actualiza el color de la fila        
     # función para actualizar el color de la fila
