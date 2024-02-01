@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : jeudi 1 février 2024 à 11:09:46
+Dernière modification : jeudi 1 février 2024 à 11:48:15
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout,QComboBox
@@ -21,6 +21,7 @@ from datetime import datetime
 import pymssql
 from .dashboard_actuaciones import Dashboard_actuacionesApp
 import logging
+from .estampado_app import Estampadoxd
 import pyodbc
 import time
 
@@ -32,6 +33,8 @@ class MiApp(QMainWindow):
     
 
     def __init__(self):
+
+        self.nombTribunal = None
 
         datos_guardados_signal = pyqtSignal()
         super().__init__()
@@ -208,13 +211,14 @@ class MiApp(QMainWindow):
             db_connection.commit()
             db_connection.close()
             self.clear_table()
+            self.nombTribunal = nombTribunal  # Hacer que la variable sea accesible en el ámbito de la clase
             QMessageBox.information(self, "Éxito", "Datos guardados correctamente")
 
             logging.info(f'Insercion de causa {self.numjui}-{self.encargo}')
 
             respuesta = QMessageBox.question(self, 'Confirmación', '¿Desea hacer seguimiento de la causa?',QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if respuesta == QMessageBox.StandardButton.Yes:
-                self.abrir_dashboard_actuaciones()
+                self.abrir_dashboard_actuaciones(self.nombTribunal)
             else:
                 pass
         except Exception as e:
@@ -224,13 +228,13 @@ class MiApp(QMainWindow):
             # Emitir la señal cuando se guardan los datos
             self.datos_guardados_signal.emit()
 
-    def abrir_dashboard_actuaciones(self):
+    def abrir_dashboard_actuaciones(self, nombTribunal):
         # Puedes implementar el código para abrir Dashboard_actuacionesApp y enviar datos aquí
         # Por ahora, simplemente imprimimos un mensaje
         print("Abriendo Dashboard_actuacionesApp y enviando datos...")
 
         # Ejemplo: Crear y mostrar Dashboard_actuacionesApp
-        self.dashact = Dashboard_actuacionesApp(self.numjui,self.nombTribunal,self.fecha_hora_formateada)
+        self.dashact = Dashboard_actuacionesApp(self.numjui,nombTribunal,self.fecha_hora_formateada)
         self.dashact.show()
     
     def ajustar_tamanio(self):

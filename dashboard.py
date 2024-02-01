@@ -252,7 +252,7 @@ class DashboardApp(QMainWindow):
                         "Notificada": fila[12],
                         "estadoCausa": fila[13],
                 }
-                print ("flag 1")
+                print ("pene")
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
         except Exception as e:
