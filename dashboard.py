@@ -179,6 +179,10 @@ class DashboardApp(QMainWindow):
         # Esta función se llamará cuando se guarden los datos
         self.label.setText("¡Panel Actualizado!")
         
+    
+    def combo_box_changed(self, row, col, index):
+        # Aquí deberías escribir el código que se ejecutará cuando cambie el índice del combo box
+        pass
 
     # establece la conexion con la base de datos
     def establecer_conexion_base_de_datos(self):
@@ -252,7 +256,7 @@ class DashboardApp(QMainWindow):
                         "Notificada": fila[12],
                         "estadoCausa": fila[13],
                 }
-                print ("flag 1")
+                
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
         except Exception as e:
@@ -438,7 +442,7 @@ class DashboardApp(QMainWindow):
         QMessageBox.information(self, "Éxito", "Causa notificada correctamente.")
 
         logging.info(f'Se notifico causa: {numjui_notificado}')
-        
+   
 # ajusta el tamaño de la tabla ajustandose al contenido
     def ajustar_tamanio(self):
         self.table.resizeColumnsToContents()
@@ -493,6 +497,7 @@ def main():
     app = QApplication(sys.argv)
     window = DashboardApp()
 
+  
     window.show()
     sys.exit(app.exec())
     

@@ -18,9 +18,11 @@ import tkinter as tk
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class DashboardHistorialActuaciones(QMainWindow):
+  
     def __init__(self):
-        # Señal para enviar datos de vuelta a dashboard.py
-        datosSeleccionados = pyqtSignal(list)
+        
+        
+
 
 
         super().__init__()
@@ -63,36 +65,11 @@ class DashboardHistorialActuaciones(QMainWindow):
         self.mostrar_tabla()
 
         self.setGeometry(100, 100, 400, 300)
-        # Botón para seleccionar y enviar datos
-        self.boton_seleccionar = QPushButton("Seleccionar datos")
-        self.boton_seleccionar.clicked.connect(self.seleccionar_datos)
-        self.layout_vertical.addWidget(self.boton_seleccionar)
+    
 
-    def seleccionar_datos(self):
-        # Obtener los datos seleccionados en la tabla
-        datos_seleccionados = []
-        for row in range(self.table.rowCount()):
-            if self.table.item(row, 0).checkState() == Qt.CheckState.Checked:
-                datos_seleccionados.append(self.table.item(row, 0).text())
-
-        # Enviar los datos de vuelta a dashboard.py
-        self.datosSeleccionados.emit(datos_seleccionados)
-
-    # ... (el resto del código)
-
-# Conexión del slot en dashboard.py
-# ...
-        self.dashboard_actuaciones = DashboardHistorialActuaciones()
-        self.dashboard_actuaciones.datosSeleccionados.connect(self.mostrar_datos_seleccionados)
-# ...
-
-# Slot para manejar los datos seleccionados
-    def mostrar_datos_seleccionados(self, datos):
-        print("Datos seleccionados:", datos)
-    def combo_box_changed(self, row, col, index):
-        # Aquí deberías escribir el código que se ejecutará cuando cambie el índice del combo box
-        pass
-
+    # Crear el botón
+        self.button = QPushButton('Seleccionar y Guardar', self)
+        self.button.clicked.connect(self.confirm_and_save)
     # crea cada boton que se necesite
     def crear_boton(self, texto, funcion):
         boton = QPushButton(texto, self)
@@ -280,7 +257,11 @@ class DashboardHistorialActuaciones(QMainWindow):
             #Llama al método negativaP para realizar el estampado
             self.embargoauto(row)
 
-        
+     
+       
+
+
+    
 
 
     def negativaP(self, row):
@@ -851,7 +832,26 @@ class DashboardHistorialActuaciones(QMainWindow):
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
-    
+    def confirm_and_save(self):
+        # Obtener la fila seleccionada
+        selected_row = self.table.currentRow()
+
+        if selected_row >= 0:
+            # Obtener los datos de la fila
+            data_to_save = [self.table.item(selected_row, col,("")) for col in range(self.table.columnCount())]
+
+            # Mostrar mensaje de confirmación
+            reply = QMessageBox.question(self, 'Confirmar', f'Seguro que quieres devolver estos datos?\n{data_to_save}',
+                                         QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+
+            if reply == QMessageBox.StandardButton.Yes:
+                # Guardar los datos en la tabla de notificaciones (base de datos)
+                cursor = self.connection.cursor()
+                cursor.execute('INSERT INTO notificaciones VALUES (?, ?, ?)', data_to_save)
+                self.connection.commit()
+
+                print('Datos guardados en la tabla de notificaciones')
+# Estampar el documento correspondiente y actualizar la tabla de notificaciones
 
    
 # Ejecuta la función principal
