@@ -19,6 +19,8 @@ logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(ascti
 
 class DashboardHistorialActuaciones(QMainWindow):
     def __init__(self):
+        # Señal para enviar datos de vuelta a dashboard.py
+        datosSeleccionados = pyqtSignal(list)
 
 
         super().__init__()
@@ -61,8 +63,32 @@ class DashboardHistorialActuaciones(QMainWindow):
         self.mostrar_tabla()
 
         self.setGeometry(100, 100, 400, 300)
+        # Botón para seleccionar y enviar datos
+        self.boton_seleccionar = QPushButton("Seleccionar datos")
+        self.boton_seleccionar.clicked.connect(self.seleccionar_datos)
+        self.layout_vertical.addWidget(self.boton_seleccionar)
 
+    def seleccionar_datos(self):
+        # Obtener los datos seleccionados en la tabla
+        datos_seleccionados = []
+        for row in range(self.table.rowCount()):
+            if self.table.item(row, 0).checkState() == Qt.CheckState.Checked:
+                datos_seleccionados.append(self.table.item(row, 0).text())
 
+        # Enviar los datos de vuelta a dashboard.py
+        self.datosSeleccionados.emit(datos_seleccionados)
+
+    # ... (el resto del código)
+
+# Conexión del slot en dashboard.py
+# ...
+        self.dashboard_actuaciones = DashboardHistorialActuaciones()
+        self.dashboard_actuaciones.datosSeleccionados.connect(self.mostrar_datos_seleccionados)
+# ...
+
+# Slot para manejar los datos seleccionados
+    def mostrar_datos_seleccionados(self, datos):
+        print("Datos seleccionados:", datos)
     def combo_box_changed(self, row, col, index):
         # Aquí deberías escribir el código que se ejecutará cuando cambie el índice del combo box
         pass
@@ -262,7 +288,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()
+        demandante = self.table.item(row, 3).text()
         demandado = self.table.item(row, 4).text()  
         repre = self.table.item(row, 5).text()  
         mandante = self.table.item(row, 6).text()  
@@ -282,7 +308,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {nombdemandante} CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {demandante} CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
@@ -307,7 +333,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()
+        demandante = self.table.item(row, 3).text()
         demandado = self.table.item(row, 4).text()  
         repre = self.table.item(row, 5).text()  
         mandante = self.table.item(row, 6).text()  
@@ -325,7 +351,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {nombdemandante}  CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {demandante}  CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
@@ -350,7 +376,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()
+        demandante = self.table.item(row, 3).text()
         demandado = self.table.item(row, 4).text()  
         repre = self.table.item(row, 5).text()  
         mandante = self.table.item(row, 6).text()  
@@ -369,7 +395,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante}  CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {demandante}  CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de notificación por cédula
@@ -392,7 +418,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text() 
+        demandante = self.table.item(row, 3).text() 
         demandado = self.table.item(row, 4).text()  
         repre = self.table.item(row, 5).text()  
         mandante = self.table.item(row, 6).text()  
@@ -411,7 +437,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante}  CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {demandante}  CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de notificación personal subsidiaria
@@ -439,7 +465,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()  
+        demandante = self.table.item(row, 3).text()  
         demandado = self.table.item(row, 4).text()  
         repre = self.table.item(row, 5).text()  
         mandante = self.table.item(row, 6).text()  
@@ -458,7 +484,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui}: {encargo}\n{nombdemandante} CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui}: {encargo}\n{demandante} CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de requerimiento de pago en rebeldía
@@ -484,7 +510,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()
+        demandante = self.table.item(row, 3).text()
         demandado = self.table.item(row, 4).text()  
         repre = self.table.item(row, 5).text()  
         mandante = self.table.item(row, 6).text()  
@@ -502,7 +528,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante} CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {demandante} CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de oposición a embargo
@@ -525,7 +551,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()  
+        demandante = self.table.item(row, 3).text()  
         demandado = self.table.item(row, 4).text()  
         repre = self.table.item(row, 5).text()  
         mandante = self.table.item(row, 6).text()  
@@ -543,7 +569,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         # Crea un nuevo documento de Word
         doc = Document()
 
-        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {nombdemandante}  CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {demandante}  CON {demandado}"
         doc.add_paragraph(encabezado)
 
         notificacionPeruano = f'NOTIFICACIÓN PERSONAL:En la Comuna de {comuna} a {fecha_actual}, siendo las {hora_actual} horas, en su domicilio ubicado {domicilio}, {comuna}, notifiqué personalmente a {demandado}, representado por {repre},  la demanda  y su respectivo proveído. Le hice entrega de copia íntegra de lo notificado y no firmó. La identidad del notificado/a  se estableció por los datos aportados por el mismo. DOY FE.'
@@ -567,7 +593,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()  
+        demandante = self.table.item(row, 3).text()  
         demandado = self.table.item(row, 4).text()  
         repre = self.table.item(row, 5).text()  
         mandante = self.table.item(row, 6).text()  
@@ -586,11 +612,11 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante}  CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {demandante}  CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de requerimiento de pago y oposición a embargo
-        requerimiento_oposicion_texto = f"REQUERIMIENTO DE PAGO PERSONAL Y OPOSICIÓN A EMBARGO: A {fecha_actual}, siendo las {hora_actual} horas, en su domicilio ubicado en {domicilio}, {comuna}, notifiqué el mandamiento de **, y requerí personalmente de pago a {demandado}, representado por {repre}, a fin de que en el acto pague a {nombdemandante} {apellidemandante}, o a quien sus derechos represente, la suma de ** (** pesos), más reajustes, intereses y recargos.\n"
+        requerimiento_oposicion_texto = f"REQUERIMIENTO DE PAGO PERSONAL Y OPOSICIÓN A EMBARGO: A {fecha_actual}, siendo las {hora_actual} horas, en su domicilio ubicado en {domicilio}, {comuna}, notifiqué el mandamiento de **, y requerí personalmente de pago a {demandado}, representado por {repre}, a fin de que en el acto pague a {demandante} , o a quien sus derechos represente, la suma de ** (** pesos), más reajustes, intereses y recargos.\n"
         requerimiento_oposicion_texto += f"NO SE EFECTUÓ EL PAGO. Le hice presente la orden de embargo sobre bienes de su propiedad, en cantidad suficiente que permita cubrir el valor total de lo adeudado, más los gastos de la ejecución. También le notifiqué su designación como depositario provisional de los bienes que se le embarguen, cargo que aceptó, jurando su fiel desempeño y además le hice presente el plazo legal que tiene para deducir excepciones a la ejecución.\n"
         requerimiento_oposicion_texto += f"Acto seguido intenté trabar embargo sobre bienes de su propiedad, diligencia que no se llevó a efecto por OPOSICIÓN DEL PROPIO DEMANDADO.\n"
         requerimiento_oposicion_texto += f"Para constancia levanté la presente acta que la ejecutada no firmó, entregándole en el acto copia del mandamiento. Doy Fe."
@@ -611,7 +637,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()  
+        demandante = self.table.item(row, 3).text()  
         demandado = self.table.item(row, 4).text()  
         repre = self.table.item(row, 5).text()  
         mandante = self.table.item(row, 6).text()  
@@ -630,7 +656,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {nombdemandante}  CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui}  :  {encargo}\n {demandante}  CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
@@ -744,7 +770,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()  
+        demandante = self.table.item(row, 3).text()  
         demandado = self.table.item(row, 4).text()  
         repre = self.table.item(row, 5).text()  
         mandante = self.table.item(row, 6).text()  
@@ -787,7 +813,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()  
+        demandante = self.table.item(row, 3).text()  
         demandado = self.table.item(row, 4).text()  
         repre = self.table.item(row, 5).text()  
         mandante = self.table.item(row, 6).text()  
