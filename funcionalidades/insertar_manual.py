@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : mercredi 31 janvier 2024 à 17:12:34
+Dernière modification : jeudi 1 février 2024 à 11:48:15
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout,QComboBox
@@ -20,8 +20,8 @@ from PyQt6.QtWidgets import QLineEdit  # Agregado para importar QLineEdit
 from datetime import datetime
 import pymssql
 from .dashboard_actuaciones import Dashboard_actuacionesApp
-from .estampado_app import Estampadoxd
 import logging
+from .estampado_app import Estampadoxd
 import pyodbc
 import time
 
@@ -34,9 +34,13 @@ class MiApp(QMainWindow):
 
     def __init__(self):
 
+        self.nombTribunal = None
+
         datos_guardados_signal = pyqtSignal()
         super().__init__()
 
+        # Inicializa un diccionario para almacenar las selecciones de combo box
+        self.selecciones_combo_box = {}
 
         self.setWindowTitle("Ingreso de Datos")
         self.setWindowIcon(QIcon("static/icono-ventana.png"))
@@ -84,41 +88,68 @@ class MiApp(QMainWindow):
         tribunal_combobox.addItems(['1° Juzgado de Letras La Serena',
                                     '2° Juzgado de Letras La Serena',
                                     '3° Juzgado de Letras La Serena',
+                                    '1° Juzgado de Letras Coquimbo',
+                                    '2° Juzgado de Letras Coquimbo',
+                                    '3° Juzgado de Letras Coquimbo',
                                     'Juzgado de Letras del Trabajo de La Serena',
                                     'Juzgado de Garantía La Serena',
                                     'Juzgado de Juicio Oral en lo Penal La Serena',
                                     'Juzgado de Familia La Serena',
+                                    'Juzgado de Familia Coquimbo',
                                     'Corte de Apelaciones de La Serena'])
         
         # Configura el nuevo QComboBox en la celda correspondiente
         item = QTableWidgetItem()
         self.table.setItem(self.table.rowCount() - 1, 1, item)
         self.table.setCellWidget(self.table.rowCount() - 1, 1, tribunal_combobox)
+        tribunal_combobox.currentIndexChanged.connect(lambda index, row=self.table.rowCount()-1, col=1: self.combo_box_changed(row, col, index))
         
     def combo_box_changed(self, row, col, index):
     # Obtén el valor actual del combo box
         combo_box = self.table.cellWidget(row, col)
-        selected_value = combo_box.currentText()  # Agrega los paréntesis para obtener el texto actual
+        selected_value = combo_box.currentText() 
+        self.selecciones_combo_box[(row, col)] = selected_value
+        
+        # Agrega los paréntesis para obtener el texto actual
 
-    # Lista de tribunales
-        tribunales = ['1° Juzgado de Letras La Serena',
-                  '2° Juzgado de Letras La Serena',
-                  '3° Juzgado de Letras La Serena',
-                  'Juzgado de Letras del Trabajo de La Serena',
-                  'Juzgado de Garantía La Serena',
-                  'Juzgado de Juicio Oral en lo Penal La Serena',
-                  'Juzgado de Familia La Serena',
-                  'Corte de Apelaciones de La Serena']
+        if selected_value == '1° Juzgado de Letras La Serena':
+            print('1° Juzgado de Letras La Serena')
 
-    # Llena el QComboBox con los tribunales
-        combo_box.clear()
-        combo_box.addItems(tribunales)
+        elif selected_value == '2° Juzgado de Letras La Serena':
+            print('2° Juzgado de Letras La Serena')
 
-    # Asigna el valor seleccionado actualmente
-        combo_box.setCurrentText(selected_value)
+        elif selected_value == '3° Juzgado de Letras La Serena':
+            print('3° Juzgado de Letras La Serena')
 
+        elif selected_value == '1° Juzgado de Letras Coquimbo':
+            print('1° Juzgado de Letras La Serena')
 
+        elif selected_value == '2° Juzgado de Letras Coquimbo':
+            print('2° Juzgado de Letras La Serena')
 
+        elif selected_value == '3° Juzgado de Letras Coquimbo':
+            print('3° Juzgado de Letras La Serena')
+        
+        elif selected_value == 'Juzgado de Letras del Trabajo de La Serena':
+            print('Juzgado de Letras del Trabajo de La Serena')
+
+        elif selected_value == 'Juzgado de Garantía La Serena':
+            print('Juzgado de Garantía La Serena')
+        
+        elif selected_value == 'Juzgado de Juicio Oral en lo Penal La Serena':
+            print('Juzgado de Juicio Oral en lo Penal La Serena')
+        
+        elif selected_value == 'Juzgado de Familia La Serena':
+            print('Juzgado de Familia La Serena')
+        
+        elif selected_value == 'Juzgado de Familia Coquimbo':
+            print('Juzgado de Familia Coquimbo')
+        
+        elif selected_value == 'Corte de Apelaciones de La Serena':
+            print('Corte de Apelaciones de La Serena')
+        else:
+            print('No se seleccionó nada')
+    
 
     def delete_row(self):
         selected_row = self.table.currentRow()
@@ -148,7 +179,7 @@ class MiApp(QMainWindow):
 
             for row_idx in range(self.table.rowCount()):
                 self.numjui = self.table.item(row_idx, 0).text()
-                self.nombTribunal = self.table.item(row_idx, 1).text()
+                nombTribunal = self.selecciones_combo_box.get((row_idx, 1), '')
                 self.demandante = self.table.item(row_idx, 2).text()
                 self.demandado = self.table.item(row_idx, 3).text()
                 self.repre = self.table.item(row_idx, 4).text()
@@ -164,23 +195,30 @@ class MiApp(QMainWindow):
                 except ValueError:
                     arancel = 0  # Valor predeterminado si la conversión falla
 
+                if any([not cell for cell in [self.numjui, nombTribunal,self.demandante,
+                                             self.demandado, self.repre,
+                                            self.mandante, self.domicilio, self.comuna, self.encargo,
+                                            self.soli, self.arancel]]):
+                    QMessageBox.critical(self, "Error", "No se permiten celdas vacías en la fila {}".format(row_idx + 1))
                     db_connection.rollback()
                     return
                 insert_query = "INSERT INTO demanda (numjui, nombTribunal,demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                cursor.execute(insert_query, (self.numjui, self.nombTribunal, self.demandante,
+                cursor.execute(insert_query, (self.numjui, nombTribunal, self.demandante,
                                              self.demandado, self.repre,
                                             self.mandante, self.domicilio, self.comuna, self.encargo,
                                             self.soli, arancel))
+                
             db_connection.commit()
             db_connection.close()
             self.clear_table()
+            self.nombTribunal = nombTribunal  # Hacer que la variable sea accesible en el ámbito de la clase
             QMessageBox.information(self, "Éxito", "Datos guardados correctamente")
 
             logging.info(f'Insercion de causa {self.numjui}-{self.encargo}')
 
             respuesta = QMessageBox.question(self, 'Confirmación', '¿Desea hacer seguimiento de la causa?',QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if respuesta == QMessageBox.StandardButton.Yes:
-                self.abrir_dashboard_actuaciones()
+                self.abrir_dashboard_actuaciones(self.nombTribunal)
             else:
                 pass
         except Exception as e:
@@ -190,13 +228,13 @@ class MiApp(QMainWindow):
             # Emitir la señal cuando se guardan los datos
             self.datos_guardados_signal.emit()
 
-    def abrir_dashboard_actuaciones(self):
+    def abrir_dashboard_actuaciones(self, nombTribunal):
         # Puedes implementar el código para abrir Dashboard_actuacionesApp y enviar datos aquí
         # Por ahora, simplemente imprimimos un mensaje
         print("Abriendo Dashboard_actuacionesApp y enviando datos...")
 
         # Ejemplo: Crear y mostrar Dashboard_actuacionesApp
-        self.dashact = Dashboard_actuacionesApp(self.numjui,self.nombTribunal,self.fecha_hora_formateada)
+        self.dashact = Dashboard_actuacionesApp(self.numjui,nombTribunal,self.fecha_hora_formateada)
         self.dashact.show()
     
     def ajustar_tamanio(self):
