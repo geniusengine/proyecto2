@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : jeudi 1 février 2024 à 11:03:43
+Dernière modification : jeudi 1 février 2024 à 11:09:46
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout,QComboBox
@@ -20,7 +20,6 @@ from PyQt6.QtWidgets import QLineEdit  # Agregado para importar QLineEdit
 from datetime import datetime
 import pymssql
 from .dashboard_actuaciones import Dashboard_actuacionesApp
-from .estampado_app import Estampadoxd
 import logging
 import pyodbc
 import time
@@ -193,7 +192,7 @@ class MiApp(QMainWindow):
                 except ValueError:
                     arancel = 0  # Valor predeterminado si la conversión falla
 
-                if any([not cell for cell in [self.numjui, self.nombTribunal,self.demandante,
+                if any([not cell for cell in [self.numjui, nombTribunal,self.demandante,
                                              self.demandado, self.repre,
                                             self.mandante, self.domicilio, self.comuna, self.encargo,
                                             self.soli, self.arancel]]):
