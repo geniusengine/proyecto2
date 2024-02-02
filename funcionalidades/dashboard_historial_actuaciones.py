@@ -9,7 +9,7 @@ import pymssql
 from datetime import datetime
 import logging
 from docx import Document
-from docx2pdf import convert
+
 from tkinter import filedialog
 import tkinter as tk
 
@@ -21,9 +21,6 @@ class DashboardHistorialActuaciones(QMainWindow):
   
     def __init__(self):
         
-        
-
-
 
         super().__init__()
         self.db_connection = None
@@ -150,7 +147,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         try:
             self.establecer_conexion_base_de_datos()
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante,  demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa FROM AUD_notificacion"
+                query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa FROM AUD_notificacion"
                 
         
                 
@@ -174,7 +171,7 @@ class DashboardHistorialActuaciones(QMainWindow):
 # muestra los datos en la tabla
     def mostrar_tabla(self):
         self.table.setColumnCount(13)
-        self.table.setHorizontalHeaderLabels(['fechaNotificacion', 'Rol', 'Tribunal', 'Nombre demandante', 'Nombre demandado', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel', 'Actuación'])
+        self.table.setHorizontalHeaderLabels(['fechaNotificacion', 'Rol', 'Tribunal', 'demandante', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel', 'Actuación'])
         for row_index, causa in enumerate(self.causas):
             
             self.table.insertRow(row_index)
@@ -203,69 +200,6 @@ class DashboardHistorialActuaciones(QMainWindow):
         # Obtén el valor actual del combo box
         combo_box = self.table.cellWidget(row, col)
         selected_value = combo_box.currentText()
-
-        # Verifica si el valor seleccionado es "Búsqueda Negativa"
-        if selected_value == "Búsqueda Negativa":
-            # Llama al método negativaP para realizar el estampado
-            self.negativaP(row)
-
-        elif selected_value == "Búsqueda Positiva":
-            #Llama al método negativaP para realizar el estampado
-            self.positivaP(row)
-
-        elif selected_value == "Not. por cédula":
-            #Llama al método negativaP para realizar el estampado
-            self.notificacionPorCedula(row)
-
-        elif selected_value == "Not. Art. 44":
-            #Llama al método negativaP para realizar el estampado
-            self.notificacion44(row)
-        
-        elif selected_value == "Req. de pago en Oficina":
-            #Llama al método negativaP para realizar el estampado
-            self.actaRequerimientoPago(row)
-        
-        elif selected_value == "Op. al Embargo":
-            #Llama al método negativaP para realizar el estampado
-            self.actaOposicionEmbargo(row)
-        
-        elif selected_value == "Not. Personal":
-            #Llama al método negativaP para realizar el estampado
-            self.notificacionpecausaperuanoqliao(row)
-        
-        elif selected_value == "Not. Personal/Req. de Pago":
-            #Llama al método negativaP para realizar el estampado
-            self.actaRequerimientoPago(row)
-
-        elif selected_value == "Not. art. 52":
-            #Llama al método negativaP para realizar el estampado
-            self.busquedaN(row)
-        
-        elif selected_value == "Embargo con Fuerza Pública":
-            #Llama al método negativaP para realizar el estampado
-            self.fuerzapu(row)
-
-        elif selected_value == "Embargo Frustrado":
-            #Llama al método negativaP para realizar el estampado
-            self.EMBARGOFRUSTRADO(row)
-
-        elif selected_value == "Embargo Banco":
-            #Llama al método negativaP para realizar el estampado
-            self.bban(row)
-
-        elif selected_value == "Embargo Vehículo":
-            #Llama al método negativaP para realizar el estampado
-            self.embargoauto(row)
-
-     
-       
-
-
-    
-
-
-    def negativaP(self, row):
-        # Obtén los datos de la fila seleccionada
         fechaNotificacion = self.table.item(row, 0).text()
         numjui = self.table.item(row, 1).text()  
         nombTribunal = self.table.item(row, 2).text()  
@@ -279,7 +213,64 @@ class DashboardHistorialActuaciones(QMainWindow):
         soli = self.table.item(row, 10).text() 
         arancel = self.table.item(row, 11).text()
 
+        fechaNotificacion_cleaned = fechaNotificacion.replace(':', '_').replace('-', '_')
+
+        # Verifica si el valor seleccionado es "Búsqueda Negativa"
+        if selected_value == "Búsqueda Negativa":
+            # Llama al método negativaP para realizar el estampado
+            self.negativaP(numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned)
+
+        elif selected_value == "Búsqueda Positiva":
+            #Llama al método negativaP para realizar el estampado
+            self.positivaP(numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned)
+
+        elif selected_value == "Not. por cédula":
+            #Llama al método negativaP para realizar el estampado
+            self.notificacionPorCedula(numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned)
+
+        elif selected_value == "Not. Art. 44":
+            #Llama al método negativaP para realizar el estampado
+            self.notificacion44(numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned)
         
+        elif selected_value == "Req. de pago en Oficina":
+            #Llama al método negativaP para realizar el estampado
+            self.actaRequerimientoPago(numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned)
+        
+        elif selected_value == "Op. al Embargo":
+            #Llama al método negativaP para realizar el estampado
+            self.actaOposicionEmbargo(numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned)
+        
+        elif selected_value == "Not. Personal":
+            #Llama al método negativaP para realizar el estampado
+            self.notificacionpecausaperuanoqliao(numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned)
+        
+        elif selected_value == "Not. Personal/Req. de Pago":
+            #Llama al método negativaP para realizar el estampado
+            self.actaRequerimientoPago(numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned)
+
+        elif selected_value == "Not. art. 52":
+            #Llama al método negativaP para realizar el estampado
+            self.busquedaN(numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned)
+        
+        elif selected_value == "Embargo con Fuerza Pública":
+            #Llama al método negativaP para realizar el estampado
+            self.fuerzapu(numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned)
+
+        elif selected_value == "Embargo Frustrado":
+            #Llama al método negativaP para realizar el estampado
+            self.EMBARGOFRUSTRADO(numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned)
+
+        elif selected_value == "Embargo Banco":
+            #Llama al método negativaP para realizar el estampado
+            self.bban(numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned)
+
+        elif selected_value == "Embargo Vehículo":
+            #Llama al método negativaP para realizar el estampado
+            self.embargoauto(numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned)
+
+    
+
+    def negativaP(self, numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel,fechaNotificacion_cleaned):
         # variables de tiempo lel
         now = datetime.now()
         años = now.strftime("%d/%m/%y")
@@ -305,24 +296,12 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
          # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
+        doc.save(os.path.join(save_path, f'{numjui} {nombTribunal} {fechaNotificacion_cleaned}.docx'))
 
         logging.info(f'A estamapado {numjui}-{encargo}')  
     
-    def positivaP(self, row):
-        # Obtén los datos de la fila seleccionada
-        fechaNotificacion = self.table.item(row, 0).text()
-        numjui = self.table.item(row, 1).text()  
-        nombTribunal = self.table.item(row, 2).text()  
-        demandante = self.table.item(row, 3).text()
-        demandado = self.table.item(row, 4).text()  
-        repre = self.table.item(row, 5).text()  
-        mandante = self.table.item(row, 6).text()  
-        domicilio = self.table.item(row, 7).text()  
-        comuna = self.table.item(row, 8).text()  
-        encargo = self.table.item(row, 9).text() 
-        soli = self.table.item(row, 10).text() 
-        arancel = self.table.item(row, 11).text()
+    def positivaP(self, numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned):
+
 
         now = datetime.now()
         años = now.strftime("%d/%m/%y")
@@ -336,7 +315,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {domicilio} {comuna}, busqué a {nombdemandante} {apellidemandante}, a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de {soli}.DOY FE."
+        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {domicilio} {comuna}, busqué a  {demandante}, a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de {soli}.DOY FE."
         doc.add_paragraph(busqueda_positiva)
 
         # Agrega la firma al final del documento
@@ -348,24 +327,11 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
          # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
+        doc.save(os.path.join(save_path, f'{numjui} {nombTribunal} {fechaNotificacion_cleaned}.docx'))
 
         logging.info(f'A estamapado {numjui}-{encargo}')
 
-    def notificacionPorCedula(self, row):
-
-        fechaNotificacion = self.table.item(row, 0).text()
-        numjui = self.table.item(row, 1).text()  
-        nombTribunal = self.table.item(row, 2).text()  
-        demandante = self.table.item(row, 3).text()
-        demandado = self.table.item(row, 4).text()  
-        repre = self.table.item(row, 5).text()  
-        mandante = self.table.item(row, 6).text()  
-        domicilio = self.table.item(row, 7).text()  
-        comuna = self.table.item(row, 8).text()  
-        encargo = self.table.item(row, 9).text() 
-        soli = self.table.item(row, 10).text() 
-        arancel = self.table.item(row, 11).text()
+    def notificacionPorCedula(self, numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned):
 
         # Variables de tiempo
         now = datetime.now()
@@ -390,25 +356,12 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
+        doc.save(os.path.join(save_path, f'{numjui} {nombTribunal} {fechaNotificacion_cleaned}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
-    def notificacion44(self, row):
+    def notificacion44(self, numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned):
         
-        fechaNotificacion = self.table.item(row, 0).text()
-        numjui = self.table.item(row, 1).text()  
-        nombTribunal = self.table.item(row, 2).text()  
-        demandante = self.table.item(row, 3).text() 
-        demandado = self.table.item(row, 4).text()  
-        repre = self.table.item(row, 5).text()  
-        mandante = self.table.item(row, 6).text()  
-        domicilio = self.table.item(row, 7).text()  
-        comuna = self.table.item(row, 8).text()  
-        encargo = self.table.item(row, 9).text() 
-        soli = self.table.item(row, 10).text() 
-        arancel = self.table.item(row, 11).text()
-
         # Variables de tiempo
         now = datetime.now()
         fecha_actual = now.strftime("%d/%m/%Y")
@@ -437,24 +390,11 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
+        doc.save(os.path.join(save_path, f'{numjui} {nombTribunal} {fechaNotificacion_cleaned}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
-    def actaRequerimientoPago(self,row):
-
-        fechaNotificacion = self.table.item(row, 0).text()
-        numjui = self.table.item(row, 1).text()  
-        nombTribunal = self.table.item(row, 2).text()  
-        demandante = self.table.item(row, 3).text()  
-        demandado = self.table.item(row, 4).text()  
-        repre = self.table.item(row, 5).text()  
-        mandante = self.table.item(row, 6).text()  
-        domicilio = self.table.item(row, 7).text()  
-        comuna = self.table.item(row, 8).text()  
-        encargo = self.table.item(row, 9).text() 
-        soli = self.table.item(row, 10).text() 
-        arancel = self.table.item(row, 11).text()
+    def actaRequerimientoPago(self, numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned):
 
         # Variables de tiempo
         now = datetime.now()
@@ -482,24 +422,11 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
+        doc.save(os.path.join(save_path, f'{numjui} {nombTribunal} {fechaNotificacion_cleaned}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
-    def actaOposicionEmbargo(self,row):
-
-        fechaNotificacion = self.table.item(row, 0).text()
-        numjui = self.table.item(row, 1).text()  
-        nombTribunal = self.table.item(row, 2).text()  
-        demandante = self.table.item(row, 3).text()
-        demandado = self.table.item(row, 4).text()  
-        repre = self.table.item(row, 5).text()  
-        mandante = self.table.item(row, 6).text()  
-        domicilio = self.table.item(row, 7).text()  
-        comuna = self.table.item(row, 8).text()  
-        encargo = self.table.item(row, 9).text() 
-        soli = self.table.item(row, 10).text() 
-        arancel = self.table.item(row, 11).text()
+    def actaOposicionEmbargo(self, numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned):
 
         now = datetime.now()
         fecha_actual = now.strftime("%d/%m/%Y")
@@ -523,24 +450,11 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
+        doc.save(os.path.join(save_path, f'{numjui} {nombTribunal} {fechaNotificacion_cleaned}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
-    def notificacionpecausaperuanoqliao(self, row):
-        
-        fechaNotificacion = self.table.item(row, 0).text()
-        numjui = self.table.item(row, 1).text()  
-        nombTribunal = self.table.item(row, 2).text()  
-        demandante = self.table.item(row, 3).text()  
-        demandado = self.table.item(row, 4).text()  
-        repre = self.table.item(row, 5).text()  
-        mandante = self.table.item(row, 6).text()  
-        domicilio = self.table.item(row, 7).text()  
-        comuna = self.table.item(row, 8).text()  
-        encargo = self.table.item(row, 9).text() 
-        soli = self.table.item(row, 10).text() 
-        arancel = self.table.item(row, 11).text()    
+    def notificacionpecausaperuanoqliao(self, numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned):
         
         # variables de tiempo lel
         now = datetime.now()
@@ -564,25 +478,12 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
          # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
+        doc.save(os.path.join(save_path, f'{numjui} {nombTribunal} {fechaNotificacion_cleaned}.docx'))
 
         logging.info(f'A estamapado {numjui}-{encargo}')
 
 
-    def actaRequerimientoPago(self,row):
-
-        fechaNotificacion = self.table.item(row, 0).text()
-        numjui = self.table.item(row, 1).text()  
-        nombTribunal = self.table.item(row, 2).text()  
-        demandante = self.table.item(row, 3).text()  
-        demandado = self.table.item(row, 4).text()  
-        repre = self.table.item(row, 5).text()  
-        mandante = self.table.item(row, 6).text()  
-        domicilio = self.table.item(row, 7).text()  
-        comuna = self.table.item(row, 8).text()  
-        encargo = self.table.item(row, 9).text() 
-        soli = self.table.item(row, 10).text() 
-        arancel = self.table.item(row, 11).text() 
+    def actaRequerimientoPago(self, numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned):
 
        # Variables de tiempo
         now = datetime.now()
@@ -609,24 +510,11 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
+        doc.save(os.path.join(save_path, f'{numjui} {nombTribunal} {fechaNotificacion_cleaned}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}') 
 
-    def busquedaN(self,row):
-
-        fechaNotificacion = self.table.item(row, 0).text()
-        numjui = self.table.item(row, 1).text()  
-        nombTribunal = self.table.item(row, 2).text()  
-        demandante = self.table.item(row, 3).text()  
-        demandado = self.table.item(row, 4).text()  
-        repre = self.table.item(row, 5).text()  
-        mandante = self.table.item(row, 6).text()  
-        domicilio = self.table.item(row, 7).text()  
-        comuna = self.table.item(row, 8).text()  
-        encargo = self.table.item(row, 9).text() 
-        soli = self.table.item(row, 10).text() 
-        arancel = self.table.item(row, 11).text() 
+    def busquedaN(self, numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned):
 
         # Variables de tiempo
         now = datetime.now()
@@ -653,24 +541,11 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
+        doc.save(os.path.join(save_path, f'{numjui} {nombTribunal} {fechaNotificacion_cleaned}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
-    def fuerzapu(self,row):
-
-        fechaNotificacion = self.table.item(row, 0).text()
-        numjui = self.table.item(row, 1).text()  
-        nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()  
-        demandado = self.table.item(row, 4).text()  
-        repre = self.table.item(row, 5).text()  
-        mandante = self.table.item(row, 6).text()  
-        domicilio = self.table.item(row, 7).text()  
-        comuna = self.table.item(row, 8).text()  
-        encargo = self.table.item(row, 9).text() 
-        soli = self.table.item(row, 10).text() 
-        arancel = self.table.item(row, 11).text() 
+    def fuerzapu(self, numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned):
 
         # Variables de tiempo
         now = datetime.now()
@@ -681,7 +556,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {nombdemandante} CON {demandado}"
+        encabezado = f"{nombTribunal}\n{numjui} : {encargo} \n {demandante} CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de retiro de vehículo
@@ -698,25 +573,12 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
+        doc.save(os.path.join(save_path, f'{numjui} {nombTribunal} {fechaNotificacion_cleaned}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
 
-    def EMBARGOFRUSTRADO(self, row):
-        
-        fechaNotificacion = self.table.item(row, 0).text()
-        numjui = self.table.item(row, 1).text()  
-        nombTribunal = self.table.item(row, 2).text()  
-        nombdemandante = self.table.item(row, 3).text()  
-        demandado = self.table.item(row, 4).text()  
-        repre = self.table.item(row, 5).text()  
-        mandante = self.table.item(row, 6).text()  
-        domicilio = self.table.item(row, 7).text()  
-        comuna = self.table.item(row, 8).text()  
-        encargo = self.table.item(row, 9).text() 
-        soli = self.table.item(row, 10).text() 
-        arancel = self.table.item(row, 11).text() 
+    def EMBARGOFRUSTRADO(self, numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned):
 
         # Variables de tiempo
         now = datetime.now()
@@ -727,7 +589,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{nombTribunal} \n {numjui} : {encargo} \n {nombdemandante}  CON {demandado}"
+        encabezado = f"{nombTribunal} \n {numjui} : {encargo} \n {demandante}  CON {demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de embargo frustrado
@@ -742,24 +604,11 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
+        doc.save(os.path.join(save_path, f'{numjui} {nombTribunal} {fechaNotificacion_cleaned}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
      
-    def bban(self, row):
-
-        fechaNotificacion = self.table.item(row, 0).text()
-        numjui = self.table.item(row, 1).text()  
-        nombTribunal = self.table.item(row, 2).text()  
-        demandante = self.table.item(row, 3).text()  
-        demandado = self.table.item(row, 4).text()  
-        repre = self.table.item(row, 5).text()  
-        mandante = self.table.item(row, 6).text()  
-        domicilio = self.table.item(row, 7).text()  
-        comuna = self.table.item(row, 8).text()  
-        encargo = self.table.item(row, 9).text() 
-        soli = self.table.item(row, 10).text() 
-        arancel = self.table.item(row, 11).text() 
+    def bban(self, numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned):
 
         # Variables de tiempo
         now = datetime.now()
@@ -785,24 +634,11 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
+        doc.save(os.path.join(save_path, f'{numjui} {nombTribunal} {fechaNotificacion_cleaned}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
-    def embargoauto(self, row):
-
-        fechaNotificacion = self.table.item(row, 0).text()
-        numjui = self.table.item(row, 1).text()  
-        nombTribunal = self.table.item(row, 2).text()  
-        demandante = self.table.item(row, 3).text()  
-        demandado = self.table.item(row, 4).text()  
-        repre = self.table.item(row, 5).text()  
-        mandante = self.table.item(row, 6).text()  
-        domicilio = self.table.item(row, 7).text()  
-        comuna = self.table.item(row, 8).text()  
-        encargo = self.table.item(row, 9).text() 
-        soli = self.table.item(row, 10).text() 
-        arancel = self.table.item(row, 11).text() 
+    def embargoauto(self, numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned):
 
         # Variables de tiempo
         now = datetime.now()
@@ -828,7 +664,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         save_path = filedialog.askdirectory()  # Abre el cuadro de diálogo
 
         # Guarda el documento en el directorio seleccionado
-        doc.save(os.path.join(save_path, f'{self.numjui} {self.nombTribunal} {self.fechaNotificacion}.docx'))
+        doc.save(os.path.join(save_path, f'{numjui} {nombTribunal} {fechaNotificacion_cleaned}.docx'))
 
         logging.info(f'A estampado {numjui}-{encargo}')
 
