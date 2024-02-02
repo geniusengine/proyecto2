@@ -1,3 +1,18 @@
+"""
+ _______       _            _     _          ______        _                 _ 
+(_______)     (_)       _  (_)   | |        (____  \      (_)               | |
+ _______  ____ _  ___ _| |_ _  __| |_____    ____)  ) ____ _ _____ ____   __| |
+|  ___  |/ ___) |/___|_   _) |/ _  | ___ |  |  __  ( / ___) (____ |  _ \ / _  |
+| |   | | |   | |___ | | |_| ( (_| | ____|  | |__)  ) |   | / ___ | | | ( (_| |
+|_|   |_|_|   |_(___/   \__)_|\____|_____)  |______/|_|   |_\_____|_| |_|\____|
+    
+Auteur: matit(matit.pro@gmail.com) 
+miscocos.py(Ɔ) 2024
+Description : Saisissez la description puis « Tab »
+Créé le :  jeudi 1 février 2024 à 13:40:07 
+Dernière modification : vendredi 2 février 2024 à 18:12:13"""
+
+import os
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
     QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel,QLineEdit
@@ -7,17 +22,11 @@ import pymssql
 import pandas as pd
 import logging
 from funcionalidades.buscado import BuscadorDatosCausaApp
-from funcionalidades.insertar_excel import ExcelToDatabaseApp
-from funcionalidades.insertar_manual import MiApp
-from funcionalidades.estampado_app import Estampadoxd
-from funcionalidades.dashboard_historial_actuaciones import DashboardHistorialActuaciones
-from funcionalidades.exportar import VentanaFiltro
-
-
+from datetime import datetime
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-class DashboardApp(QMainWindow):
+class exportN(QMainWindow):
     datos_actualizados_signal = pyqtSignal()
     def __init__(self):
         super().__init__()
@@ -41,32 +50,38 @@ class DashboardApp(QMainWindow):
         self.timer.timeout.connect(self.actualizar_datos)
         self.timer.start(15000)  # 240000 milisegundos = 4 minutos
         
+        # Dentro del método initUI() en tu clase DashboardApp
+        self.txt_filtro_comuna = QLineEdit(self)
+        self.txt_filtro_mandante = QLineEdit(self)
+        self.btn_aplicar_filtro = QPushButton("Aplicar Filtro1", self)
+        self.btn_aplicar_filtro.clicked.connect(self.aplicar_filtro)
 
+        # Crear un contenedor para los widgets de filtro
+        filtro_layout = QHBoxLayout()
+        filtro_layout.addWidget(QLabel("Filtrar por Comuna:"))
+        filtro_layout.addWidget(self.txt_filtro_comuna)
+        filtro_layout.addWidget(QLabel("Filtrar por Mandante:"))
+        filtro_layout.addWidget(self.txt_filtro_mandante)
+        filtro_layout.addWidget(self.btn_aplicar_filtro)
 
-
-        # Añadir el contenedor de filtro al diseño vertical
-       # self.layout_vertical.addLayout(filtro_layout)
+        self.layout_vertical.addLayout(filtro_layout)
         # Crea botones
         self.crear_botones()
 
         # Añade botones al layout horizontal y el layout horizontal al layout vertical
-        self.layout_horizontal.addWidget(self.btn_buscar)
-       # self.layout_horizontal.addWidget(self.btn_Insertar_excel)
-        self.layout_horizontal.addWidget(self.btn_Insertar_manual)
-        self.layout_horizontal.addWidget(self.btn_historial_actuaciones)
-        self.layout_horizontal.addWidget(self.btn_aplicar_filtro)
+        
         self.layout_vertical.addWidget(self.btn_exportar)
         self.layout_vertical.addLayout(self.layout_horizontal)
-
-
         # Crea una tabla y un botón de guardar
         self.table = QTableWidget()
+
         # Establecer el color de las líneas de las celdas
         self.table.setStyleSheet(
         "QTableView { gridline-color: white; }"
         "QTableCornerButton::section { background-color: #d3d3d3; border: 1px solid black; }"
         "QHeaderView::section { background-color: #d3d3d3; border: 1px solid black; }"
         )
+        
         self.layout_vertical.addWidget(self.table)
     
         # Conectar la señal de clic en el encabezado de la columna para ordenar
@@ -86,46 +101,6 @@ class DashboardApp(QMainWindow):
         # Agrega un contenedor para la leyenda de colores
         color_legend_layout = QHBoxLayout()
 
-        # Círculo verde con texto
-        green_widget = QWidget()
-        green_layout = QHBoxLayout()
-        green_label = QLabel()
-        green_label.setFixedSize(20, 20)
-        green_label.setStyleSheet("background-color: rgb(46, 204, 113); border-radius: 10px;")
-        green_text = QLabel("Estampada y Notificada")
-        green_text.setStyleSheet("color: rgb(46, 204, 113)")
-        green_layout.addWidget(green_label)
-        green_layout.addWidget(green_text)
-        green_widget.setLayout(green_layout)
-        color_legend_layout.addWidget(green_widget)
-
-        # Círculo amarillo con texto
-        yellow_widget = QWidget()
-        yellow_layout = QHBoxLayout()
-        yellow_label = QLabel()
-        yellow_label.setFixedSize(20, 20)
-        yellow_label.setStyleSheet("background-color: rgb(250, 193, 114); border-radius: 10px;")
-        yellow_text = QLabel("No estampada y Notificada")
-        yellow_text.setStyleSheet("color: rgb(250, 193, 114);")
-        yellow_layout.addWidget(yellow_label)
-        yellow_layout.addWidget(yellow_text)
-        yellow_widget.setLayout(yellow_layout)
-        color_legend_layout.addWidget(yellow_widget)
-
-
-        # Círculo rojo con texto
-        red_widget = QWidget()
-        red_layout = QHBoxLayout()
-        red_label = QLabel()
-        red_label.setFixedSize(20, 20)
-        red_label.setStyleSheet("background-color: rgb(224, 92, 69); border-radius: 10px;")
-        red_text = QLabel("No Estampada y No Notificada")
-        red_text.setStyleSheet("color: rgb(224, 92, 69);")
-        red_layout.addWidget(red_label)
-        red_layout.addWidget(red_text)
-        red_widget.setLayout(red_layout)
-        color_legend_layout.addWidget(red_widget)
-
         # Agrega la leyenda de colores al layout vertical existente
         self.layout_vertical.addLayout(color_legend_layout)
 
@@ -135,16 +110,10 @@ class DashboardApp(QMainWindow):
         self.timer_eliminar_respaldo.timeout.connect(self.eliminar_y_respaldo)
         self.timer_eliminar_respaldo.start(1800000)  # 600000 milisegundos = 10 minutos
 
-
-
     # crea los botones de la interfaz
     def crear_botones(self):
-        self.btn_buscar = self.crear_boton('Buscar', self.buscar_clicked)
-        #self.btn_Insertar_excel = self.crear_boton('Insertar Excel', self.Insertar_excel_clicked)
-        self.btn_Insertar_manual = self.crear_boton('Insertar Manual', self.Insertar_manual_clicked)
-        self.btn_historial_actuaciones = self.crear_boton('Historial Actuaciones', self.historial_actuaciones_clicked)
         self.btn_exportar = self.crear_boton('Exportar', self.exportar_clicked)
-        self.btn_aplicar_filtro = self.crear_boton('Aplicar Filtro', self.aplicar_filtro_clicked)
+
     def aplicar_filtro(self):
         filtro_comuna = self.txt_filtro_comuna.text()
         filtro_mandante = self.txt_filtro_mandante.text()
@@ -243,8 +212,8 @@ class DashboardApp(QMainWindow):
                         "Encargo": fila[9],
                         "Resultado": fila[10],
                         "Arancel": fila[11],
-                        "Notificar": "Notificar",
-                        "Estampada": "Estampada",
+                        "Notificar": "lol",
+                        "Estampada": "lol",
                         "Notificada": fila[12],
                         "estadoCausa": fila[13],
                 }
@@ -279,9 +248,6 @@ class DashboardApp(QMainWindow):
                 if key == "Notificar":
                     button = self.crear_boton_con_icono("static/notificar.png", self.notificar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
-                elif key == "Estampada":
-                    button = self.crear_boton_con_icono("static/firmar.png", self.estampar_clicked)
-                    self.table.setCellWidget(row_index, col_index, button)
                 else:
                     # Crea un objeto QTableWidgetItem para las otras columnas
                     item = QTableWidgetItem(str(value))
@@ -291,100 +257,19 @@ class DashboardApp(QMainWindow):
 
     def exportar_clicked(self):
     # Exporta los datos a un archivo Excel
+        now = datetime.now()
+        años = now.strftime("%d-%m-%y")
+        horas = now.strftime("%H:%M")
+
         try:
             df = pd.DataFrame(self.causas)
-            columnas_deseadas = ['fecha',  'Rol', 'Tribunal', 'Nombre demandante',  'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
+            print(df)
+            columnas_deseadas = ['Fecha notificacion',  'Rol', 'Tribunal', 'demandante',  'demandado', 'repre', 'Encargo', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
             df_seleccionado = df.loc[:, columnas_deseadas]
-            df_seleccionado.to_excel('as.xlsx', index=False)
+            df_seleccionado.to_excel('Nomina.xlsx', index=False)
             QMessageBox.information(self, "Información", "Los datos se han exportado correctamente.")
         except Exception as e:
             QMessageBox.warning(self, "Advertencia", f"Error al exportar a Excel: {e}")
-
-    def historial_actuaciones_clicked(self):
-        print("Historial de actuaciones")
-        self.exchistorial = DashboardHistorialActuaciones()
-        self.exchistorial.show()
-    def aplicar_filtro_clicked(self):
-        self.filtro= VentanaFiltro()
-        self.filtro.show()
-# abre la ventana de insertar excel
-    #def Insertar_excel_clicked(self):
-        # Lógica para insertar desde Excel
-       # self.exc = ExcelToDatabaseApp()
-       # self.exc.show()
-# abre la ventana de insertar manualmente
-    def Insertar_manual_clicked(self):
-        # Lógica para insertar manualmente
-        self.exa = MiApp()
-        self.exa.show()
-# abre la ventana de estampado
-    def estampar_clicked(self):
-        # Obtener la fila seleccionada
-        selected_row = self.table.currentRow()
-        # Verificar si se seleccionó una fila
-        if selected_row != -1:
-
-            notificada = self.causas[selected_row]["Notificada"]
-
-            if not notificada:
-                QMessageBox.warning(self, "Advertencia", "La causa debe ser notificada primero antes de estampar.")
-                return
-
-            # Obtener datos de la fila seleccionada
-            fechaNotificacion = self.table.item(selected_row, 0).text()
-            numjui = self.table.item(selected_row, 1).text()
-            nombTribunal = self.table.item(selected_row, 2).text()
-            demandante = self.table.item(selected_row, 3).text()
-            demandado = self.table.item(selected_row, 4).text()
-            repre = self.table.item(selected_row, 5).text()
-            mandante = self.table.item(selected_row, 6).text()
-            domicilio = self.table.item(selected_row, 7).text()
-            comuna = self.table.item(selected_row, 8).text()
-            encargo = self.table.item(selected_row, 9).text()
-            soli = self.table.item(selected_row, 10).text()
-            arancel = self.table.item(selected_row, 11).text()
-    
-            # Importa Estampadoxd localmente
-            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
-            self.ex3.show()
-        
-        button = self.sender()
-        index = self.table.indexAt(button.pos())
-        row, col = index.row(), index.column()
-        causa = self.causas[row]
-        color = QColor(250, 193, 114)
-
-        # Verifica si la causa ya ha sido notificada
-        if causa["Estampada"] == 1:
-            QMessageBox.warning(self, "Advertencia", "Esta causa ya ha sido estampada.")
-            return
-        
-        # Actualiza la información localmente
-        causa["Estampada"] = 1
-
-        numjui = self.table.item(selected_row, 1).text()
-        
-        # Actualiza el valor en la base de datos
-        try:
-            self.establecer_conexion_base_de_datos()
-            with self.db_connection.cursor() as cursor:
-                query = "UPDATE notificacion SET estadoCausa = 1 WHERE numjui = %s"
-                cursor.execute(query, (causa['Rol'],))
-            self.db_connection.commit()
-        except pymssql.Error as db_error:
-            print(f"Error al ejecutar la consulta SQL: {db_error}")
-            self.db_connection.rollback()
-            raise  # Re-levanta la excepción para que el programa no continúe si hay un error grave en la base de datos
-        except Exception as e:
-            print(f"Error desconocido: {e}")
-            raise  # Re-levanta la excepción para que el programa no continúe si hay un error desconocido
-        finally:
-            self.cerrar_conexion_base_de_datos()
-        # Actualiza la celda en la tabla y el color de la fila
-        self.actualizar_color_fila(row)
-
-        # Configurar el sistema de registro
-        logging.info(f'Se estampo causa: {numjui}')
 
 
 # Función para ordenar la tabla según la columna clicada
@@ -494,9 +379,8 @@ class DashboardApp(QMainWindow):
 # Función principal
 def main():
     app = QApplication(sys.argv)
-    window = DashboardApp()
+    window = exportN()
 
-  
     window.show()
     sys.exit(app.exec())
     
