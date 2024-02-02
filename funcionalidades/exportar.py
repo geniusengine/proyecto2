@@ -1,29 +1,20 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
-    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel,QLineEdit
+    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout, QMessageBox, QLabel, QLineEdit, QDialog
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
 import pandas as pd
 import logging
-from funcionalidades.buscado import BuscadorDatosCausaApp
-from funcionalidades.insertar_excel import ExcelToDatabaseApp
-from funcionalidades.insertar_manual import MiApp
-from funcionalidades.estampado_app import Estampadoxd
-from funcionalidades.dashboard_historial_actuaciones import DashboardHistorialActuaciones
-from funcionalidades.exportar import VentanaFiltro
 
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-class DashboardApp(QMainWindow):
-    datos_actualizados_signal = pyqtSignal()
-    def __init__(self):
-        super().__init__()
-        self.db_connection = None
-        self.initUI()
-    
+
+class VentanaFiltro(QDialog):
+    filtro_aplicado_signal = pyqtSignal(str, str)
+
     def initUI(self):
         self.setWindowTitle('Dashboard App')
         self.setWindowIcon(QIcon("static/icono-ventana.png"))
@@ -41,20 +32,26 @@ class DashboardApp(QMainWindow):
         self.timer.timeout.connect(self.actualizar_datos)
         self.timer.start(15000)  # 240000 milisegundos = 4 minutos
         
+        # Dentro del método initUI() en tu clase DashboardApp
+        self.txt_filtro_comuna = QLineEdit(self)
+        self.txt_filtro_mandante = QLineEdit(self)
+        self.btn_aplicar_filtro = QPushButton("Aplicar Filtro", self)
+        self.btn_aplicar_filtro.clicked.connect(self.aplicar_filtro)
 
-
+        # Crear un contenedor para los widgets de filtro
+        filtro_layout = QHBoxLayout()
+        filtro_layout.addWidget(QLabel("Filtrar por Comuna:"))
+        filtro_layout.addWidget(self.txt_filtro_comuna)
+        filtro_layout.addWidget(QLabel("Filtrar por Mandante:"))
+        filtro_layout.addWidget(self.txt_filtro_mandante)
+        filtro_layout.addWidget(self.btn_aplicar_filtro)
 
         # Añadir el contenedor de filtro al diseño vertical
-       # self.layout_vertical.addLayout(filtro_layout)
+        self.layout_vertical.addLayout(filtro_layout)
         # Crea botones
         self.crear_botones()
 
         # Añade botones al layout horizontal y el layout horizontal al layout vertical
-        self.layout_horizontal.addWidget(self.btn_buscar)
-       # self.layout_horizontal.addWidget(self.btn_Insertar_excel)
-        self.layout_horizontal.addWidget(self.btn_Insertar_manual)
-        self.layout_horizontal.addWidget(self.btn_historial_actuaciones)
-        self.layout_horizontal.addWidget(self.btn_aplicar_filtro)
         self.layout_vertical.addWidget(self.btn_exportar)
         self.layout_vertical.addLayout(self.layout_horizontal)
 
@@ -139,12 +136,7 @@ class DashboardApp(QMainWindow):
 
     # crea los botones de la interfaz
     def crear_botones(self):
-        self.btn_buscar = self.crear_boton('Buscar', self.buscar_clicked)
-        #self.btn_Insertar_excel = self.crear_boton('Insertar Excel', self.Insertar_excel_clicked)
-        self.btn_Insertar_manual = self.crear_boton('Insertar Manual', self.Insertar_manual_clicked)
-        self.btn_historial_actuaciones = self.crear_boton('Historial Actuaciones', self.historial_actuaciones_clicked)
         self.btn_exportar = self.crear_boton('Exportar', self.exportar_clicked)
-        self.btn_aplicar_filtro = self.crear_boton('Aplicar Filtro', self.aplicar_filtro_clicked)
     def aplicar_filtro(self):
         filtro_comuna = self.txt_filtro_comuna.text()
         filtro_mandante = self.txt_filtro_mandante.text()
@@ -289,34 +281,7 @@ class DashboardApp(QMainWindow):
                     self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
         self.primera_vez()
 
-    def exportar_clicked(self):
-    # Exporta los datos a un archivo Excel
-        try:
-            df = pd.DataFrame(self.causas)
-            columnas_deseadas = ['fecha',  'Rol', 'Tribunal', 'Nombre demandante',  'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
-            df_seleccionado = df.loc[:, columnas_deseadas]
-            df_seleccionado.to_excel('as.xlsx', index=False)
-            QMessageBox.information(self, "Información", "Los datos se han exportado correctamente.")
-        except Exception as e:
-            QMessageBox.warning(self, "Advertencia", f"Error al exportar a Excel: {e}")
 
-    def historial_actuaciones_clicked(self):
-        print("Historial de actuaciones")
-        self.exchistorial = DashboardHistorialActuaciones()
-        self.exchistorial.show()
-    def aplicar_filtro_clicked(self):
-        self.filtro= VentanaFiltro()
-        self.filtro.show()
-# abre la ventana de insertar excel
-    #def Insertar_excel_clicked(self):
-        # Lógica para insertar desde Excel
-       # self.exc = ExcelToDatabaseApp()
-       # self.exc.show()
-# abre la ventana de insertar manualmente
-    def Insertar_manual_clicked(self):
-        # Lógica para insertar manualmente
-        self.exa = MiApp()
-        self.exa.show()
 # abre la ventana de estampado
     def estampar_clicked(self):
         # Obtener la fila seleccionada
@@ -344,9 +309,6 @@ class DashboardApp(QMainWindow):
             soli = self.table.item(selected_row, 10).text()
             arancel = self.table.item(selected_row, 11).text()
     
-            # Importa Estampadoxd localmente
-            self.ex3 = Estampadoxd(fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
-            self.ex3.show()
         
         button = self.sender()
         index = self.table.indexAt(button.pos())
@@ -390,12 +352,6 @@ class DashboardApp(QMainWindow):
 # Función para ordenar la tabla según la columna clicada
     def ordenar_tabla(self, logicalIndex):
         self.table.sortItems(logicalIndex, Qt.SortOrder.AscendingOrder if self.table.horizontalHeader().sortIndicatorOrder() == Qt.SortOrder.DescendingOrder else Qt.SortOrder.DescendingOrder)
-# abre la ventana de buscar
-    def buscar_clicked(self):
-        # Lógica para buscar
-        self.bas = BuscadorDatosCausaApp()
-        self.bas.show()
-
 
 # al notificar cambia el estado de la causa
     def notificar_clicked(self):
@@ -489,17 +445,12 @@ class DashboardApp(QMainWindow):
         if self.primer_mostrado:
             self.ajustar_tamanio()
             self.primer_mostrado = False
-# Función principal
 def main():
     app = QApplication(sys.argv)
-    window = DashboardApp()
-
-  
+    window = VentanaFiltro()
     window.show()
     sys.exit(app.exec())
-    
-# Ejecuta la función principal
+
+
 if __name__ == '__main__':
     main()
-    
- 
