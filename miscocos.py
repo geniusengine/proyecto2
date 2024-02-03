@@ -10,12 +10,12 @@ Auteur: matit(matit.pro@gmail.com)
 miscocos.py(Ɔ) 2024
 Description : Saisissez la description puis « Tab »
 Créé le :  jeudi 1 février 2024 à 13:40:07 
-Dernière modification : vendredi 2 février 2024 à 18:12:13"""
+Dernière modification : samedi 3 février 2024 à 17:20:21"""
 
 import os
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
-    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel,QLineEdit
+    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel,QLineEdit, QFileDialog
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
@@ -191,7 +191,8 @@ class exportN(QMainWindow):
                     query += f" AND mandante = '{filtro_mandante}'" if filtro_comuna else f" WHERE mandante = '{filtro_mandante}'"
                 cursor.execute(query)
                 resultados = cursor.fetchall()
-           
+
+            
             self.causas = []
             for fila in resultados:
                 if len(fila) > 0:
@@ -220,6 +221,9 @@ class exportN(QMainWindow):
                 
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
+        except pymssql.Error as db_error:
+            print(f"Error al ejecutar la consulta SQL: {db_error}")
+            self.db_connection.rollback()    
         except Exception as e:
             print(f"Error al acceder a la base de datos: {e}")
 # limpia la tabla
@@ -237,7 +241,7 @@ class exportN(QMainWindow):
 
 # muestra los datos en la tabla
     def mostrar_clicked(self):
-        self.table.setColumnCount(14)
+        self.table.setColumnCount(16)
         self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'demandante', 'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel',
                                             'Notificar','Estampar'])
         for row_index, causa in enumerate(self.causas):
@@ -256,20 +260,30 @@ class exportN(QMainWindow):
         self.primera_vez()
 
     def exportar_clicked(self):
-    # Exporta los datos a un archivo Excel
-        now = datetime.now()
-        años = now.strftime("%d-%m-%y")
-        horas = now.strftime("%H:%M")
+        # Abre un diálogo de selección de directorios
+        selected_folder = QFileDialog.getExistingDirectory(self, "Selecciona la carpeta para guardar el archivo")
 
-        try:
-            df = pd.DataFrame(self.causas)
-            print(df)
-            columnas_deseadas = ['Fecha notificacion',  'Rol', 'Tribunal', 'demandante',  'demandado', 'repre', 'Encargo', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
-            df_seleccionado = df.loc[:, columnas_deseadas]
-            df_seleccionado.to_excel('Nomina.xlsx', index=False)
-            QMessageBox.information(self, "Información", "Los datos se han exportado correctamente.")
-        except Exception as e:
-            QMessageBox.warning(self, "Advertencia", f"Error al exportar a Excel: {e}")
+        # Si el usuario selecciona una carpeta, procede a exportar
+        if selected_folder:
+            now = datetime.now()
+            años = now.strftime("%d-%m-%y")
+            horas = now.strftime("%H:%M")
+
+            try:
+                df = pd.DataFrame(self.causas)
+                columnas_deseadas = ['Fecha notificacion',  'Rol', 'Tribunal', 'demandante',  'demandado', 'repre', 'Encargo', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
+                df_seleccionado = df.loc[:, columnas_deseadas]
+                
+                # Combina la ruta de la carpeta seleccionada con el nombre del archivo
+                ruta_archivo = os.path.join(selected_folder, f'Nomina.xlsx')
+                
+                df_seleccionado.to_excel(ruta_archivo, index=False)
+                QMessageBox.information(self, "Información", "Los datos se han exportado correctamente.")
+            except Exception as e:
+                QMessageBox.warning(self, "Advertencia", f"Error al exportar a Excel: {e}")
+
+
+
 
 
 # Función para ordenar la tabla según la columna clicada
