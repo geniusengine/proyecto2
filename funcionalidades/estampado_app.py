@@ -16,7 +16,7 @@ class Estampadoxd(QMainWindow):
     def __init__(self, fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, parent=None):
         super().__init__(parent)
 
-        self.setWindowTitle('Ventana con Botones')
+        self.setWindowTitle('Ventana de estampado')
         self.setWindowIcon(QIcon("static/icono-ventana.png"))
         self.setGeometry(100, 100, 400, 200)
 

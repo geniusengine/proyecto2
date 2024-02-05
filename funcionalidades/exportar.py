@@ -10,7 +10,7 @@ Auteur: matit(matit.pro@gmail.com)
 miscocos.py(Ɔ) 2024
 Description : Saisissez la description puis « Tab »
 Créé le :  jeudi 1 février 2024 à 13:40:07 
-Dernière modification : lundi 5 février 2024 à 12:44:02"""
+Dernière modification : lundi 5 février 2024 à 17:44:42"""
 
 import os
 import sys
@@ -240,7 +240,7 @@ class exportN(QMainWindow):
 # muestra los datos en la tabla
     def mostrar_clicked(self):
         self.table.setColumnCount(12)
-        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'demandante', 'Nombre demandando', 'Representante', 'Mandante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel'])
+        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'Demandante', 'Demandando', 'Representante', 'Mandante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
             notificada = causa["Notificada"]
@@ -272,7 +272,7 @@ class exportN(QMainWindow):
                 df_seleccionado = df.loc[:, columnas_deseadas]
                 
                 # Combina la ruta de la carpeta seleccionada con el nombre del archivo
-                ruta_archivo = os.path.join(selected_folder, f'Nomina.xlsx')
+                ruta_archivo = os.path.join(selected_folder, f'Nomina {años}.xlsx')
                 
                 df_seleccionado.to_excel(ruta_archivo, index=False)
                 QMessageBox.information(self, "Información", "Los datos se han exportado correctamente.")
