@@ -202,7 +202,7 @@ class BuscadorDatosCausaApp(QMainWindow):
     def select_results(self):
         self.limpiar_tabla()
         self.table.setColumnCount(15)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante',  'Nombre demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'Solicitud', 'Arancel',
+        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante',  'Nombre demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'Solicitud', 'Arancel','Actuacion',
                                             'Notificar','Estampar'])
         try:
             if self.causa_seleccionada :#si se selecciono una causa para buscar se ejecuta esta query
@@ -221,21 +221,21 @@ class BuscadorDatosCausaApp(QMainWindow):
 
                     if numjui:#si se selecciono numjui para buscar se ejecuta esta query
                         query = """
-                        SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante,  demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
+                        SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante,  demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa,actu
                         FROM buscar_historico
                         WHERE numjui = %s
                         """
                         cursor.execute(query, (numjui))
                     elif nombTribunal:#si se selecciono tribunal para buscar se ejecuta esta query
                         query = """
-                        SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante,  demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
+                        SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante,  demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa,actu
                         FROM buscar_historico
                         WHERE nombtribunal = %s
                         """
                         cursor.execute(query, (nombTribunal))
                     elif numjui and nombTribunal:#si se selecciono ambos para buscar se ejecuta esta query
                         query = """
-                        SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante,  demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa
+                        SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante,  demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa,actu
                         FROM buscar_historico
                         WHERE numjui = %s OR nombtribunal = %s
                         """
@@ -258,10 +258,11 @@ class BuscadorDatosCausaApp(QMainWindow):
                                 "Encargo": fila[9],
                                 "Solicitud": fila[10],
                                 "Arancel": fila[11],
+                                "actu": fila [12],
                                 "Notificar": "Notificar",
                                 "Estampada": "Estampada",
-                                "Notificada": fila[12],
-                                "estadoCausa": fila[13],
+                                "Notificada": fila[13],
+                                "estadoCausa": fila[14],
                             }
                             self.causas_seleccionadas.append(datos_causa)
                         self.mostrar_datos_causa()

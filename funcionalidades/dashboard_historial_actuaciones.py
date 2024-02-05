@@ -27,6 +27,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         self.datos = []
         self.initUI()
         print("Dashboard Actuaciones")
+        self.actuar=None
     
     def initUI(self):
         self.setWindowTitle('Historial Actuaciones')
@@ -147,7 +148,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         try:
             self.establecer_conexion_base_de_datos()
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa FROM AUD_notificacion"
+                query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa,actu FROM AUD_notificacion"
                 
         
                 
@@ -267,7 +268,8 @@ class DashboardHistorialActuaciones(QMainWindow):
         elif selected_value == "Embargo Vehículo":
             #Llama al método negativaP para realizar el estampado
             self.embargoauto(numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, fechaNotificacion_cleaned)
-
+        
+        self.actuar=selected_value
     
 
     def negativaP(self, numjui, nombTribunal, fechaNotificacion, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel,fechaNotificacion_cleaned):
@@ -687,10 +689,12 @@ class DashboardHistorialActuaciones(QMainWindow):
                                          QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
 
             if reply == QMessageBox.StandardButton.Yes:
+                actuacion=self.actuar
                 # Guardar los datos en la tabla de notificaciones (base de datos)
                 self.establecer_conexion_base_de_datos()
                 cursor = self.db_connection.cursor()
-                cursor.execute('INSERT INTO notificacion (fechaNotificacion, numjui, nombTribunal, demandante,  demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s )', data_to_save)
+                # Ajusta la sentencia INSERT para tener la cantidad correcta de marcadores de posición (%s)
+                cursor.execute('INSERT INTO notificacion (fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa, actu) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (fecha_notificacion,) + data_to_save + (actuacion,))
 
                 self.db_connection.commit()
 

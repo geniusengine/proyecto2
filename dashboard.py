@@ -1,6 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
-    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel,QLineEdit
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel,QLineEdit
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
@@ -213,7 +212,7 @@ class DashboardApp(QMainWindow):
     def acceder_base_de_datos(self, filtro_comuna=None, filtro_mandante=None):
         try:
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa FROM notificacion"
+                query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa,actu FROM notificacion"
                 
                 # Aplicar filtros si se proporcionan
                 if filtro_comuna:
@@ -243,6 +242,7 @@ class DashboardApp(QMainWindow):
                         "Encargo": fila[9],
                         "Resultado": fila[10],
                         "Arancel": fila[11],
+                        "actu":fila[14],
                         "Notificar": "Notificar",
                         "Estampada": "Estampada",
                         "Notificada": fila[12],
@@ -268,8 +268,8 @@ class DashboardApp(QMainWindow):
 
 # muestra los datos en la tabla
     def mostrar_clicked(self):
-        self.table.setColumnCount(14)
-        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'demandante', 'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel',
+        self.table.setColumnCount(15)
+        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'demandante', 'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel','Actuacion',
                                             'Notificar','Estampar'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
