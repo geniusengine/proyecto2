@@ -221,21 +221,21 @@ class BuscadorDatosCausaApp(QMainWindow):
 
                     if numjui:#si se selecciono numjui para buscar se ejecuta esta query
                         query = """
-                        SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante,  demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa,actu
+                        SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa,actu
                         FROM buscar_historico
                         WHERE numjui = %s
                         """
                         cursor.execute(query, (numjui))
                     elif nombTribunal:#si se selecciono tribunal para buscar se ejecuta esta query
                         query = """
-                        SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante,  demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa,actu
+                        SELECT fechaNotificacion, numjui, nombTribunal, demandante,  demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa,actu
                         FROM buscar_historico
                         WHERE nombtribunal = %s
                         """
                         cursor.execute(query, (nombTribunal))
                     elif numjui and nombTribunal:#si se selecciono ambos para buscar se ejecuta esta query
                         query = """
-                        SELECT fechaNotificacion, numjui, nombTribunal, nombdemandante,  demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa,actu
+                        SELECT fechaNotificacion, numjui, nombTribunal, demandante,  demandado,repre, mandante , domicilio, comuna,encargo, soli, arancel, estadoNoti, estadoCausa,actu
                         FROM buscar_historico
                         WHERE numjui = %s OR nombtribunal = %s
                         """
@@ -258,12 +258,13 @@ class BuscadorDatosCausaApp(QMainWindow):
                                 "Encargo": fila[9],
                                 "Solicitud": fila[10],
                                 "Arancel": fila[11],
-                                "actu": fila [12],
+                                "actu": fila [14],
                                 "Notificar": "Notificar",
                                 "Estampada": "Estampada",
                                 "Notificada": fila[13],
-                                "estadoCausa": fila[14],
+                                "estadoCausa": fila[12],
                             }
+                            print(causas)
                             self.causas_seleccionadas.append(datos_causa)
                         self.mostrar_datos_causa()
                     else:
