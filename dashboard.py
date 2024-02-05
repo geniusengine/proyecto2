@@ -39,11 +39,8 @@ class DashboardApp(QMainWindow):
         self.timer.timeout.connect(self.actualizar_datos)
         self.timer.start(15000)  # 240000 milisegundos = 4 minutos
         
-
-
-
         # Añadir el contenedor de filtro al diseño vertical
-       # self.layout_vertical.addLayout(filtro_layout)
+        # self.layout_vertical.addLayout(filtro_layout)
         # Crea botones
         self.crear_botones()
 
@@ -108,7 +105,6 @@ class DashboardApp(QMainWindow):
         yellow_layout.addWidget(yellow_text)
         yellow_widget.setLayout(yellow_layout)
         color_legend_layout.addWidget(yellow_widget)
-
 
         # Círculo rojo con texto
         red_widget = QWidget()
@@ -383,7 +379,6 @@ class DashboardApp(QMainWindow):
         # Lógica para buscar
         self.bas = BuscadorDatosCausaApp()
         self.bas.show()
-
 
 # al notificar cambia el estado de la causa
     def notificar_clicked(self):

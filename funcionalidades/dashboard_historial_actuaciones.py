@@ -20,9 +20,8 @@ logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(ascti
 class DashboardHistorialActuaciones(QMainWindow):
   
     def __init__(self):
-        
-
         super().__init__()
+
         self.db_connection = None
         self.datos = []
         self.initUI()
@@ -68,6 +67,17 @@ class DashboardHistorialActuaciones(QMainWindow):
     # Crear el botón
         self.button = QPushButton('Seleccionar y Guardar', self)
         self.button.clicked.connect(self.confirm_and_save)
+        # Agregar el botón al layout vertical
+        self.layout_vertical.addWidget(self.button)
+
+        # Alinear el botón a la derecha dentro del layout vertical
+        self.layout_vertical.setAlignment(self.button, Qt.AlignmentFlag.AlignRight)
+
+        # Configuraciones finales del diseño
+        self.central_widget.setLayout(self.layout_horizontal)
+
+        self.show()
+
     # crea cada boton que se necesite
     def crear_boton(self, texto, funcion):
         boton = QPushButton(texto, self)
@@ -694,7 +704,7 @@ class DashboardHistorialActuaciones(QMainWindow):
                 self.establecer_conexion_base_de_datos()
                 cursor = self.db_connection.cursor()
                 # Ajusta la sentencia INSERT para tener la cantidad correcta de marcadores de posición (%s)
-                cursor.execute('INSERT INTO notificacion (fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa, actu) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (fecha_notificacion,) + data_to_save + (actuacion,))
+                cursor.execute('INSERT INTO notificacion (fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa, actu) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', data_to_save + (actuacion,))
 
                 self.db_connection.commit()
 
