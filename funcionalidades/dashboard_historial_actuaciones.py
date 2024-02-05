@@ -172,7 +172,7 @@ class DashboardHistorialActuaciones(QMainWindow):
 # muestra los datos en la tabla
     def mostrar_tabla(self):
         self.table.setColumnCount(13)
-        self.table.setHorizontalHeaderLabels(['fechaNotificacion', 'Rol', 'Tribunal', 'demandante', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel', 'Actuación'])
+        self.table.setHorizontalHeaderLabels(['fechaNotificacion', 'Rol', 'Tribunal', 'demandante','demandado','Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel', 'Actuación'])
         for row_index, causa in enumerate(self.causas):
             
             self.table.insertRow(row_index)

@@ -1,22 +1,39 @@
+"""
+ _______       _            _     _          ______        _                 _ 
+(_______)     (_)       _  (_)   | |        (____  \      (_)               | |
+ _______  ____ _  ___ _| |_ _  __| |_____    ____)  ) ____ _ _____ ____   __| |
+|  ___  |/ ___) |/___|_   _) |/ _  | ___ |  |  __  ( / ___) (____ |  _ \ / _  |
+| |   | | |   | |___ | | |_| ( (_| | ____|  | |__)  ) |   | / ___ | | | ( (_| |
+|_|   |_|_|   |_(___/   \__)_|\____|_____)  |______/|_|   |_\_____|_| |_|\____|
+    
+Auteur: matit(matit.pro@gmail.com) 
+miscocos.py(Ɔ) 2024
+Description : Saisissez la description puis « Tab »
+Créé le :  jeudi 1 février 2024 à 13:40:07 
+Dernière modification : lundi 5 février 2024 à 12:44:02"""
+
+import os
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
-    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout, QMessageBox, QLabel, QLineEdit, QDialog
+    QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel,QLineEdit, QFileDialog
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
 import pandas as pd
 import logging
-
-
+from datetime import datetime
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-
-class VentanaFiltro(QDialog):
-    filtro_aplicado_signal = pyqtSignal(str, str)
-
+class exportN(QMainWindow):
+    datos_actualizados_signal = pyqtSignal()
+    def __init__(self):
+        super().__init__()
+        self.db_connection = None
+        self.initUI()
+    
     def initUI(self):
-        self.setWindowTitle('Dashboard App')
+        self.setWindowTitle('Exportar Datos')
         self.setWindowIcon(QIcon("static/icono-ventana.png"))
         self.setGeometry(100, 100, 1280, 720)
         #verifica si es la primera vez que mostrara los datos
@@ -30,7 +47,7 @@ class VentanaFiltro(QDialog):
         #Crea un temporizador para actualizar los datos cada 4 minuto
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.actualizar_datos)
-        self.timer.start(15000)  # 240000 milisegundos = 4 minutos
+        self.timer.start(240000)  # 240000 milisegundos = 4 minutos
         
         # Dentro del método initUI() en tu clase DashboardApp
         self.txt_filtro_comuna = QLineEdit(self)
@@ -46,24 +63,24 @@ class VentanaFiltro(QDialog):
         filtro_layout.addWidget(self.txt_filtro_mandante)
         filtro_layout.addWidget(self.btn_aplicar_filtro)
 
-        # Añadir el contenedor de filtro al diseño vertical
         self.layout_vertical.addLayout(filtro_layout)
         # Crea botones
         self.crear_botones()
 
         # Añade botones al layout horizontal y el layout horizontal al layout vertical
+        
         self.layout_vertical.addWidget(self.btn_exportar)
         self.layout_vertical.addLayout(self.layout_horizontal)
-
-
         # Crea una tabla y un botón de guardar
         self.table = QTableWidget()
+
         # Establecer el color de las líneas de las celdas
         self.table.setStyleSheet(
         "QTableView { gridline-color: white; }"
         "QTableCornerButton::section { background-color: #d3d3d3; border: 1px solid black; }"
         "QHeaderView::section { background-color: #d3d3d3; border: 1px solid black; }"
         )
+        
         self.layout_vertical.addWidget(self.table)
     
         # Conectar la señal de clic en el encabezado de la columna para ordenar
@@ -83,46 +100,6 @@ class VentanaFiltro(QDialog):
         # Agrega un contenedor para la leyenda de colores
         color_legend_layout = QHBoxLayout()
 
-        # Círculo verde con texto
-        green_widget = QWidget()
-        green_layout = QHBoxLayout()
-        green_label = QLabel()
-        green_label.setFixedSize(20, 20)
-        green_label.setStyleSheet("background-color: rgb(46, 204, 113); border-radius: 10px;")
-        green_text = QLabel("Estampada y Notificada")
-        green_text.setStyleSheet("color: rgb(46, 204, 113)")
-        green_layout.addWidget(green_label)
-        green_layout.addWidget(green_text)
-        green_widget.setLayout(green_layout)
-        color_legend_layout.addWidget(green_widget)
-
-        # Círculo amarillo con texto
-        yellow_widget = QWidget()
-        yellow_layout = QHBoxLayout()
-        yellow_label = QLabel()
-        yellow_label.setFixedSize(20, 20)
-        yellow_label.setStyleSheet("background-color: rgb(250, 193, 114); border-radius: 10px;")
-        yellow_text = QLabel("No estampada y Notificada")
-        yellow_text.setStyleSheet("color: rgb(250, 193, 114);")
-        yellow_layout.addWidget(yellow_label)
-        yellow_layout.addWidget(yellow_text)
-        yellow_widget.setLayout(yellow_layout)
-        color_legend_layout.addWidget(yellow_widget)
-
-
-        # Círculo rojo con texto
-        red_widget = QWidget()
-        red_layout = QHBoxLayout()
-        red_label = QLabel()
-        red_label.setFixedSize(20, 20)
-        red_label.setStyleSheet("background-color: rgb(224, 92, 69); border-radius: 10px;")
-        red_text = QLabel("No Estampada y No Notificada")
-        red_text.setStyleSheet("color: rgb(224, 92, 69);")
-        red_layout.addWidget(red_label)
-        red_layout.addWidget(red_text)
-        red_widget.setLayout(red_layout)
-        color_legend_layout.addWidget(red_widget)
-
         # Agrega la leyenda de colores al layout vertical existente
         self.layout_vertical.addLayout(color_legend_layout)
 
@@ -132,11 +109,10 @@ class VentanaFiltro(QDialog):
         self.timer_eliminar_respaldo.timeout.connect(self.eliminar_y_respaldo)
         self.timer_eliminar_respaldo.start(1800000)  # 600000 milisegundos = 10 minutos
 
-
-
     # crea los botones de la interfaz
     def crear_botones(self):
         self.btn_exportar = self.crear_boton('Exportar', self.exportar_clicked)
+
     def aplicar_filtro(self):
         filtro_comuna = self.txt_filtro_comuna.text()
         filtro_mandante = self.txt_filtro_mandante.text()
@@ -202,11 +178,12 @@ class VentanaFiltro(QDialog):
             self.cerrar_conexion_base_de_datos()
 
     # accede a la base de datos
-    def acceder_base_de_datos(self, filtro_comuna=None, filtro_mandante=None):
+    def acceder_base_de_datos(self, filtro_comuna=None, filtro_mandante=None): 
         try:
             with self.db_connection.cursor() as cursor:
                 query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa FROM notificacion"
                 
+            
                 # Aplicar filtros si se proporcionan
                 if filtro_comuna:
                     query += f" WHERE comuna = '{filtro_comuna}'"
@@ -214,7 +191,9 @@ class VentanaFiltro(QDialog):
                     query += f" AND mandante = '{filtro_mandante}'" if filtro_comuna else f" WHERE mandante = '{filtro_mandante}'"
                 cursor.execute(query)
                 resultados = cursor.fetchall()
-           
+
+            query += "AND  estadoNoti IS NULL" 
+              
             self.causas = []
             for fila in resultados:
                 if len(fila) > 0:
@@ -235,14 +214,15 @@ class VentanaFiltro(QDialog):
                         "Encargo": fila[9],
                         "Resultado": fila[10],
                         "Arancel": fila[11],
-                        "Notificar": "Notificar",
-                        "Estampada": "Estampada",
                         "Notificada": fila[12],
                         "estadoCausa": fila[13],
                 }
-                
+                print(causa)
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
+        except pymssql.Error as db_error:
+            print(f"Error al ejecutar la consulta SQL: {db_error}")
+            self.db_connection.rollback()    
         except Exception as e:
             print(f"Error al acceder a la base de datos: {e}")
 # limpia la tabla
@@ -257,12 +237,10 @@ class VentanaFiltro(QDialog):
         formato_fecha = fecha_actual.toString('yyyy-MM-dd HH:mm:ss')
         return formato_fecha
 
-
 # muestra los datos en la tabla
     def mostrar_clicked(self):
-        self.table.setColumnCount(14)
-        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'demandante', 'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel',
-                                            'Notificar','Estampar'])
+        self.table.setColumnCount(12)
+        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'demandante', 'Nombre demandando', 'Representante', 'Mandante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
             notificada = causa["Notificada"]
@@ -271,9 +249,6 @@ class VentanaFiltro(QDialog):
                 if key == "Notificar":
                     button = self.crear_boton_con_icono("static/notificar.png", self.notificar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
-                elif key == "Estampada":
-                    button = self.crear_boton_con_icono("static/firmar.png", self.estampar_clicked)
-                    self.table.setCellWidget(row_index, col_index, button)
                 else:
                     # Crea un objeto QTableWidgetItem para las otras columnas
                     item = QTableWidgetItem(str(value))
@@ -281,73 +256,28 @@ class VentanaFiltro(QDialog):
                     self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
         self.primera_vez()
 
+    def exportar_clicked(self):
+        # Abre un diálogo de selección de directorios
+        selected_folder = QFileDialog.getExistingDirectory(self, "Selecciona la carpeta para guardar el archivo")
 
-# abre la ventana de estampado
-    def estampar_clicked(self):
-        # Obtener la fila seleccionada
-        selected_row = self.table.currentRow()
-        # Verificar si se seleccionó una fila
-        if selected_row != -1:
+        # Si el usuario selecciona una carpeta, procede a exportar
+        if selected_folder:
+            now = datetime.now()
+            años = now.strftime("%d-%m-%y")
+            horas = now.strftime("%H:%M")
 
-            notificada = self.causas[selected_row]["Notificada"]
-
-            if not notificada:
-                QMessageBox.warning(self, "Advertencia", "La causa debe ser notificada primero antes de estampar.")
-                return
-
-            # Obtener datos de la fila seleccionada
-            fechaNotificacion = self.table.item(selected_row, 0).text()
-            numjui = self.table.item(selected_row, 1).text()
-            nombTribunal = self.table.item(selected_row, 2).text()
-            demandante = self.table.item(selected_row, 3).text()
-            demandado = self.table.item(selected_row, 4).text()
-            repre = self.table.item(selected_row, 5).text()
-            mandante = self.table.item(selected_row, 6).text()
-            domicilio = self.table.item(selected_row, 7).text()
-            comuna = self.table.item(selected_row, 8).text()
-            encargo = self.table.item(selected_row, 9).text()
-            soli = self.table.item(selected_row, 10).text()
-            arancel = self.table.item(selected_row, 11).text()
-    
-        
-        button = self.sender()
-        index = self.table.indexAt(button.pos())
-        row, col = index.row(), index.column()
-        causa = self.causas[row]
-        color = QColor(250, 193, 114)
-
-        # Verifica si la causa ya ha sido notificada
-        if causa["Estampada"] == 1:
-            QMessageBox.warning(self, "Advertencia", "Esta causa ya ha sido estampada.")
-            return
-        
-        # Actualiza la información localmente
-        causa["Estampada"] = 1
-
-        numjui = self.table.item(selected_row, 1).text()
-        
-        # Actualiza el valor en la base de datos
-        try:
-            self.establecer_conexion_base_de_datos()
-            with self.db_connection.cursor() as cursor:
-                query = "UPDATE notificacion SET estadoCausa = 1 WHERE numjui = %s"
-                cursor.execute(query, (causa['Rol'],))
-            self.db_connection.commit()
-        except pymssql.Error as db_error:
-            print(f"Error al ejecutar la consulta SQL: {db_error}")
-            self.db_connection.rollback()
-            raise  # Re-levanta la excepción para que el programa no continúe si hay un error grave en la base de datos
-        except Exception as e:
-            print(f"Error desconocido: {e}")
-            raise  # Re-levanta la excepción para que el programa no continúe si hay un error desconocido
-        finally:
-            self.cerrar_conexion_base_de_datos()
-        # Actualiza la celda en la tabla y el color de la fila
-        self.actualizar_color_fila(row)
-
-        # Configurar el sistema de registro
-        logging.info(f'Se estampo causa: {numjui}')
-
+            try:
+                df = pd.DataFrame(self.causas)
+                columnas_deseadas = ['Fecha notificacion',  'Rol', 'Tribunal', 'demandante',  'demandado', 'repre', 'Encargo', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
+                df_seleccionado = df.loc[:, columnas_deseadas]
+                
+                # Combina la ruta de la carpeta seleccionada con el nombre del archivo
+                ruta_archivo = os.path.join(selected_folder, f'Nomina.xlsx')
+                
+                df_seleccionado.to_excel(ruta_archivo, index=False)
+                QMessageBox.information(self, "Información", "Los datos se han exportado correctamente.")
+            except Exception as e:
+                QMessageBox.warning(self, "Advertencia", f"Error al exportar a Excel: {e}")
 
 # Función para ordenar la tabla según la columna clicada
     def ordenar_tabla(self, logicalIndex):
@@ -403,6 +333,7 @@ class VentanaFiltro(QDialog):
         min_width = max(self.width(), total_width)-70
         self.setMinimumWidth(min_width)
         self.adjustSize()
+        
 # actualiza el color de la fila        
     # función para actualizar el color de la fila
     def actualizar_color_fila(self, row):
@@ -445,12 +376,16 @@ class VentanaFiltro(QDialog):
         if self.primer_mostrado:
             self.ajustar_tamanio()
             self.primer_mostrado = False
+
+
+# Función principal
 def main():
     app = QApplication(sys.argv)
-    window = VentanaFiltro()
+    window = exportN()
+
     window.show()
     sys.exit(app.exec())
-
-
+    
+# Ejecuta la función principal
 if __name__ == '__main__':
     main()
