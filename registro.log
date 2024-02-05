@@ -20,3 +20,6 @@
 2024-02-01 23:54:49,987 - ERROR - Error accediendo a la base de datos: 'NoneType' object has no attribute 'cursor'
 2024-02-01 23:55:35,859 - ERROR - Error estableciendo conexión con la base de datos: (20009, b'DB-Lib error message 20009, severity 9:\nUnable to connect: Adaptive Server is unavailable or does not exist (tu_servidor)\n')
 2024-02-01 23:55:37,372 - ERROR - Error accediendo a la base de datos: 'NoneType' object has no attribute 'cursor'
+2024-02-05 09:48:26,458 - INFO - Insercion de causa asda-dasd
+2024-02-05 09:48:44,249 - INFO - Insercion-seguimiento de causa asda-3° Juzgado de Letras La Serena
+2024-02-05 09:52:31,672 - INFO - A estamapado 123-ddasd
