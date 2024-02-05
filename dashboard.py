@@ -11,6 +11,7 @@ from funcionalidades.insertar_manual import MiApp
 from funcionalidades.estampado_app import Estampadoxd
 from funcionalidades.dashboard_historial_actuaciones import DashboardHistorialActuaciones
 from funcionalidades.exportar import exportN
+from funcionalidades.arancel import ActualizarArancelDialog
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -51,6 +52,7 @@ class DashboardApp(QMainWindow):
         self.layout_horizontal.addWidget(self.btn_historial_actuaciones)
         self.layout_horizontal.addWidget(self.btn_exportar)
         self.layout_vertical.addLayout(self.layout_horizontal)
+        self.btn_actualizar_arancel = self.crear_boton('Actualizar Arancel', self.actualizar_arancel_clicked)  # Agrega este botón
 
 
         # Crea una tabla y un botón de guardar
@@ -472,6 +474,15 @@ class DashboardApp(QMainWindow):
         if self.primer_mostrado:
             self.ajustar_tamanio()
             self.primer_mostrado = False
+            
+    def actualizar_arancel_clicked(self):
+    # Verifica si se ha seleccionado una fila
+        selected_row = self.table.currentRow()
+        if selected_row != -1:
+        # Abre el diálogo de actualización de arancel
+            dialog = ActualizarArancelDialog(self)
+            dialog.exec()
+        
 # Función principal
 def main():
     app = QApplication(sys.argv)
