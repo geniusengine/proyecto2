@@ -10,8 +10,7 @@ from funcionalidades.insertar_excel import ExcelToDatabaseApp
 from funcionalidades.insertar_manual import MiApp
 from funcionalidades.estampado_app import Estampadoxd
 from funcionalidades.dashboard_historial_actuaciones import DashboardHistorialActuaciones
-from funcionalidades.exportar import VentanaFiltro
-
+from funcionalidades.exportar import exportN
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -53,8 +52,7 @@ class DashboardApp(QMainWindow):
        # self.layout_horizontal.addWidget(self.btn_Insertar_excel)
         self.layout_horizontal.addWidget(self.btn_Insertar_manual)
         self.layout_horizontal.addWidget(self.btn_historial_actuaciones)
-        self.layout_horizontal.addWidget(self.btn_aplicar_filtro)
-        self.layout_vertical.addWidget(self.btn_exportar)
+        self.layout_horizontal.addWidget(self.btn_exportar)
         self.layout_vertical.addLayout(self.layout_horizontal)
 
 
@@ -132,7 +130,7 @@ class DashboardApp(QMainWindow):
         self.timer_eliminar_respaldo = QTimer(self)
 
         self.timer_eliminar_respaldo.timeout.connect(self.eliminar_y_respaldo)
-        self.timer_eliminar_respaldo.start(1800000)  # 600000 milisegundos = 10 minutos
+        self.timer_eliminar_respaldo.start(15000)  # 600000 milisegundos = 10 minutos
 
 
 
@@ -143,7 +141,7 @@ class DashboardApp(QMainWindow):
         self.btn_Insertar_manual = self.crear_boton('Insertar Manual', self.Insertar_manual_clicked)
         self.btn_historial_actuaciones = self.crear_boton('Historial Actuaciones', self.historial_actuaciones_clicked)
         self.btn_exportar = self.crear_boton('Exportar', self.exportar_clicked)
-        self.btn_aplicar_filtro = self.crear_boton('Aplicar Filtro', self.aplicar_filtro_clicked)
+
     def aplicar_filtro(self):
         filtro_comuna = self.txt_filtro_comuna.text()
         filtro_mandante = self.txt_filtro_mandante.text()
@@ -287,25 +285,15 @@ class DashboardApp(QMainWindow):
                     item = QTableWidgetItem(str(value))
                     self.table.setItem(row_index, col_index, item)
                     self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
+                    
         self.primera_vez()
-
-    def exportar_clicked(self):
-    # Exporta los datos a un archivo Excel
-        try:
-            df = pd.DataFrame(self.causas)
-            columnas_deseadas = ['fecha',  'Rol', 'Tribunal', 'Nombre demandante',  'Nombre demandando', 'Representante', 'Quien Encarga', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
-            df_seleccionado = df.loc[:, columnas_deseadas]
-            df_seleccionado.to_excel('as.xlsx', index=False)
-            QMessageBox.information(self, "Información", "Los datos se han exportado correctamente.")
-        except Exception as e:
-            QMessageBox.warning(self, "Advertencia", f"Error al exportar a Excel: {e}")
 
     def historial_actuaciones_clicked(self):
         print("Historial de actuaciones")
         self.exchistorial = DashboardHistorialActuaciones()
         self.exchistorial.show()
-    def aplicar_filtro_clicked(self):
-        self.filtro= VentanaFiltro()
+    def exportar_clicked(self):
+        self.filtro= exportN()
         self.filtro.show()
 # abre la ventana de insertar excel
     #def Insertar_excel_clicked(self):
