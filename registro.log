@@ -31,3 +31,40 @@
 2024-02-05 17:03:24,099 - INFO - Insercion de causa x-x
 2024-02-05 17:03:48,795 - INFO - Insercion de causa h-h
 2024-02-05 17:03:59,159 - INFO - Insercion-seguimiento de causa h-2° Juzgado de Letras Coquimbo
+2024-02-05 17:07:31,739 - INFO - Se notifico causa: 16
+2024-02-05 17:07:32,910 - INFO - Se estampo causa: 16
+2024-02-05 17:07:36,114 - INFO - Se notifico causa: x
+2024-02-05 17:07:37,120 - INFO - Se estampo causa: x
+2024-02-05 17:12:19,687 - INFO - Se notifico causa: d
+2024-02-05 17:12:22,590 - INFO - Se estampo causa: d
+2024-02-05 17:12:26,312 - INFO - Se notifico causa: h
+2024-02-05 17:12:27,489 - INFO - Se estampo causa: h
+2024-02-05 17:13:08,269 - INFO - Se estampo causa: h
+2024-02-05 17:15:03,855 - INFO - Insercion de causa y-y
+2024-02-05 17:16:24,113 - INFO - Insercion de causa l-l
+2024-02-05 17:16:52,014 - INFO - Insercion de causa o-o
+2024-02-05 17:19:26,068 - INFO - Insercion de causa f-f
+2024-02-05 17:19:42,014 - INFO - Insercion-seguimiento de causa f-3° Juzgado de Letras La Serena
+2024-02-05 17:20:18,530 - INFO - Se notifico causa: f
+2024-02-05 17:20:20,892 - INFO - Se estampo causa: f
+2024-02-05 17:27:59,725 - INFO - A estampado f-f
+2024-02-05 17:32:02,615 - INFO - Se notifico causa: o
+2024-02-05 17:34:42,750 - INFO - Inicio de sesión exitoso para el usuario: admin
+2024-02-05 17:35:20,215 - INFO - Insercion de causa v-v
+2024-02-05 17:35:35,706 - INFO - Insercion-seguimiento de causa v-Juzgado de Familia La Serena
+2024-02-05 17:35:52,503 - INFO - Se notifico causa: v
+2024-02-05 17:35:53,980 - INFO - Se estampo causa: v
+2024-02-05 17:36:29,831 - INFO - A estamapado f-f
+2024-02-05 17:36:31,079 - INFO - A estamapado f-f
+2024-02-05 17:37:24,512 - INFO - Se estampo causa: v
+2024-02-05 17:37:29,865 - INFO - A estamapado v-v
+2024-02-05 17:45:32,705 - INFO - Se estampo causa: o
+2024-02-05 17:47:17,784 - INFO - Se notifico causa: 123
+2024-02-05 17:47:19,423 - INFO - Se estampo causa: 123
+2024-02-05 18:00:16,939 - INFO - A estampado d-d
+2024-02-05 18:01:08,501 - INFO - Se notifico causa: f
+2024-02-05 18:01:09,820 - INFO - Se estampo causa: f
+2024-02-05 18:01:25,336 - INFO - A estamapado v-v
+2024-02-05 18:01:27,268 - INFO - A estamapado f-f
+2024-02-05 18:02:21,236 - INFO - A estamapado d-d
+2024-02-05 18:02:22,532 - INFO - A estamapado d-d

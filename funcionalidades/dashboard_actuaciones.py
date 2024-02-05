@@ -145,13 +145,12 @@ class Dashboard_actuacionesApp(QMainWindow):
                 "numjui": self.numjui,
                 "tribunal": self.nombTribunal,
                 "actuacion": "Actuacionprueba",
-                "tipojuicio": "Tipojuicioprueba",
-                "Estampada": "Estampada"}
+                "tipojuicio": "Tipojuicioprueba"}
         print(causa)
         self.causas = []
         self.causas.append(causa)
-        self.table.setColumnCount(6)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal','Actuacion','Tipo de juicio','Estampar'])
+        self.table.setColumnCount(5)
+        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal','Actuacion','Tipo de juicio'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
             for col_index, (key, value) in enumerate(causa.items()):

@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 insertar.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 16:15:10 
-Dernière modification : mercredi 31 janvier 2024 à 17:28:09
+Dernière modification : lundi 5 février 2024 à 17:23:18
 """
 
 import sys
@@ -47,7 +47,7 @@ class ExcelToDatabaseApp(QMainWindow):
 
         self.data_table = QTableWidget(self)
         self.data_table.setColumnCount(12)  # 5 para los datos Excel, 1 para "arancel", 1 para "tribunal"
-        self.data_table.setHorizontalHeaderLabels([ 'Rol', 'Tribunal', 'Nombre demandante', 'Apellido demandante', 'Nombre demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'Solicitud', 'Arancel'])
+        self.data_table.setHorizontalHeaderLabels([ 'Rol', 'Tribunal', 'demandante', 'Demandando', 'Representante', 'Mandante', 'Domicilio', 'Comuna', 'Encargo', 'Solicitud', 'Arancel'])
         layout.addWidget(self.data_table)
         
 
