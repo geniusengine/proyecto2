@@ -489,8 +489,6 @@ class DashboardApp(QMainWindow):
         if self.primer_mostrado:
             self.ajustar_tamanio()
             self.primer_mostrado = False
-
-
 # Función principal
 def main():
     app = QApplication(sys.argv)

@@ -147,7 +147,7 @@ class DashboardHistorialActuaciones(QMainWindow):
         try:
             self.establecer_conexion_base_de_datos()
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa,actu FROM AUD_notificacion"
+                query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa FROM AUD_notificacion"
                 
         
                 
@@ -184,7 +184,6 @@ class DashboardHistorialActuaciones(QMainWindow):
                             combo_box.setCurrentText(value)
                             self.table.setCellWidget(row_index, col_index, combo_box)
                             combo_box.currentIndexChanged.connect(lambda index, row=row_index, col=col_index: self.combo_box_changed(row, col, index))
-                            
                         else:
                         # Crea un objeto QTableWidgetItem para las otras columnas
                             item = QTableWidgetItem(str(value))
@@ -198,7 +197,6 @@ class DashboardHistorialActuaciones(QMainWindow):
         self.table.sortItems(logicalIndex, Qt.SortOrder.AscendingOrder if self.table.horizontalHeader().sortIndicatorOrder() == Qt.SortOrder.DescendingOrder else Qt.SortOrder.DescendingOrder)
         
     def combo_box_changed(self, row, col, index):
-        
         # Obtén el valor actual del combo box
         combo_box = self.table.cellWidget(row, col)
         selected_value = combo_box.currentText()
@@ -214,8 +212,6 @@ class DashboardHistorialActuaciones(QMainWindow):
         encargo = self.table.item(row, 9).text() 
         soli = self.table.item(row, 10).text() 
         arancel = self.table.item(row, 11).text()
-        
-        
 
         fechaNotificacion_cleaned = fechaNotificacion.replace(':', '_').replace('-', '_')
 
@@ -690,19 +686,12 @@ class DashboardHistorialActuaciones(QMainWindow):
             reply = QMessageBox.question(self, 'Confirmar', f'Seguro que quieres devolver estos datos?\n{data_to_save}',
                                          QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
 
-           
-    # ...
-
             if reply == QMessageBox.StandardButton.Yes:
-                actuacion = self.table.cellWidget(self.table.currentRow(), 13).currentText()
-
-        # Guardar los datos en la tabla de notificaciones (base de datos)
+                # Guardar los datos en la tabla de notificaciones (base de datos)
                 self.establecer_conexion_base_de_datos()
                 cursor = self.db_connection.cursor()
-                cursor.execute('INSERT INTO notificacion (fechaNotificacion, numjui, nombTribunal, demandante,  demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa, actu) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s, %s)', (fecha_notificacion,) + data_to_save + (actuacion,))
+                cursor.execute('INSERT INTO notificacion (fechaNotificacion, numjui, nombTribunal, demandante,  demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s )', data_to_save)
 
-                self.db_connection.commit()
-                print('Datos guardados en la tabla de notificaciones')
                 self.db_connection.commit()
 
                 print('Datos guardados en la tabla de notificaciones')
