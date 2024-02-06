@@ -228,7 +228,7 @@ class DashboardApp(QMainWindow):
                         "Comuna": fila[8],
                         "Encargo": fila[9],
                         "Resultado": fila[10],
-                        "Arancel": fila[11],
+                        "Arancel": 'Arancel',
                         "actu":fila[14],
                         "Notificar": "Notificar",
                         "Estampada": "Estampada",
