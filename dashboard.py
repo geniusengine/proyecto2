@@ -6,12 +6,13 @@ import pymssql
 import pandas as pd
 import logging
 from funcionalidades.buscado import BuscadorDatosCausaApp
-from funcionalidades.insertar_excel import ExcelToDatabaseApp
 from funcionalidades.insertar_manual import MiApp
 from funcionalidades.estampado_app import Estampadoxd
 from funcionalidades.dashboard_historial_actuaciones import DashboardHistorialActuaciones
 from funcionalidades.exportar import exportN
 from funcionalidades.historico import Histo
+from funcionalidades.arancel import ActualizarArancelDialog
+
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -263,7 +264,11 @@ class DashboardApp(QMainWindow):
             notificada = causa["Notificada"]
             estampada = causa["estadoCausa"]
             for col_index, (key, value) in enumerate(causa.items()):
-                if key == "Notificar":
+                if key == "Arancel":
+                    button = self.crear_boton_con_icono("static/arancel.png", self.arancel_clicked)
+                    self.table.setCellWidget(row_index, col_index, button)
+                
+                elif key == "Notificar":
                     button = self.crear_boton_con_icono("static/notificar.png", self.notificar_clicked)
                     self.table.setCellWidget(row_index, col_index, button)
                 elif key == "Estampada":
