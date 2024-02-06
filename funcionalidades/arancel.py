@@ -10,13 +10,15 @@ Auteur: danie(danie.pro@gmail.com)
 arancel.py(Ɔ) 2024
 Description : Saisissez la description puis « Tab »
 Créé le :  mardi 6 février 2024 à 10:23:51 
-Dernière modification : mardi 6 février 2024 à 12:45:16
+Dernière modification : mardi 6 février 2024 à 13:30:45
 """
 
 import sys
 from PyQt6.QtWidgets import QDialog, QLabel, QLineEdit, QPushButton, QVBoxLayout, QComboBox, QMessageBox, QApplication
+from PyQt6.QtCore import pyqtSignal
 
 class ActualizarArancelDialog(QDialog):
+    actualizar_arancel = pyqtSignal()
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Actualizar Arancel")
@@ -25,6 +27,7 @@ class ActualizarArancelDialog(QDialog):
         self.combo_letters = QComboBox()
         self.combo_letters.currentTextChanged.connect(self.update_number_combo_box)
         self.layout.addWidget(self.combo_letters)
+       
         
         # Create the second QComboBox for numbers
         self.combo_numbers = QComboBox()
@@ -450,11 +453,11 @@ class ActualizarArancelDialog(QDialog):
 
     def actualizar_arancel(self):
         # Get the selected values from combo boxes
-        selected_letter = self.combo_letters.currentText()
+        
         selected_number = self.combo_numbers.currentText()
 
         # Combine the selected values (you may adjust the format based on your needs)
-        new_arancel_value = f"{selected_letter}-{selected_number}"
+        new_arancel_value = f"{selected_number}"
 
         # Assume you have access to the table widget in the parent, replace 'table' with your actual table widget
         selected_row = self.parent().table.currentRow()
@@ -465,7 +468,9 @@ class ActualizarArancelDialog(QDialog):
             self.parent().table.setItem(selected_row, 1, QTableWidgetItem(new_arancel_value))
 
             # You may want to trigger any additional logic here based on the new value
-
+    def evento_que_requiere_actualizar_arancel(self):
+    # Lógica para actualizar el arancel
+        self.actualizar_arancel.emit()  # Emitir la señal
 
 def main():
         app = QApplication(sys.argv)

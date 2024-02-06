@@ -23,7 +23,10 @@ class DashboardApp(QMainWindow):
         super().__init__()
         self.db_connection = None
         self.initUI()
-    
+        
+        self.arancel_dialog = ActualizarArancelDialog()
+        self.arancel_dialog.actualizar_arancel.connect(self.update_arancel)
+
     def initUI(self):
         self.setWindowTitle('Dashboard App')
         self.setWindowIcon(QIcon("static/icono-ventana.png"))
@@ -130,7 +133,10 @@ class DashboardApp(QMainWindow):
         self.timer_eliminar_respaldo.timeout.connect(self.eliminar_y_respaldo)
         self.timer_eliminar_respaldo.start(15000)  # 600000 milisegundos = 10 minutos
 
-
+         # Agregar el botón "Actualizar Arancel"
+        self.btn_actualizar_arancel = self.crear_boton('Actualizar Arancel', self.actualizar_arancel_clicked)
+        self.layout_horizontal.addWidget(self.btn_actualizar_arancel)
+        
 
     # crea los botones de la interfaz
     def crear_botones(self):
@@ -281,6 +287,16 @@ class DashboardApp(QMainWindow):
                     self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
                     
         self.primera_vez()
+    def update_arancel(self, arancel):
+        # Update the arancel value in the dashboard
+        print(f"Arancel updated: {arancel}")
+        pass
+        
+    def actualizar_arancel_clicked(self):
+        # Lógica para abrir la ventana ActualizarArancelDialog
+        
+        actualizar_arancel_dialog = ActualizarArancelDialog()
+        actualizar_arancel_dialog.exec()
 
     def historico_clicked(self):
         self.exchistorico = Histo()
