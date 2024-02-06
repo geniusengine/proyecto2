@@ -11,6 +11,7 @@ from funcionalidades.insertar_manual import MiApp
 from funcionalidades.estampado_app import Estampadoxd
 from funcionalidades.dashboard_historial_actuaciones import DashboardHistorialActuaciones
 from funcionalidades.exportar import exportN
+from funcionalidades.historico import Histo
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -46,10 +47,10 @@ class DashboardApp(QMainWindow):
 
         # Añade botones al layout horizontal y el layout horizontal al layout vertical
         self.layout_horizontal.addWidget(self.btn_buscar)
-       # self.layout_horizontal.addWidget(self.btn_Insertar_excel)
         self.layout_horizontal.addWidget(self.btn_Insertar_manual)
         self.layout_horizontal.addWidget(self.btn_historial_actuaciones)
         self.layout_horizontal.addWidget(self.btn_exportar)
+        self.layout_horizontal.addWidget(self.btn_historico)
         self.layout_vertical.addLayout(self.layout_horizontal)
 
 
@@ -133,20 +134,12 @@ class DashboardApp(QMainWindow):
     # crea los botones de la interfaz
     def crear_botones(self):
         self.btn_buscar = self.crear_boton('Buscar', self.buscar_clicked)
-        #self.btn_Insertar_excel = self.crear_boton('Insertar Excel', self.Insertar_excel_clicked)
         self.btn_Insertar_manual = self.crear_boton('Insertar Manual', self.Insertar_manual_clicked)
         self.btn_historial_actuaciones = self.crear_boton('Historial Actuaciones', self.historial_actuaciones_clicked)
         self.btn_exportar = self.crear_boton('Exportar', self.exportar_clicked)
+        self.btn_historico = self.crear_boton('Historico', self.historico_clicked)
 
-    def aplicar_filtro(self):
-        filtro_comuna = self.txt_filtro_comuna.text()
-        filtro_mandante = self.txt_filtro_mandante.text()
 
-        self.limpiar_tabla()
-        self.establecer_conexion_base_de_datos()
-        self.acceder_base_de_datos(filtro_comuna, filtro_mandante)
-        self.mostrar_clicked()
-        self.cerrar_conexion_base_de_datos()
     # crea cada boton que se necesite
     def crear_boton(self, texto, funcion):
         boton = QPushButton(texto, self)
@@ -284,6 +277,10 @@ class DashboardApp(QMainWindow):
                     
         self.primera_vez()
 
+    def historico_clicked(self):
+        self.exchistorico = Histo()
+        self.exchistorico.show()
+
     def historial_actuaciones_clicked(self):
         print("Historial de actuaciones")
         self.exchistorial = DashboardHistorialActuaciones()
@@ -291,11 +288,7 @@ class DashboardApp(QMainWindow):
     def exportar_clicked(self):
         self.filtro= exportN()
         self.filtro.show()
-# abre la ventana de insertar excel
-    #def Insertar_excel_clicked(self):
-        # Lógica para insertar desde Excel
-       # self.exc = ExcelToDatabaseApp()
-       # self.exc.show()
+
 # abre la ventana de insertar manualmente
     def Insertar_manual_clicked(self):
         # Lógica para insertar manualmente
