@@ -10,7 +10,7 @@ Auteur: daniel(mitchel.dmch@gmail.com)
 manualapajas.py(Ɔ) 2023
 Description : Saisissez la description puis « Tab »
 Créé le :  samedi 4 novembre 2023 à 17:40:55 
-Dernière modification : lundi 5 février 2024 à 17:21:18
+Dernière modification : mardi 6 février 2024 à 15:56:12
 """
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableWidget, QTableWidgetItem, QPushButton, QWidget, QMessageBox,QHBoxLayout,QComboBox
@@ -41,6 +41,7 @@ class MiApp(QMainWindow):
 
         # Inicializa un diccionario para almacenar las selecciones de combo box
         self.selecciones_combo_box = {}
+        self.actu_sec_combo_box = {}
 
         self.setWindowTitle("Ingreso de Datos")
         self.setWindowIcon(QIcon("static/icono-ventana.png"))
@@ -53,8 +54,8 @@ class MiApp(QMainWindow):
         layout_vertical = QVBoxLayout()
         
         self.table = QTableWidget()
-        self.table.setColumnCount(11)
-        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Demandante', 'Demandando', 'Representante', 'Mandante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel'])
+        self.table.setColumnCount(12)
+        self.table.setHorizontalHeaderLabels(['Rol', 'Tribunal', 'Demandante', 'Demandando', 'Representante', 'Mandante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel','Actuacion'])
         layout.addWidget(self.table)
 
         self.add_row_button = QPushButton("Agregar Fila")
@@ -98,11 +99,27 @@ class MiApp(QMainWindow):
                                     'Juzgado de Familia Coquimbo',
                                     'Corte de Apelaciones de La Serena'])
         
+        actuacion_combobox = QComboBox()
+        actuacion_combobox.addItems(['Búsqueda Negativa', 'Búsqueda Positiva', 'Not. por cédula', 
+                                     'Not. Art. 44', 'Req. de pago en Oficina', 'Op. al Embargo', 
+                                     'Not. Personal', 'Not. Personal/Req. de Pago', 'Not. art. 52', 
+                                     'Embargo con Fuerza Pública', 'Embargo Frustrado', 'Embargo Banco', 
+                                     'Embargo Vehículo', 'Embargo TGR', 'Op.Retiro','Retiro de Vehículo',
+                                    'In.Vehiculo', 'Not. Martillero','Retiro Frustrado', 'Retiro de Especies',
+                                     'Retiro fuerza pública' ,'Otro'])
+        
+
+        
         # Configura el nuevo QComboBox en la celda correspondiente
         item = QTableWidgetItem()
         self.table.setItem(self.table.rowCount() - 1, 1, item)
+        self.table.setItem(self.table.rowCount() - 1, 11, item)
+
         self.table.setCellWidget(self.table.rowCount() - 1, 1, tribunal_combobox)
+        self.table.setCellWidget(self.table.rowCount() - 1, 11, actuacion_combobox)
+
         tribunal_combobox.currentIndexChanged.connect(lambda index, row=self.table.rowCount()-1, col=1: self.combo_box_changed(row, col, index))
+        actuacion_combobox.currentIndexChanged.connect(lambda index, row=self.table.rowCount()-1, col=11: self.actuacion_combobox_changed(row, col, index))
         
     def combo_box_changed(self, row, col, index):
     # Obtén el valor actual del combo box
@@ -150,6 +167,82 @@ class MiApp(QMainWindow):
         else:
             print('No se seleccionó nada')
     
+    def actuacion_combobox_changed(self, row, col, index):
+        combo_box = self.table.cellWidget(row, col)
+        selected_value = combo_box.currentText() 
+        self.actu_sec_combo_box[(row, col)] = selected_value
+
+        # Agrega los paréntesis para obtener el texto actual
+
+        if selected_value == 'Búsqueda Negativa':
+            print('Búsqueda Negativa')
+
+        elif selected_value == 'Búsqueda Positiva':
+            print('Busqueda Positiva')
+
+        elif selected_value == 'Not. por cédula':
+            print('Not. por cédula')
+
+        elif selected_value == 'Not. Art. 44':
+            print('Not. Art. 44')
+
+        elif selected_value == 'Req. de pago en Oficina':
+            print('Req. de pago en Oficina')
+
+        elif selected_value == 'Op. al Embargo':
+            print('Op. al Embargo')
+        
+        elif selected_value == 'Not. Personal':
+            print('Not. Personal')
+
+        elif selected_value == 'Not. Personal/Req. de Pago':
+            print('Not. Personal/Req. de Pago')
+        
+        elif selected_value == 'Not. art. 52':
+            print('Not. art. 52')
+        
+        elif selected_value == 'Embargo con Fuerza Pública':
+            print('Embargo con Fuerza Pública')
+        
+        elif selected_value == 'Embargo Frustrado':
+            print('Embargo Frustrado')
+        
+        elif selected_value == 'Embargo Banco':
+            print('Embargo Banco')
+
+        elif selected_value == 'Embargo Vehículo':
+            print('Embargo Vehículo')
+
+        elif selected_value == 'Embargo TGR':
+            print('Embargo TGR')
+
+        elif selected_value == 'Op.Retiro':
+            print('Op.Retiro')
+        
+        elif selected_value == 'Retiro de Vehículo':
+            print('Retiro de Vehículo')
+
+        elif selected_value == 'In.Vehiculo':
+            print('In.Vehiculo')
+
+        elif selected_value == 'Not. Martillero':
+            print('Not. Martillero')
+
+        elif selected_value == 'Retiro Frustrado':
+            print('Retiro Frustrado')
+
+        elif selected_value == 'Retiro de Especies':
+            print('Retiro de Especies')
+
+        elif selected_value == 'Retiro fuerza pública':
+            print('Retiro fuerza pública')
+
+        elif selected_value == 'Otro':
+            print('Otro')
+
+        else:
+            print('No se seleccionó nada')
+
 
     def delete_row(self):
         selected_row = self.table.currentRow()
@@ -189,6 +282,8 @@ class MiApp(QMainWindow):
                 self.encargo = self.table.item(row_idx, 8).text()
                 self.soli = self.table.item(row_idx, 9).text()
                 self.arancel = self.table.item(row_idx, 10).text()
+                actu = self.actu_sec_combo_box.get((row_idx, 11), '')
+
                 print(self.arancel)
                 try:
                     arancel = float(self.arancel)
@@ -198,15 +293,15 @@ class MiApp(QMainWindow):
                 if any([not cell for cell in [self.numjui, nombTribunal,self.demandante,
                                              self.demandado, self.repre,
                                             self.mandante, self.domicilio, self.comuna, self.encargo,
-                                            self.soli, self.arancel]]):
+                                            self.soli, self.arancel, actu]]):
                     QMessageBox.critical(self, "Error", "No se permiten celdas vacías en la fila {}".format(row_idx + 1))
                     db_connection.rollback()
                     return
-                insert_query = "INSERT INTO demanda (numjui, nombTribunal,demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                insert_query = "INSERT INTO demanda (numjui, nombTribunal,demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, actu) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 cursor.execute(insert_query, (self.numjui, nombTribunal, self.demandante,
                                              self.demandado, self.repre,
                                             self.mandante, self.domicilio, self.comuna, self.encargo,
-                                            self.soli, arancel))
+                                            self.soli, arancel, actu))
                 
             db_connection.commit()
             db_connection.close()
