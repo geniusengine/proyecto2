@@ -10,7 +10,7 @@ Auteur: danie(danie.pro@gmail.com)
 arancel.py(Ɔ) 2024
 Description : Saisissez la description puis « Tab »
 Créé le :  mardi 6 février 2024 à 10:23:51 
-Dernière modification : mardi 6 février 2024 à 13:30:45
+Dernière modification : mardi 6 février 2024 à 17:29:29
 """
 
 import sys
@@ -465,7 +465,7 @@ class ActualizarArancelDialog(QDialog):
         # Check if a row is selected
         if selected_row != -1:
             # Update the 'arancel' column in the selected row with the new value
-            self.parent().table.setItem(selected_row, 1, QTableWidgetItem(new_arancel_value))
+            self.parent().table.setItem(selected_row, 1, (new_arancel_value))
 
             # You may want to trigger any additional logic here based on the new value
     def evento_que_requiere_actualizar_arancel(self):
