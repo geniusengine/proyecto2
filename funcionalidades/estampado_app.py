@@ -733,7 +733,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo} \n {self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo} \n {self.demandante} CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de requerimiento de pago y oposición a embargo

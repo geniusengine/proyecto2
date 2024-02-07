@@ -74,3 +74,36 @@
 2024-02-06 16:00:22,308 - INFO - Insercion-seguimiento de causa ñ-1° Juzgado de Letras Coquimbo
 2024-02-06 16:01:32,727 - INFO - Se notifico causa: ñ
 2024-02-06 16:01:35,522 - INFO - Se estampo causa: ñ
+2024-02-06 18:05:56,100 - INFO - Insercion de causa 13-13
+2024-02-06 18:06:08,046 - INFO - Insercion-seguimiento de causa 13-1° Juzgado de Letras Coquimbo
+2024-02-06 18:06:33,398 - INFO - Se notifico causa: 13
+2024-02-06 18:08:37,512 - INFO - A estamapado h-h
+2024-02-06 18:08:51,838 - INFO - A estamapado ñ-ñ
+2024-02-07 12:06:17,218 - INFO - Se notifico causa: t
+2024-02-07 14:04:34,049 - ERROR - Error al actualizar la tabla: (20009, b'DB-Lib error message 20009, severity 9:\nUnable to connect: Adaptive Server is unavailable or does not exist (123.45.678.90)\n')
+2024-02-07 14:09:25,004 - ERROR - Error al actualizar la tabla: (18456, b"Login failed for user 'daniel'.DB-Lib error message 20018, severity 14:\nGeneral SQL Server error: Check messages from the SQL Server\nDB-Lib error message 20002, severity 9:\nAdaptive Server connection failed (vps-3697915-x.dattaweb.com)\nDB-Lib error message 20002, severity 9:\nAdaptive Server connection failed (vps-3697915-x.dattaweb.com)\n")
+2024-02-07 14:12:52,260 - ERROR - Error al actualizar la tabla: (18456, b"Login failed for user 'daniel'.DB-Lib error message 20018, severity 14:\nGeneral SQL Server error: Check messages from the SQL Server\nDB-Lib error message 20002, severity 9:\nAdaptive Server connection failed (vps-3697915-x.dattaweb.com)\nDB-Lib error message 20002, severity 9:\nAdaptive Server connection failed (vps-3697915-x.dattaweb.com)\n")
+2024-02-07 14:17:35,482 - ERROR - Error al actualizar la tabla: (102, b"Incorrect syntax near '?'.DB-Lib error message 20018, severity 15:\nGeneral SQL Server error: Check messages from the SQL Server\n")
+2024-02-07 14:22:28,779 - ERROR - Error al actualizar la tabla: (102, b"Incorrect syntax near '?'.DB-Lib error message 20018, severity 15:\nGeneral SQL Server error: Check messages from the SQL Server\n")
+2024-02-07 16:36:51,009 - ERROR - Error al actualizar la tabla: 'pymssql._pymssql.Cursor' object attribute 'execute' is read-only
+2024-02-07 16:36:55,439 - ERROR - Error al actualizar la tabla: 'pymssql._pymssql.Cursor' object attribute 'execute' is read-only
+2024-02-07 16:37:34,360 - ERROR - Error al actualizar la tabla: 'pymssql._pymssql.Cursor' object attribute 'execute' is read-only
+2024-02-07 16:40:20,501 - ERROR - Error al actualizar la tabla: (245, b"Conversion failed when converting the nvarchar value '42.000' to data type int.DB-Lib error message 20018, severity 16:\nGeneral SQL Server error: Check messages from the SQL Server\n")
+2024-02-07 16:42:42,630 - ERROR - Error al actualizar la tabla: (245, b"Conversion failed when converting the nvarchar value '42.000' to data type int.DB-Lib error message 20018, severity 16:\nGeneral SQL Server error: Check messages from the SQL Server\n")
+2024-02-07 16:43:26,768 - ERROR - Error al actualizar la tabla: (245, b"Conversion failed when converting the nvarchar value '1.800' to data type int.DB-Lib error message 20018, severity 16:\nGeneral SQL Server error: Check messages from the SQL Server\n")
+2024-02-07 16:44:21,906 - ERROR - Error al actualizar la tabla: (245, b"Conversion failed when converting the nvarchar value '1,800' to data type int.DB-Lib error message 20018, severity 16:\nGeneral SQL Server error: Check messages from the SQL Server\n")
+2024-02-07 16:58:34,766 - INFO - Insercion de causa u-u
+2024-02-07 16:58:57,892 - INFO - Se notifico causa: u
+2024-02-07 17:04:51,559 - INFO - Se estampo causa: u
+2024-02-07 17:17:11,918 - INFO - Insercion de causa actuacion1-a
+2024-02-07 17:17:33,949 - INFO - Insercion-seguimiento de causa actuacion1-1° Juzgado de Letras La Serena
+2024-02-07 17:18:08,432 - INFO - Insercion de causa actuacion2-b
+2024-02-07 17:18:25,432 - INFO - Insercion-seguimiento de causa actuacion2-2° Juzgado de Letras La Serena
+2024-02-07 17:18:45,674 - INFO - Insercion de causa actuacion3-c
+2024-02-07 17:18:56,902 - INFO - Insercion-seguimiento de causa actuacion3-3° Juzgado de Letras La Serena
+2024-02-07 17:19:11,795 - INFO - Se notifico causa: actuacion1
+2024-02-07 17:19:39,957 - INFO - Se estampo causa: actuacion1
+2024-02-07 17:19:56,456 - INFO - A estamapado actuacion1-a
+2024-02-07 17:21:57,010 - INFO - Se notifico causa: actuacion2
+2024-02-07 17:22:23,844 - INFO - Se estampo causa: actuacion2
+2024-02-07 17:23:15,865 - INFO - Se estampo causa: actuacion2

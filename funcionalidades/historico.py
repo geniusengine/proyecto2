@@ -11,7 +11,7 @@ Auteur: matit(matit.pro@gmail.com)
 miscocos.py(Ɔ) 2024
 Description : Saisissez la description puis « Tab »
 Créé le :  jeudi 1 février 2024 à 13:40:07 
-Dernière modification : mardi 6 février 2024 à 12:49:21"""
+Dernière modification : mercredi 7 février 2024 à 17:12:18"""
 
 import os
 import sys
@@ -133,7 +133,7 @@ class Histo(QMainWindow):
     def acceder_base_de_datos(self, fecha_inicio=None, fecha_fin=None): 
         try:
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa FROM notificacion"
+                query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa FROM buscar_historico"
                 
                 if fecha_inicio and fecha_fin:
                     query += " WHERE fechaNotificacion BETWEEN %s AND %s"
@@ -205,7 +205,7 @@ class Histo(QMainWindow):
             años = now.strftime("%d-%m-%y")
             try:
                 df = pd.DataFrame(self.causas)
-                columnas_deseadas = ['Fecha notificacion',  'Rol', 'Tribunal', 'demandante',  'demandado', 'repre', 'Encargo', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
+                columnas_deseadas = ['Fecha notificacion',  'Rol', 'Tribunal', 'demandante',  'demandado', 'repre', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
                 df_seleccionado = df.loc[:, columnas_deseadas]
                 ruta_archivo = os.path.join(selected_folder, f'Nomina {años}.xlsx')
                 df_seleccionado.to_excel(ruta_archivo, index=False)

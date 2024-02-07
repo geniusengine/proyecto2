@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel,QLineEdit
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel, QDialog
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
 import pymssql
@@ -203,12 +203,6 @@ class DashboardApp(QMainWindow):
         try:
             with self.db_connection.cursor() as cursor:
                 query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa,actu FROM notificacion"
-                
-                # Aplicar filtros si se proporcionan
-                if filtro_comuna:
-                    query += f" WHERE comuna = '{filtro_comuna}'"
-                if filtro_mandante:
-                    query += f" AND mandante = '{filtro_mandante}'" if filtro_comuna else f" WHERE mandante = '{filtro_mandante}'"
                 cursor.execute(query)
                 resultados = cursor.fetchall()
            
@@ -231,8 +225,9 @@ class DashboardApp(QMainWindow):
                         "Comuna": fila[8],
                         "Encargo": fila[9],
                         "Resultado": fila[10],
-                        "Arancel": 'Arancel',
+                        "Arancel1": fila[11],
                         "actu":fila[14],
+                        'Arancel': 'Arancel',
                         "Notificar": "Notificar",
                         "Estampada": "Estampada",
                         "Notificada": fila[12],
@@ -256,11 +251,11 @@ class DashboardApp(QMainWindow):
         return formato_fecha
 
 
-# muestra los datos en la tabla
+    # muestra los datos en la tabla
     def mostrar_clicked(self):
-        self.table.setColumnCount(15)
+        self.table.setColumnCount(16)
         self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'demandante', 'Nombre demandando', 'Representante', 'Mandante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel','Actuacion',
-                                            'Notificar','Estampar'])
+                                             'Arancel','Notificar','Estampar'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
             notificada = causa["Notificada"]
@@ -283,23 +278,55 @@ class DashboardApp(QMainWindow):
                     self.color_y_etiqueta_celda(self.table.item(row_index, col_index), estampada, notificada)
                     
         self.primera_vez()
+
+
+    def obtener_fila_del_boton(self, boton):
+        # Obtener la fila del botón
+        index = self.table.indexAt(boton.pos())
+        row, col = index.row(), index.column()
+        return row
+    
+    
     def actualizar_arancel_clicked(self):
         # Lógica para abrir la ventana ActualizarArancelDialog
-        
+               # Obtener la fila seleccionada
+        selected_row = self.table.currentRow()
+        # Verificar si se seleccionó una fila
+        if selected_row != -1:
 
-        #self.arancel_dialog = ActualizarArancelDialog()
-        #self.arancel_dialog.actualizar_arancel.connect(self.update_arancel)
-        actualizar_arancel_dialog = ActualizarArancelDialog()
-        actualizar_arancel_dialog.exec()
+            notificada = self.causas[selected_row]["Notificada"]
+
+            if not notificada:
+                QMessageBox.warning(self, "Advertencia", "La causa debe ser notificada primero antes de estampar.")
+                return
+
+            # Obtener datos de la fila seleccionada
+            fechaNotificacion = self.table.item(selected_row, 0).text()
+            numjui = self.table.item(selected_row, 1).text()
+            nombTribunal = self.table.item(selected_row, 2).text()
+            demandante = self.table.item(selected_row, 3).text()
+            demandado = self.table.item(selected_row, 4).text()
+            repre = self.table.item(selected_row, 5).text()
+            mandante = self.table.item(selected_row, 6).text()
+            domicilio = self.table.item(selected_row, 7).text()
+            comuna = self.table.item(selected_row, 8).text()
+            encargo = self.table.item(selected_row, 9).text()
+            soli = self.table.item(selected_row, 10).text()
+            arancel = self.table.item(selected_row, 11).text()
+    
+            # Importa Estampadoxd localmente
+            self.ex3 = ActualizarArancelDialog(fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel)
+            self.ex3.show()
+        
 
     def historico_clicked(self):
         self.exchistorico = Histo()
         self.exchistorico.show()
 
     def historial_actuaciones_clicked(self):
-        print("Historial de actuaciones")
         self.exchistorial = DashboardHistorialActuaciones()
         self.exchistorial.show()
+        
     def exportar_clicked(self):
         self.filtro= exportN()
         self.filtro.show()
