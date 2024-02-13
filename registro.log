@@ -107,3 +107,17 @@
 2024-02-07 17:21:57,010 - INFO - Se notifico causa: actuacion2
 2024-02-07 17:22:23,844 - INFO - Se estampo causa: actuacion2
 2024-02-07 17:23:15,865 - INFO - Se estampo causa: actuacion2
+2024-02-08 10:55:28,615 - INFO - Inicio de sesión exitoso para el usuario: admin
+2024-02-08 10:56:36,706 - INFO - Insercion de causa x-x
+2024-02-08 10:57:26,246 - INFO - Insercion-seguimiento de causa x-Juzgado de Familia Coquimbo
+2024-02-08 10:58:09,306 - INFO - Se notifico causa: x
+2024-02-08 10:58:38,566 - INFO - Se estampo causa: x
+2024-02-08 10:58:52,950 - INFO - A estamapado x-x
+2024-02-08 11:01:07,261 - INFO - A estamapado x-x
+2024-02-08 12:54:23,083 - INFO - Se estampo causa: x
+2024-02-08 12:55:59,719 - INFO - A estamapado actuacion1-a
+2024-02-08 12:56:24,602 - INFO - Se notifico causa: actuacion1
+2024-02-08 12:57:51,256 - INFO - Se notifico causa: actuacion3
+2024-02-08 12:58:00,656 - INFO - Se estampo causa: actuacion1
+2024-02-08 12:58:04,933 - INFO - Se estampo causa: actuacion3
+2024-02-08 12:59:04,544 - INFO - A estamapado actuacion1-a

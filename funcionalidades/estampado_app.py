@@ -28,22 +28,22 @@ class Estampadoxd(QMainWindow):
         layout_vertical = QVBoxLayout(self.central_widget)
 
         # Crear botones
-        boton1 = QPushButton('Negativa 52', self)
+        boton1 = QPushButton('Búsqueda Negativa 52', self)
         boton1.clicked.connect(self.estampar_1)
 
-        boton2 = QPushButton('Negativa Personal', self)
+        boton2 = QPushButton('Búsqueda Negativa', self)
         boton2.clicked.connect(self.estampar_2)
 
-        boton3 = QPushButton('Positivo', self)
+        boton3 = QPushButton('Búsqueda Positivo', self)
         boton3.clicked.connect(self.estampar_3)
 
-        boton4 = QPushButton('Busqueda y Notificacion', self)
+        boton4 = QPushButton('Búsqueda y Notificación', self)
         boton4.clicked.connect(self.estampar_4)
 
-        boton5 = QPushButton('Notificacion Personal', self)
+        boton5 = QPushButton('Notificación Personal', self)
         boton5.clicked.connect(self.estampar_5)
 
-        boton6 = QPushButton('Embargo Vehiculo', self)
+        boton6 = QPushButton('Embargo Vehículo', self)
         boton6.clicked.connect(self.estampar_6)
 
         boton7 = QPushButton('Acta Embargo', self)
@@ -73,13 +73,13 @@ class Estampadoxd(QMainWindow):
         boton15 = QPushButton('Acta Embargo arrendamiento', self)
         boton15.clicked.connect(self.estampar_15)
 
-        boton16 = QPushButton('Notificacion subpersonal', self)
+        boton16 = QPushButton('Notificación subpersonal', self)
         boton16.clicked.connect(self.estampar_16)
 
-        boton17 = QPushButton('Notificaion por cedula', self)
+        boton17 = QPushButton('Notificación por cedula', self)
         boton17.clicked.connect(self.estampar_17)
 
-        boton18 = QPushButton('Notificaion del conservador', self)
+        boton18 = QPushButton('Notificación del conservador', self)
         boton18.clicked.connect(self.estampar_18)
 
         boton19 = QPushButton('Acta Opsicion al embargo', self)
@@ -88,7 +88,7 @@ class Estampadoxd(QMainWindow):
         boton20 = QPushButton('Acta pago por oposicion', self)
         boton20.clicked.connect(self.estampar_20)
 
-        boton21= QPushButton('Retiro de vehiculo', self)
+        boton21= QPushButton('Retiro con fuerza pública', self)
         boton21.clicked.connect(self.estampar_21)
 
 
@@ -152,7 +152,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_negativa = f"BÚSQUEDA NEGATIVA: Certifico haber buscado al(la) demandado(a) {self.demandado}, con domicilio en {self.domicilio} {self.comuna} especialmente el día {años}, siendo las {horas} horas, a fin de notificarle la resolución de fecha nose . Diligencia que no se llevó a efecto por cuanto el(la) demandado(a) no fue habido(a), {self.encargo}. DOY FE."
+        busqueda_negativa = f"BÚSQUEDA NEGATIVA: Certifico haber buscado al(la) demandado(a) {self.demandado}, con domicilio en {self.domicilio} {self.comuna} especialmente el día {años}, siendo las {horas} horas, a fin de notificarle la resolución de fecha nose . Diligencia que no se llevó a efecto por cuanto el(la) demandado(a) no fue habido(a), {self.soli}. DOY FE."
         doc.add_paragraph(busqueda_negativa)
 
         # Agrega la firma al final del documento
@@ -189,7 +189,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_negativaP = f"BÚSQUEDA NEGATIVA: Certifico haber buscado al(la) demandado(a) {self.demandado} con domicilio en {self.domicilio} {self.comuna}, especialmente el día {años}, siendo las {horas} horas, a fin de notificarle la demanda íntegra y su respectivo proveído. Diligencia que no se llevó a efecto por cuanto el(la) demandado(a) no fue habido(a), {self.soli}. DOY FE."
+        busqueda_negativaP = f"BÚSQUEDA NEGATIVA: Certifico haber buscado al(la) demandado(a) {self.demandado}, representado por {self.repre}, con domicilio en {self.domicilio} {self.comuna}, especialmente el día {años}, siendo las {horas} horas, a fin de notificarle la demanda íntegra y su respectivo proveído. Diligencia que no se llevó a efecto por cuanto el(la) demandado(a) no fue habido(a), {self.soli}. DOY FE."
         doc.add_paragraph(busqueda_negativaP)
 
         # Agrega la firma al final del documento
@@ -219,7 +219,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.demandante}, a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de una persona adulta, sexo masculino, vecino del lugar, se constató que este es el domicilio del demandado, y que se encuentra en el lugar del juicio. DOY FE. "
+        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.demandado}, representado por {self.repre},a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de una persona adulta, sexo masculino, vecino del lugar, se constató que este es el domicilio del demandado, y que se encuentra en el lugar del juicio. DOY FE. "
         doc.add_paragraph(busqueda_positiva)
 
         # Agrega la firma al final del documento
@@ -249,11 +249,11 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.encargo}\n {self.demandante}CON {self.demandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui}  :  {self.encargo}\n {self.demandante} CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busquedaN = f"BÚSQUEDA Y NOTIFICACIÓN: a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.demandado}, a fin de notificarle la resolución de fecha **, junto al escrito que antecede, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Informado por **, quien manifestó que es el domicilio del demandado y que se encuentra en el lugar del juicio, acto seguido procedo a notificar de conformidad al artículo 52 c.p.c. la resolución de fecha **, junto al escrito que antecede,  copia integra fue **. DOY FE."
+        busquedaN = f"BÚSQUEDA Y NOTIFICACIÓN: a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.demandado} representado por {self.repre}, a fin de notificarle la resolución de fecha **, junto al escrito que antecede, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Informado por **, quien manifestó que es el domicilio del demandado y que se encuentra en el lugar del juicio, acto seguido procedo a notificar de conformidad al artículo 52 c.p.c. la resolución de fecha **, junto al escrito que antecede,  copia integra fue **. DOY FE."
         doc.add_paragraph(busquedaN)
 
         # Agrega la firma al final del documento
@@ -286,7 +286,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        notificacionP = f"NOTIFICACIÓN PERSONAL SUBSIDIARIA: a {self.fechaNotificacion} horas, en su domicilio ubicado en {self.domicilio} notifiqué a {self.demandado}, se constató que es su domicilio y que se encuentra en el lugar del juicio por **, en conformidad al artículo 44 inciso segundo del Código de Procedimiento Civil modificado por el artículo 3, N°3 letra A y B de la ley N°21.394,  la demanda íntegra, su respectivo proveído. Copia íntegra de lo notificado fue **. Doy fe."
+        notificacionP = f"NOTIFICACIÓN PERSONAL: En la Comuna de {self.comuna}, a {años}, siendo las {horas} horas, en su domicilio ubicado {self.domicilio}, {self.comuna}, notifiqué personalmente a {self.demandado}, Representado por {self.repre}, la demanda  y su respectivo proveído. Le hice entrega de copia íntegra de lo notificado y no firmó. La identidad del notificado/a  se estableció por los datos aportados por el mismo. Doy fe."
         doc.add_paragraph(notificacionP)
 
         # Agrega la firma al final del documento
@@ -312,7 +312,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui} \n {self.demandante} CON {self.demandado}"
+        encabezado = f"JUZGADO= {self.nombTribunal}\nCAUSA ROL= {self.numjui} \nCARÁTULA {self.demandante} / {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de embargo
@@ -353,7 +353,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.encargo}  \n {self.demandado} / {self.demandante} "
+        encabezado = f"JUZGADO={self.nombTribunal}\nCAUSA ROL={self.numjui}  \n {self.demandado} / {self.demandante} "
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de embargo
@@ -476,7 +476,7 @@ class Estampadoxd(QMainWindow):
 
         # Agrega la sección de acta de lanzamiento
         acta_lanzamiento = f"ACTA DE LANZAMIENTO: En {self.comuna}, a {fecha_actual}, siendo las {hora_actual} hrs, me constituí en domicilio ubicado en {self.domicilio}, {self.comuna}, Región de Coquimbo, lugar donde procedí a efectuar el lanzamiento decretado en autos, terminando la actuación a las 00:00 hrs. Dejé constancia en fotografía, que se acompañan a continuación. Se hizo entrega de la propiedad a **. DOY FE.-\n\n"
-        acta_lanzamiento += F"Drs. {self.arancel}.-"
+        acta_lanzamiento += f"Drs. {self.arancel}.-"
         doc.add_paragraph(acta_lanzamiento)
 
         # Abre un cuadro de diálogo para seleccionar el directorio donde se guardará el documento
@@ -503,7 +503,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de requerimiento de pago en rebeldía
-        acta_requerimiento_pago = f"ACTA DE REQUERIMIENTO DE PAGO EN REBELDÍA: En La Serena, a {fecha_actual}, siendo las {hora_actual} horas, en mi oficio ubicado en Av. Del Mar, N° 5.700, of. N° 47 La Serena, no habiendo comparecido el (la) demandado (a), don (ña) {self.demandado}, representado por {self.repre}, lo (la) doy por requerido(a) de pago en rebeldía por la suma de  pesos), más reajustes, intereses, recargos.\n\n"
+        acta_requerimiento_pago = f"ACTA DE REQUERIMIENTO DE PAGO EN REBELDÍA: En La Serena, a {fecha_actual}, siendo las {hora_actual} horas, en mi oficio ubicado en Av. Del Mar, N° 5.700, of. N° 47 La Serena, no habiendo comparecido el (la) demandado (a), don (ña) {self.demandado}, representado por {self.repre}, lo (la) doy por requerido(a) de pago en rebeldía por la suma de ** pesos (** pesos), más reajustes, intereses, recargos.\n\n"
         acta_requerimiento_pago += "NO SE EFECTUÓ EL PAGO.\n"
         acta_requerimiento_pago += "Tiene el (la) ejecutado (da) el plazo legal de 8 días hábiles para oponer excepciones a la ejecución.\n"
         acta_requerimiento_pago += "Para constancia levanté la presente acta. Doy fe.\n\n"
@@ -587,7 +587,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo} \n {self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo} \n  {self.demandante} CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de notificación de desahucio
@@ -616,7 +616,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo} \n {self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo} \n {self.demandante} CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de notificación personal subsidiaria
@@ -649,7 +649,7 @@ class Estampadoxd(QMainWindow):
             doc = Document()
 
             # Agrega el encabezado con los marcadores de posición
-            encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo} \n {self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+            encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo} \n {self.demandante} CON {self.demandado}"
             doc.add_paragraph(encabezado)
 
             # Agrega la sección de notificación por cédula
@@ -677,7 +677,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo} \n {self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo} \n {self.demandante} CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de notificación
@@ -705,7 +705,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo} \n {self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo} \n {self.demandante} CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de oposición a embargo
@@ -737,7 +737,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de requerimiento de pago y oposición a embargo
-        requerimiento_oposicion_texto = f"REQUERIMIENTO DE PAGO PERSONAL Y OPOSICIÓN A EMBARGO: A {fecha_actual}, siendo las {hora_actual} horas, en su domicilio ubicado en {self.domicilio}, {self.comuna}, notifiqué el mandamiento de **, y requerí personalmente de pago a {self.demandado}, representado por {self.repre}, a fin de que en el acto pague a {self.nombdemandante} {self.apellidemandante}, o a quien sus derechos represente, la suma de ** (** pesos), más reajustes, intereses y recargos.\n"
+        requerimiento_oposicion_texto = f"REQUERIMIENTO DE PAGO PERSONAL Y OPOSICIÓN A EMBARGO: A {fecha_actual}, siendo las {hora_actual} horas, en su domicilio ubicado en {self.domicilio}, {self.comuna}, notifiqué el mandamiento de **, y requerí personalmente de pago a {self.demandado}, representado por {self.repre}, a fin de que en el acto pague a {self.demandante}, o a quien sus derechos represente, la suma de ** (** pesos), más reajustes, intereses y recargos.\n"
         requerimiento_oposicion_texto += f"NO SE EFECTUÓ EL PAGO. Le hice presente la orden de embargo sobre bienes de su propiedad, en cantidad suficiente que permita cubrir el valor total de lo adeudado, más los gastos de la ejecución. También le notifiqué su designación como depositario provisional de los bienes que se le embarguen, cargo que aceptó, jurando su fiel desempeño y además le hice presente el plazo legal que tiene para deducir excepciones a la ejecución.\n"
         requerimiento_oposicion_texto += f"Acto seguido intenté trabar embargo sobre bienes de su propiedad, diligencia que no se llevó a efecto por OPOSICIÓN DEL PROPIO DEMANDADO.\n"
         requerimiento_oposicion_texto += f"Para constancia levanté la presente acta que la ejecutada no firmó, entregándole en el acto copia del mandamiento. Doy Fe."
@@ -763,7 +763,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo} \n {self.nombdemandante} {self.apellidemandante} CON {self.demandado}"
+        encabezado = f"{self.nombTribunal}\n{self.numjui} : {self.encargo} \n {self.demandante} CON {self.demandado}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de retiro de vehículo

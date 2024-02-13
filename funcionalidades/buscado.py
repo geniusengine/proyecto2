@@ -202,7 +202,7 @@ class BuscadorDatosCausaApp(QMainWindow):
     def select_results(self):
         self.limpiar_tabla()
         self.table.setColumnCount(15)
-        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Nombre demandante',  'Nombre demandando', 'Representante', 'Nombre mandante', 'Domicilio', 'Comuna', 'Encargo', 'Solicitud', 'Arancel','Actuacion',
+        self.table.setHorizontalHeaderLabels(['Fecha',  'Rol', 'Tribunal', 'Demandante',  'Demandando', 'Representante', 'Mandante', 'Domicilio', 'Comuna', 'Encargo', 'Solicitud', 'Arancel', 'Actuacion',
                                             'Notificar','Estampar'])
         try:
             if self.causa_seleccionada :#si se selecciono una causa para buscar se ejecuta esta query

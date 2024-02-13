@@ -11,7 +11,7 @@ Auteur: matit(matit.pro@gmail.com)
 miscocos.py(Ɔ) 2024
 Description : Saisissez la description puis « Tab »
 Créé le :  jeudi 1 février 2024 à 13:40:07 
-Dernière modification : mercredi 7 février 2024 à 17:12:18"""
+Dernière modification : jeudi 8 février 2024 à 10:29:43"""
 
 import os
 import sys
@@ -30,7 +30,7 @@ class Histo(QMainWindow):
         self.initUI()
     
     def initUI(self):
-        self.setWindowTitle('Exportar Datos')
+        self.setWindowTitle('Exportar historico de notificaciones')
         self.setWindowIcon(QIcon("static/icono-ventana.png"))
         self.setGeometry(100, 100, 1280, 720)
         

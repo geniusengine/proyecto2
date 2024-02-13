@@ -178,7 +178,6 @@ class DashboardApp(QMainWindow):
         if self.db_connection:
             self.db_connection.close()
 
-
     def eliminar_y_respaldo(self):
         try:
             self.establecer_conexion_base_de_datos()
@@ -254,7 +253,7 @@ class DashboardApp(QMainWindow):
     # muestra los datos en la tabla
     def mostrar_clicked(self):
         self.table.setColumnCount(16)
-        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'demandante', 'Nombre demandando', 'Representante', 'Mandante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel','Actuacion',
+        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'Demandante', 'Demandando', 'Representante', 'Mandante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel','Actuacion',
                                              'Arancel','Notificar','Estampar'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
