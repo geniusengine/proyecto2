@@ -10,7 +10,7 @@ Auteur: matit(matit.pro@gmail.com)
 miscocos.py(Ɔ) 2024
 Description : Saisissez la description puis « Tab »
 Créé le :  jeudi 1 février 2024 à 13:40:07 
-Dernière modification : lundi 5 février 2024 à 17:44:42"""
+Dernière modification : vendredi 23 février 2024 à 16:07:25"""
 
 import os
 import sys
@@ -268,7 +268,7 @@ class exportN(QMainWindow):
 
             try:
                 df = pd.DataFrame(self.causas)
-                columnas_deseadas = ['Fecha notificacion',  'Rol', 'Tribunal', 'demandante',  'demandado', 'repre', 'Encargo', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
+                columnas_deseadas = ['Fecha notificacion',  'Rol', 'Tribunal', 'demandante',  'demandado', 'repre', 'mandante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
                 df_seleccionado = df.loc[:, columnas_deseadas]
                 
                 # Combina la ruta de la carpeta seleccionada con el nombre del archivo
