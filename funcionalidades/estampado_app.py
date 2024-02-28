@@ -12,6 +12,8 @@ import logging
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+
+# el repre es mandante´ y el mandante repre´
 class Estampadoxd(QMainWindow):
     def __init__(self, fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, parent=None):
         super().__init__(parent)
@@ -189,7 +191,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_negativaP = f"BÚSQUEDA NEGATIVA: Certifico haber buscado al(la) demandado(a) {self.demandado}, representado por {self.repre}, con domicilio en {self.domicilio} {self.comuna}, especialmente el día {años}, siendo las {horas} horas, a fin de notificarle la demanda íntegra y su respectivo proveído. Diligencia que no se llevó a efecto por cuanto el(la) demandado(a) no fue habido(a), {self.soli}. DOY FE."
+        busqueda_negativaP = f"BÚSQUEDA NEGATIVA: Certifico haber buscado al(la) demandado(a) {self.demandado}, representado por {self.mandante}, con domicilio en {self.domicilio} {self.comuna}, especialmente el día {años}, siendo las {horas} horas, a fin de notificarle la demanda íntegra y su respectivo proveído. Diligencia que no se llevó a efecto por cuanto el(la) demandado(a) no fue habido(a), {self.soli}. DOY FE."
         doc.add_paragraph(busqueda_negativaP)
 
         # Agrega la firma al final del documento
@@ -219,7 +221,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.demandado}, representado por {self.repre},a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de una persona adulta, sexo masculino, vecino del lugar, se constató que este es el domicilio del demandado, y que se encuentra en el lugar del juicio. DOY FE. "
+        busqueda_positiva = f"BÚSQUEDA POSITIVA:a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.demandado}, representado por {self.mandante},a fin de notificarle la demanda íntegra y su respectivo proveído, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Por los dichos de una persona adulta, sexo masculino, vecino del lugar, se constató que este es el domicilio del demandado, y que se encuentra en el lugar del juicio. DOY FE. "
         doc.add_paragraph(busqueda_positiva)
 
         # Agrega la firma al final del documento
@@ -253,7 +255,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        busquedaN = f"BÚSQUEDA Y NOTIFICACIÓN: a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.demandado} representado por {self.repre}, a fin de notificarle la resolución de fecha **, junto al escrito que antecede, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Informado por **, quien manifestó que es el domicilio del demandado y que se encuentra en el lugar del juicio, acto seguido procedo a notificar de conformidad al artículo 52 c.p.c. la resolución de fecha **, junto al escrito que antecede,  copia integra fue **. DOY FE."
+        busquedaN = f"BÚSQUEDA Y NOTIFICACIÓN: a {años}, siendo las {horas} horas, en su domicilio ubicado en {self.domicilio} {self.comuna}, busqué a {self.demandado} representado por {self.mandante}, a fin de notificarle la resolución de fecha **, junto al escrito que antecede, diligencia que no se llevó a efecto por no ser habido en dicho domicilio, en ese momento. Informado por **, quien manifestó que es el domicilio del demandado y que se encuentra en el lugar del juicio, acto seguido procedo a notificar de conformidad al artículo 52 c.p.c. la resolución de fecha **, junto al escrito que antecede,  copia integra fue **. DOY FE."
         doc.add_paragraph(busquedaN)
 
         # Agrega la firma al final del documento
@@ -286,7 +288,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de búsqueda negativa con los datos proporcionados
-        notificacionP = f"NOTIFICACIÓN PERSONAL: En la Comuna de {self.comuna}, a {años}, siendo las {horas} horas, en su domicilio ubicado {self.domicilio}, {self.comuna}, notifiqué personalmente a {self.demandado}, Representado por {self.repre}, la demanda  y su respectivo proveído. Le hice entrega de copia íntegra de lo notificado y no firmó. La identidad del notificado/a  se estableció por los datos aportados por el mismo. Doy fe."
+        notificacionP = f"NOTIFICACIÓN PERSONAL: En la Comuna de {self.comuna}, a {años}, siendo las {horas} horas, en su domicilio ubicado {self.domicilio}, {self.comuna}, notifiqué personalmente a {self.demandado}, Representado por {self.mandante}, la demanda  y su respectivo proveído. Le hice entrega de copia íntegra de lo notificado y no firmó. La identidad del notificado/a  se estableció por los datos aportados por el mismo. Doy fe."
         doc.add_paragraph(notificacionP)
 
         # Agrega la firma al final del documento
@@ -357,7 +359,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de embargo
-        acta_embargo = f"ACTA DE EMBARGO: A FECHA {fecha_actual}, siendo las {hora_actual} horas, me constituí en el domicilio del demandado {self.demandado} representada legalmente por {self.repre} con domicilio ubicado en {self.domicilio}, {self.comuna}. Sin hacer uso de la fuerza pública, procedí a trabar embargo sobre:\n"
+        acta_embargo = f"ACTA DE EMBARGO: A FECHA {fecha_actual}, siendo las {hora_actual} horas, me constituí en el domicilio del demandado {self.demandado} representada legalmente por {self.mandante} con domicilio ubicado en {self.domicilio}, {self.comuna}. Sin hacer uso de la fuerza pública, procedí a trabar embargo sobre:\n"
         acta_embargo += f"1. \n"
         acta_embargo += f"2. \n\n"
         acta_embargo += f"El referido bien embargado fue entregado al demandado, en forma simbólica, en su calidad de depositario provisional, bajo su responsabilidad legal.\n Drs. {self.arancel}.-"
@@ -384,7 +386,7 @@ class Estampadoxd(QMainWindow):
         doc = Document()
 
         # Agrega el encabezado con los marcadores de posición
-        encabezado = f"{self.nombTribunal}\nROL/RIT: {self.numjui} \nCARATULADO: {self.encargo} CON {self.repre}"
+        encabezado = f"{self.nombTribunal}\nROL/RIT: {self.numjui} \nCARATULADO: {self.encargo} CON {self.mandante}"
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de embargo
@@ -503,7 +505,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de requerimiento de pago en rebeldía
-        acta_requerimiento_pago = f"ACTA DE REQUERIMIENTO DE PAGO EN REBELDÍA: En La Serena, a {fecha_actual}, siendo las {hora_actual} horas, en mi oficio ubicado en Av. Del Mar, N° 5.700, of. N° 47 La Serena, no habiendo comparecido el (la) demandado (a), don (ña) {self.demandado}, representado por {self.repre}, lo (la) doy por requerido(a) de pago en rebeldía por la suma de ** pesos (** pesos), más reajustes, intereses, recargos.\n\n"
+        acta_requerimiento_pago = f"ACTA DE REQUERIMIENTO DE PAGO EN REBELDÍA: En La Serena, a {fecha_actual}, siendo las {hora_actual} horas, en mi oficio ubicado en Av. Del Mar, N° 5.700, of. N° 47 La Serena, no habiendo comparecido el (la) demandado (a), don (ña) {self.demandado}, representado por {self.mandante}, lo (la) doy por requerido(a) de pago en rebeldía por la suma de ** pesos (** pesos), más reajustes, intereses, recargos.\n\n"
         acta_requerimiento_pago += "NO SE EFECTUÓ EL PAGO.\n"
         acta_requerimiento_pago += "Tiene el (la) ejecutado (da) el plazo legal de 8 días hábiles para oponer excepciones a la ejecución.\n"
         acta_requerimiento_pago += "Para constancia levanté la presente acta. Doy fe.\n\n"
@@ -620,12 +622,12 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de notificación personal subsidiaria
-        notificacion_subsidiaria = f"NOTIFICACIÓN PERSONAL SUBSIDIARIA: A {fecha_actual}, siendo las {hora_actual} horas, en su domicilio ubicado en {self.domicilio}, {self.comuna}, notifiqué a {self.demandado}, representado por {self.repre}, se constató que es su domicilio y que se encuentra en el lugar del juicio por **, en conformidad al artículo 44 inciso segundo del Código de Procedimiento Civil modificado por el artículo 3, N°3 letra A y B de la ley N°21.394, la demanda íntegra, su respectivo proveído. Copia íntegra de lo notificado fue **. Doy fe.\n"
+        notificacion_subsidiaria = f"NOTIFICACIÓN PERSONAL SUBSIDIARIA: A {fecha_actual}, siendo las {hora_actual} horas, en su domicilio ubicado en {self.domicilio}, {self.comuna}, notifiqué a {self.demandado}, representado por {self.mandante}, se constató que es su domicilio y que se encuentra en el lugar del juicio por **, en conformidad al artículo 44 inciso segundo del Código de Procedimiento Civil modificado por el artículo 3, N°3 letra A y B de la ley N°21.394, la demanda íntegra, su respectivo proveído. Copia íntegra de lo notificado fue **. Doy fe.\n"
         notificacion_subsidiaria += f"Búsqueda: **.-\nDrs: {self.arancel}.-"
         doc.add_paragraph(notificacion_subsidiaria)
 
         # Agrega la sección de cédula de espera
-        cedula_espera = f"CÉDULA DE ESPERA: A **, siendo las ** horas, en su domicilio ubicado en {self.domicilio}, {self.comuna}, busqué a {self.demandado}, representado por {self.repre}, y notifiqué el mandamiento de fs.01, por cédula. Dejé citado (a) al demandado (a) a fin de que concurra a mi oficio ubicado en calle Av. Del Mar, N° 5.700, of. N° 47 La Serena., el día **, a las ** horas, a fin de requerirlo (a) personalmente de pago, bajo apercibimiento de que si no comparece, será declarado (a) requerido (a) de pago en rebeldía y se le practicará sin más trámite el embargo.\n"
+        cedula_espera = f"CÉDULA DE ESPERA: A **, siendo las ** horas, en su domicilio ubicado en {self.domicilio}, {self.comuna}, busqué a {self.demandado}, representado por {self.mandante}, y notifiqué el mandamiento de fs.01, por cédula. Dejé citado (a) al demandado (a) a fin de que concurra a mi oficio ubicado en calle Av. Del Mar, N° 5.700, of. N° 47 La Serena., el día **, a las ** horas, a fin de requerirlo (a) personalmente de pago, bajo apercibimiento de que si no comparece, será declarado (a) requerido (a) de pago en rebeldía y se le practicará sin más trámite el embargo.\n"
         cedula_espera += "Para constancia levanté la presente acta. Doy fe.-"
         doc.add_paragraph(cedula_espera)
 
@@ -653,7 +655,7 @@ class Estampadoxd(QMainWindow):
             doc.add_paragraph(encabezado)
 
             # Agrega la sección de notificación por cédula
-            notificacion_cedula = f"NOTIFICACIÓN POR CÉDULA: a {fecha_actual}, siendo las {hora_actual} horas, en su domicilio ubicado en {self.domicilio}, {self.comuna}, notifiqué por cédula a {self.demandado} representado por {self.repre}, a fin de notificarle la resolución de fecha **, la resolución de fecha **. La cédula conteniendo copia íntegra de lo notificado fue **. DOY FE.\n"
+            notificacion_cedula = f"NOTIFICACIÓN POR CÉDULA: a {fecha_actual}, siendo las {hora_actual} horas, en su domicilio ubicado en {self.domicilio}, {self.comuna}, notifiqué por cédula a {self.demandado} representado por {self.mandante}, a fin de notificarle la resolución de fecha **, la resolución de fecha **. La cédula conteniendo copia íntegra de lo notificado fue **. DOY FE.\n"
             notificacion_cedula += f"Drs. {self.arancel}.-"
             doc.add_paragraph(notificacion_cedula)
 
@@ -709,7 +711,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de acta de oposición a embargo
-        acta_oposicion_embargo = f"ACTA DE OPOSICION A EMBARGO: a {fecha_actual}, siendo las {hora_actual} horas, concurrí al domicilio ubicado en {self.domicilio}, {self.comuna}, notifiqué a {self.demandado}, representado por {self.repre}, con el objeto de proceder a trabar embargo sobre bienes de su propiedad, diligencia que no pude efectuar, por OPOSICIÓN AL EMBARGO, por **. DOY FE.\n"
+        acta_oposicion_embargo = f"ACTA DE OPOSICION A EMBARGO: a {fecha_actual}, siendo las {hora_actual} horas, concurrí al domicilio ubicado en {self.domicilio}, {self.comuna}, notifiqué a {self.demandado}, representado por {self.mandante}, con el objeto de proceder a trabar embargo sobre bienes de su propiedad, diligencia que no pude efectuar, por OPOSICIÓN AL EMBARGO, por **. DOY FE.\n"
         acta_oposicion_embargo += f"Drs. {self.arancel}.-"
         doc.add_paragraph(acta_oposicion_embargo)
 
@@ -737,7 +739,7 @@ class Estampadoxd(QMainWindow):
         doc.add_paragraph(encabezado)
 
         # Agrega la sección de requerimiento de pago y oposición a embargo
-        requerimiento_oposicion_texto = f"REQUERIMIENTO DE PAGO PERSONAL Y OPOSICIÓN A EMBARGO: A {fecha_actual}, siendo las {hora_actual} horas, en su domicilio ubicado en {self.domicilio}, {self.comuna}, notifiqué el mandamiento de **, y requerí personalmente de pago a {self.demandado}, representado por {self.repre}, a fin de que en el acto pague a {self.demandante}, o a quien sus derechos represente, la suma de ** (** pesos), más reajustes, intereses y recargos.\n"
+        requerimiento_oposicion_texto = f"REQUERIMIENTO DE PAGO PERSONAL Y OPOSICIÓN A EMBARGO: A {fecha_actual}, siendo las {hora_actual} horas, en su domicilio ubicado en {self.domicilio}, {self.comuna}, notifiqué el mandamiento de **, y requerí personalmente de pago a {self.demandado}, representado por {self.mandante}, a fin de que en el acto pague a {self.demandante}, o a quien sus derechos represente, la suma de ** (** pesos), más reajustes, intereses y recargos.\n"
         requerimiento_oposicion_texto += f"NO SE EFECTUÓ EL PAGO. Le hice presente la orden de embargo sobre bienes de su propiedad, en cantidad suficiente que permita cubrir el valor total de lo adeudado, más los gastos de la ejecución. También le notifiqué su designación como depositario provisional de los bienes que se le embarguen, cargo que aceptó, jurando su fiel desempeño y además le hice presente el plazo legal que tiene para deducir excepciones a la ejecución.\n"
         requerimiento_oposicion_texto += f"Acto seguido intenté trabar embargo sobre bienes de su propiedad, diligencia que no se llevó a efecto por OPOSICIÓN DEL PROPIO DEMANDADO.\n"
         requerimiento_oposicion_texto += f"Para constancia levanté la presente acta que la ejecutada no firmó, entregándole en el acto copia del mandamiento. Doy Fe."

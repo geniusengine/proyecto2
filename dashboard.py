@@ -354,8 +354,8 @@ class DashboardApp(QMainWindow):
             nombTribunal = self.table.item(selected_row, 2).text()
             demandante = self.table.item(selected_row, 3).text()
             demandado = self.table.item(selected_row, 4).text()
-            repre = self.table.item(selected_row, 5).text()
-            mandante = self.table.item(selected_row, 6).text()
+            repre = self.table.item(selected_row, 5).text() # ahora mandante 
+            mandante = self.table.item(selected_row, 6).text()#ahora repre
             domicilio = self.table.item(selected_row, 7).text()
             comuna = self.table.item(selected_row, 8).text()
             encargo = self.table.item(selected_row, 9).text()
