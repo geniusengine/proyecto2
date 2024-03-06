@@ -11,7 +11,7 @@ Auteur: matit(matit.pro@gmail.com)
 miscocos.py(Ɔ) 2024
 Description : Saisissez la description puis « Tab »
 Créé le :  jeudi 1 février 2024 à 13:40:07 
-Dernière modification : jeudi 8 février 2024 à 10:29:43"""
+Dernière modification : mercredi 6 mars 2024 à 18:23:21"""
 
 import os
 import sys
@@ -153,10 +153,10 @@ class Histo(QMainWindow):
                     "Fecha notificacion": fecha_formateada,
                         "Rol": fila[1],
                         "Tribunal": fila[2],
-                        "demandante": fila[3],
-                        "demandado": fila[4],
-                        "repre": fila[5],
-                        "mandante": fila[6],
+                        "Demandante": fila[3],
+                        "Demandado": fila[4],
+                        "Mandante": fila[5],
+                        "Representante": fila[6],
                         "Domicilio": fila[7],
                         "Comuna": fila[8],
                         "Encargo": fila[9],
@@ -183,7 +183,7 @@ class Histo(QMainWindow):
 
     def mostrar_clicked(self):
         self.table.setColumnCount(12)
-        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'Demandante', 'Demandando', 'Representante', 'Mandante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel'])
+        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'Demandante', 'Demandando', 'Mandante', 'Representante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
             notificada = causa["Notificada"]
@@ -205,7 +205,7 @@ class Histo(QMainWindow):
             años = now.strftime("%d-%m-%y")
             try:
                 df = pd.DataFrame(self.causas)
-                columnas_deseadas = ['Fecha notificacion',  'Rol', 'Tribunal', 'demandante',  'demandado', 'repre', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
+                columnas_deseadas = ['Fecha notificacion',  'Rol', 'Tribunal', 'Demandante', 'Demandado', 'Mandante', 'Representante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
                 df_seleccionado = df.loc[:, columnas_deseadas]
                 ruta_archivo = os.path.join(selected_folder, f'Nomina {años}.xlsx')
                 df_seleccionado.to_excel(ruta_archivo, index=False)
