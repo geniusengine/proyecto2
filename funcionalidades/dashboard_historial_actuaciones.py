@@ -154,19 +154,36 @@ class DashboardHistorialActuaciones(QMainWindow):
         selected_row = self.table.currentRow()
         if selected_row >= 0:
             data_to_save = tuple([self.table.item(selected_row, col).text() if self.table.item(selected_row, col) is not None else '' for col in range(14)])
-            fecha_notificacion = datetime.strptime(data_to_save[0], '%Y-%m-%d %H:%M:%S.%f').strftime('%Y-%m-%d %H:%M:%S')
-            data_to_save = (fecha_notificacion,) + data_to_save[1:]
+
+            # Intenta formatear fecha, incluyendo el manejo de posibles formatos
+            try:
+                fecha_notificacion = datetime.strptime(data_to_save[0], '%Y-%m-%d %H:%M:%S.%f').strftime('%Y-%m-%d %H:%M:%S')
+            except ValueError:
+                fecha_notificacion = datetime.strptime(data_to_save[0], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
+
+            # Asegúrate de que estadoNoti y estadoCausa tengan un valor entero válido
+            estadoNoti = int(data_to_save[12]) if data_to_save[12].isdigit() else 0
+            estadoCausa = int(data_to_save[13]) if data_to_save[13].isdigit() else 0
+
+            # Reemplaza los valores con los ajustados
+            data_to_save = (fecha_notificacion,) + data_to_save[1:12] + (estadoNoti, estadoCausa)
+
+            # Confirma antes de guardar
             reply = QMessageBox.question(self, 'Confirmar', f'Seguro que quieres devolver estos datos?\n{data_to_save}',
-                                         QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+                                        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
 
             if reply == QMessageBox.StandardButton.Yes:
                 actuacion = self.actuar
                 self.establecer_conexion_base_de_datos()
                 cursor = self.db_connection.cursor()
-                cursor.execute('INSERT INTO notificacion (fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa, actu) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', data_to_save + (actuacion,))
+                cursor.execute(
+                    'INSERT INTO notificacion (fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa, actu) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                    data_to_save + (actuacion,)
+                )
                 self.db_connection.commit()
                 print('Datos guardados en la tabla de notificaciones')
                 self.cerrar_conexion_base_de_datos()
+
 
 # Función principal
 if __name__ == '__main__':

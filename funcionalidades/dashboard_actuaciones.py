@@ -60,8 +60,19 @@ class Dashboard_actuacionesApp(QMainWindow):
 
         self.setGeometry(100, 100, 400, 300)
 
+    def verificar_numjui_en_demanda(self):
+        cursor = self.db_connection.cursor()
+        query = "SELECT COUNT(*) FROM demanda WHERE numjui = %s"
+        cursor.execute(query, (self.numjui,))
+        resultado = cursor.fetchone()
+        return resultado[0] > 0
+
+
     def guardar_datos(self):
-        print("Guardando datos...")
+        if not self.verificar_numjui_en_demanda():
+            QMessageBox.warning(self, "Error", f"El numjui '{self.numjui}' no existe en la tabla 'demanda'.")
+            return
+
         try:
             db_connection = mysql.connector.connect(
                 host='causas.mysql.database.azure.com', 
@@ -73,13 +84,13 @@ class Dashboard_actuacionesApp(QMainWindow):
             insert_query = "INSERT INTO actuaciones (numjui, nombTribunal, tipojuicio, actuacion, fecha) VALUES (%s, %s, %s, %s, %s)"
             cursor.execute(insert_query, (self.numjui, self.nombTribunal, self.tipojuicio, self.actuacion, self.fecha))
             db_connection.commit()
-            db_connection.close()
             QMessageBox.information(self, "Éxito", "Datos guardados correctamente")
             logging.info(f'Insercion-seguimiento de causa {self.numjui}-{self.nombTribunal}')
         except mysql.connector.Error as e:
             print(e)
             QMessageBox.critical(self, "Error", "Error al guardar los datos")
             db_connection.rollback()
+
 
     def crear_boton(self, texto, funcion):
         boton = QPushButton(texto, self)
