@@ -4,10 +4,9 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushB
 from PyQt6.QtSql import QSqlDatabase, QSqlQuery
 from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QIcon
-import pymssql
+import mysql.connector
 import logging
 from dashboard import DashboardApp
-
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -26,7 +25,7 @@ class LoginApp(QMainWindow):
 
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
-         # Desactiva la redimensión de la ventana 
+        # Desactiva la redimensión de la ventana 
         self.setFixedSize(300, 200)
         self.layout = QVBoxLayout()
 
@@ -47,18 +46,26 @@ class LoginApp(QMainWindow):
         self.central_widget.setLayout(self.layout)
 
     def init_db(self):
-        self.db = pymssql.connect(
-                server='vps-3697915-x.dattaweb.com',
-                user='daniel',
-                password='LOLxdsas--',
-                database='micau5a'
+        try:
+            # Cambiar a mysql.connector
+            self.db = mysql.connector.connect(
+                host='causas.mysql.database.azure.com',
+                user='admin_carlos',
+                password='F14tomcat',
+                database='matias1'
             )
 
-        if not self.db:
-            print("Error al conectar a la base de datos MySQL.")
-            sys.exit(1)
+            if self.db.is_connected():
+                print("Conexión exitosa a la base de datos MySQL.")
+            else:
+                print("Error al conectar a la base de datos MySQL.")
+                sys.exit(1)
 
-        self.cursor = self.db.cursor()
+            self.cursor = self.db.cursor()
+
+        except mysql.connector.Error as e:
+            print(f"Error al conectar a la base de datos MySQL: {e}")
+            sys.exit(1)
 
     def authenticate(self):
         username = self.username_input.text()
@@ -90,15 +97,16 @@ class LoginApp(QMainWindow):
             else:
                 # Contraseña incorrecta
                 QMessageBox.warning(self, "Inicio de Sesión", "Contraseña incorrecta.")
-                logging.warning(f'Inicio de sesión fallido')
+                logging.warning(f'Inicio de sesión fallido para el usuario: {username}')
         else:
             # Usuario no encontrado
             QMessageBox.warning(self, "Inicio de Sesión", "Usuario no encontrado.")
-            logging.warning(f'Inicio de secion erroneo')
+            logging.warning(f'Inicio de sesión fallido: usuario no encontrado')
 
     def close_db_connection(self):
-        self.cursor.close()
-        self.db.close()
+        if self.db.is_connected():
+            self.cursor.close()
+            self.db.close()
 
 def main():
     app = QApplication(sys.argv)

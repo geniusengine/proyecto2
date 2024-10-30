@@ -1,4 +1,3 @@
-
 """
  _______       _            _     _          ______        _                 _ 
 (_______)     (_)       _  (_)   | |        (____  \      (_)               | |
@@ -11,15 +10,16 @@ Auteur: matit(matit.pro@gmail.com)
 miscocos.py(Ɔ) 2024
 Description : Saisissez la description puis « Tab »
 Créé le :  jeudi 1 février 2024 à 13:40:07 
-Dernière modification : mercredi 6 mars 2024 à 18:23:21"""
+Dernière modification : mercredi 6 mars 2024 à 18:23:21
+"""
 
 import os
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, \
-    QTableWidgetItem, QHeaderView, QHBoxLayout , QLabel, QDateTimeEdit, QFileDialog, QMessageBox
+    QTableWidgetItem, QHeaderView, QHBoxLayout, QLabel, QDateTimeEdit, QFileDialog, QMessageBox
 from PyQt6.QtGui import QIcon, QColor
 from PyQt6.QtCore import QTimer, Qt, QDateTime
-import pymssql
+import mysql.connector
 import pandas as pd
 from datetime import datetime
 
@@ -104,11 +104,11 @@ class Histo(QMainWindow):
         self.label.setText("¡Panel Actualizado!")
 
     def establecer_conexion_base_de_datos(self):
-        self.db_connection = pymssql.connect(
-            server='vps-3697915-x.dattaweb.com',
-            user='daniel',
-            password='LOLxdsas--',
-            database='micau5a'
+        self.db_connection = mysql.connector.connect(
+            host='causas.mysql.database.azure.com', 
+            user='admin_carlos',
+            password='F14tomcat',
+            database='matias1'
         )
 
     def cerrar_conexion_base_de_datos(self):
@@ -119,10 +119,10 @@ class Histo(QMainWindow):
         try:
             self.establecer_conexion_base_de_datos()
             with self.db_connection.cursor() as cursor:
-                delete_query = "DELETE FROM notificacion WHERE estadoNoti = 1 and estadoCausa = 1"
+                delete_query = "DELETE FROM notificacion WHERE estadoNoti = 1 AND estadoCausa = 1"
                 cursor.execute(delete_query)
             self.db_connection.commit()
-        except pymssql.Error as db_error:
+        except mysql.connector.Error as db_error:
             print(f"Error al ejecutar la consulta SQL: {db_error}")
             self.db_connection.rollback()
         except Exception as e:
@@ -145,28 +145,25 @@ class Histo(QMainWindow):
 
             self.causas = []
             for fila in resultados:
-                if len(fila) > 0:
-                    fecha_formateada = fila[0].strftime("%d-%m-%Y")
-                else:
-                    fecha_formateada = "Fecha no disponible"
+                fecha_formateada = fila[0].strftime("%d-%m-%Y") if fila[0] else "Fecha no disponible"
                 causa = {
                     "Fecha notificacion": fecha_formateada,
-                        "Rol": fila[1],
-                        "Tribunal": fila[2],
-                        "Demandante": fila[3],
-                        "Demandado": fila[4],
-                        "Mandante": fila[5],
-                        "Representante": fila[6],
-                        "Domicilio": fila[7],
-                        "Comuna": fila[8],
-                        "Encargo": fila[9],
-                        "Resultado": fila[10],
-                        "Arancel": fila[11],
-                        "Notificada": fila[12],
-                        "estadoCausa": fila[13],
+                    "Rol": fila[1],
+                    "Tribunal": fila[2],
+                    "Demandante": fila[3],
+                    "Demandado": fila[4],
+                    "Mandante": fila[5],
+                    "Representante": fila[6],
+                    "Domicilio": fila[7],
+                    "Comuna": fila[8],
+                    "Encargo": fila[9],
+                    "Resultado": fila[10],
+                    "Arancel": fila[11],
+                    "Notificada": fila[12],
+                    "estadoCausa": fila[13],
                 }
                 self.causas.append(causa)
-        except pymssql.Error as db_error:
+        except mysql.connector.Error as db_error:
             print(f"Error al ejecutar la consulta SQL: {db_error}")
             self.db_connection.rollback()    
         except Exception as e:
@@ -183,7 +180,7 @@ class Histo(QMainWindow):
 
     def mostrar_clicked(self):
         self.table.setColumnCount(12)
-        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'Demandante', 'Demandando', 'Mandante', 'Representante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel'])
+        self.table.setHorizontalHeaderLabels(['Fecha notificacion', 'Rol', 'Tribunal', 'Demandante', 'Demandando', 'Mandante', 'Representante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
             notificada = causa["Notificada"]
@@ -205,7 +202,7 @@ class Histo(QMainWindow):
             años = now.strftime("%d-%m-%y")
             try:
                 df = pd.DataFrame(self.causas)
-                columnas_deseadas = ['Fecha notificacion',  'Rol', 'Tribunal', 'Demandante', 'Demandado', 'Mandante', 'Representante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
+                columnas_deseadas = ['Fecha notificacion', 'Rol', 'Tribunal', 'Demandante', 'Demandado', 'Mandante', 'Representante', 'Domicilio', 'Comuna', 'Encargo', 'Resultado', 'Arancel']
                 df_seleccionado = df.loc[:, columnas_deseadas]
                 ruta_archivo = os.path.join(selected_folder, f'Nomina {años}.xlsx')
                 df_seleccionado.to_excel(ruta_archivo, index=False)
@@ -238,7 +235,7 @@ class Histo(QMainWindow):
                 query = "UPDATE notificacion SET estadoNoti = 1 WHERE numjui = %s"
                 cursor.execute(query, (causa['Rol'],))
             self.db_connection.commit()
-        except pymssql.Error as db_error:
+        except mysql.connector.Error as db_error:
             print(f"Error al ejecutar la consulta SQL: {db_error}")
             self.db_connection.rollback()
             raise
@@ -275,11 +272,11 @@ class Histo(QMainWindow):
         if item is not None:
             color = QColor(250, 193, 114)
             if notificada and estampada:
-                color = QColor(46, 204, 113)  #verde
+                color = QColor(46, 204, 113)  # verde
             elif not notificada and estampada:
-                color = QColor(250, 193, 114)  # Amarillo
+                color = QColor(250, 193, 114)  # amarillo
             elif not notificada and not estampada:
-                color = QColor(224, 92, 69)  #rojo
+                color = QColor(224, 92, 69)  # rojo
             item.setBackground(color)
 
     def actualizar_datos(self):

@@ -129,3 +129,74 @@
 2024-02-23 13:33:39,775 - INFO - Se estampo causa: prueba
 2024-02-23 13:33:55,565 - INFO - A estamapado prueba-b
 2024-03-04 09:59:50,939 - INFO - A estamapado prueba -prueba 
+2024-10-29 20:02:06,458 - INFO - package: mysql.connector.plugins
+2024-10-29 20:02:06,458 - INFO - plugin_name: mysql_native_password
+2024-10-29 20:02:06,459 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 20:03:55,996 - INFO - package: mysql.connector.plugins
+2024-10-29 20:03:55,996 - INFO - plugin_name: mysql_native_password
+2024-10-29 20:03:55,997 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 20:04:19,991 - INFO - package: mysql.connector.plugins
+2024-10-29 20:04:19,991 - INFO - plugin_name: mysql_native_password
+2024-10-29 20:04:19,992 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 20:04:29,702 - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\matit\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-10-29 20:04:30,939 - INFO - Inicio de sesión exitoso para el usuario: ty
+2024-10-29 20:13:29,829 - INFO - package: mysql.connector.plugins
+2024-10-29 20:13:29,829 - INFO - plugin_name: mysql_native_password
+2024-10-29 20:13:29,830 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 20:14:01,054 - INFO - package: mysql.connector.plugins
+2024-10-29 20:14:01,055 - INFO - plugin_name: mysql_native_password
+2024-10-29 20:14:01,056 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 20:14:41,819 - INFO - Insercion de causa 12-lo
+2024-10-29 20:15:48,825 - INFO - package: mysql.connector.plugins
+2024-10-29 20:15:48,825 - INFO - plugin_name: mysql_native_password
+2024-10-29 20:15:48,825 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 20:16:30,396 - INFO - Insercion de causa 3-hola
+2024-10-29 20:16:50,324 - INFO - Insercion-seguimiento de causa 3-3° Juzgado de Letras Coquimbo
+2024-10-29 20:26:27,246 - INFO - package: mysql.connector.plugins
+2024-10-29 20:26:27,246 - INFO - plugin_name: mysql_native_password
+2024-10-29 20:26:27,247 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 20:27:23,839 - INFO - Insercion de causa 12-compramos
+2024-10-29 22:27:21,615 - INFO - package: mysql.connector.plugins
+2024-10-29 22:27:21,616 - INFO - plugin_name: mysql_native_password
+2024-10-29 22:27:21,617 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 22:28:08,635 - INFO - package: mysql.connector.plugins
+2024-10-29 22:28:08,635 - INFO - plugin_name: mysql_native_password
+2024-10-29 22:28:08,637 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 22:29:52,426 - INFO - package: mysql.connector.plugins
+2024-10-29 22:29:52,426 - INFO - plugin_name: mysql_native_password
+2024-10-29 22:29:52,427 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 22:53:37,978 - INFO - package: mysql.connector.plugins
+2024-10-29 22:53:37,978 - INFO - plugin_name: mysql_native_password
+2024-10-29 22:53:37,979 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 22:56:00,578 - INFO - package: mysql.connector.plugins
+2024-10-29 22:56:00,579 - INFO - plugin_name: mysql_native_password
+2024-10-29 22:56:00,579 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 23:11:31,392 - INFO - package: mysql.connector.plugins
+2024-10-29 23:11:31,392 - INFO - plugin_name: mysql_native_password
+2024-10-29 23:11:31,393 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 23:11:43,860 - INFO - package: mysql.connector.plugins
+2024-10-29 23:11:43,861 - INFO - plugin_name: mysql_native_password
+2024-10-29 23:11:43,861 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 23:16:15,443 - INFO - package: mysql.connector.plugins
+2024-10-29 23:16:15,444 - INFO - plugin_name: mysql_native_password
+2024-10-29 23:16:15,445 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 23:17:52,899 - INFO - package: mysql.connector.plugins
+2024-10-29 23:17:52,899 - INFO - plugin_name: mysql_native_password
+2024-10-29 23:17:52,900 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 23:19:18,956 - INFO - package: mysql.connector.plugins
+2024-10-29 23:19:18,957 - INFO - plugin_name: mysql_native_password
+2024-10-29 23:19:18,957 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 23:19:28,887 - INFO - package: mysql.connector.plugins
+2024-10-29 23:19:28,887 - INFO - plugin_name: mysql_native_password
+2024-10-29 23:19:28,888 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 23:20:42,587 - INFO - package: mysql.connector.plugins
+2024-10-29 23:20:42,587 - INFO - plugin_name: mysql_native_password
+2024-10-29 23:20:42,588 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-29 23:21:09,977 - INFO - Se notifico causa: 12
+2024-10-29 23:21:20,300 - INFO - Se estampo causa: 12
+2024-10-29 23:21:29,322 - INFO - A estamapado 12-compramos

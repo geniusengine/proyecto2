@@ -1,8 +1,8 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout , QMessageBox, QLabel, QDialog
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QTableWidget, QTableWidgetItem, QHeaderView, QCheckBox, QHBoxLayout, QMessageBox, QLabel, QDialog
 from PyQt6.QtGui import QColor, QIcon
 from PyQt6.QtCore import QDateTime, QTimer, Qt, pyqtSignal
-import pymssql
+import mysql.connector
 import pandas as pd
 import logging
 from funcionalidades.buscado import BuscadorDatosCausaApp
@@ -12,7 +12,7 @@ from funcionalidades.dashboard_historial_actuaciones import DashboardHistorialAc
 from funcionalidades.exportar import exportN
 from funcionalidades.historico import Histo
 from funcionalidades.arancel import ActualizarArancelDialog
-
+from tkinter import Button, PhotoImage
 
 # Configurar el sistema de registro
 logging.basicConfig(filename='registro.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -24,14 +24,12 @@ class DashboardApp(QMainWindow):
         super().__init__()
         self.db_connection = None
         self.initUI()
-
-
         
     def initUI(self):
         self.setWindowTitle('Dashboard App')
         self.setWindowIcon(QIcon("static/icono-ventana.png"))
         self.setGeometry(100, 100, 1280, 720)
-        #verifica si es la primera vez que mostrara los datos
+        # verifica si es la primera vez que mostrará los datos
         self.primer_mostrado = True
 
         self.central_widget = QWidget(self)
@@ -39,13 +37,11 @@ class DashboardApp(QMainWindow):
         self.layout_vertical = QVBoxLayout()  # Crea un layout vertical
         self.layout_horizontal = QHBoxLayout()  # Crea un layout horizontal
 
-        #Crea un temporizador para actualizar los datos cada 4 minuto
+        # Crea un temporizador para actualizar los datos cada 4 minutos
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.actualizar_datos)
         self.timer.start(15000)  # 240000 milisegundos = 4 minutos
         
-        # Añadir el contenedor de filtro al diseño vertical
-        # self.layout_vertical.addLayout(filtro_layout)
         # Crea botones
         self.crear_botones()
 
@@ -57,14 +53,13 @@ class DashboardApp(QMainWindow):
         self.layout_horizontal.addWidget(self.btn_historico)
         self.layout_vertical.addLayout(self.layout_horizontal)
 
-
         # Crea una tabla y un botón de guardar
         self.table = QTableWidget()
         # Establecer el color de las líneas de las celdas
         self.table.setStyleSheet(
-        "QTableView { gridline-color: white; }"
-        "QTableCornerButton::section { background-color: #d3d3d3; border: 1px solid black; }"
-        "QHeaderView::section { background-color: #d3d3d3; border: 1px solid black; }"
+            "QTableView { gridline-color: white; }"
+            "QTableCornerButton::section { background-color: #d3d3d3; border: 1px solid black; }"
+            "QHeaderView::section { background-color: #d3d3d3; border: 1px solid black; }"
         )
         self.layout_vertical.addWidget(self.table)
     
@@ -80,61 +75,28 @@ class DashboardApp(QMainWindow):
         self.acceder_base_de_datos()
         self.mostrar_clicked()
 
-        self.setGeometry(100, 100, 400, 300)
-
         # Agrega un contenedor para la leyenda de colores
         color_legend_layout = QHBoxLayout()
 
-        # Círculo verde con texto
-        green_widget = QWidget()
-        green_layout = QHBoxLayout()
-        green_label = QLabel()
-        green_label.setFixedSize(20, 20)
-        green_label.setStyleSheet("background-color: rgb(46, 204, 113); border-radius: 10px;")
-        green_text = QLabel("Estampada y Notificada")
-        green_text.setStyleSheet("color: rgb(46, 204, 113)")
-        green_layout.addWidget(green_label)
-        green_layout.addWidget(green_text)
-        green_widget.setLayout(green_layout)
-        color_legend_layout.addWidget(green_widget)
-
-        # Círculo amarillo con texto
-        yellow_widget = QWidget()
-        yellow_layout = QHBoxLayout()
-        yellow_label = QLabel()
-        yellow_label.setFixedSize(20, 20)
-        yellow_label.setStyleSheet("background-color: rgb(250, 193, 114); border-radius: 10px;")
-        yellow_text = QLabel("No estampada y Notificada")
-        yellow_text.setStyleSheet("color: rgb(250, 193, 114);")
-        yellow_layout.addWidget(yellow_label)
-        yellow_layout.addWidget(yellow_text)
-        yellow_widget.setLayout(yellow_layout)
-        color_legend_layout.addWidget(yellow_widget)
-
-        # Círculo rojo con texto
-        red_widget = QWidget()
-        red_layout = QHBoxLayout()
-        red_label = QLabel()
-        red_label.setFixedSize(20, 20)
-        red_label.setStyleSheet("background-color: rgb(224, 92, 69); border-radius: 10px;")
-        red_text = QLabel("No Estampada y No Notificada")
-        red_text.setStyleSheet("color: rgb(224, 92, 69);")
-        red_layout.addWidget(red_label)
-        red_layout.addWidget(red_text)
-        red_widget.setLayout(red_layout)
-        color_legend_layout.addWidget(red_widget)
+        # Configura leyenda de colores
+        self.configurar_leyenda_colores(color_legend_layout)
 
         # Agrega la leyenda de colores al layout vertical existente
         self.layout_vertical.addLayout(color_legend_layout)
 
         # Crea un temporizador para realizar la eliminación y respaldo cada 10 minutos
         self.timer_eliminar_respaldo = QTimer(self)
-
         self.timer_eliminar_respaldo.timeout.connect(self.eliminar_y_respaldo)
         self.timer_eliminar_respaldo.start(15000)  # 600000 milisegundos = 10 minutos
 
+    def crear_boton_con_icono(self, icono_path, funcion):
+            """Crea un botón con un ícono especificado y una función asignada."""
+            boton = QPushButton(self)
+            icono = QIcon(icono_path)
+            boton.setIcon(icono)
+            boton.clicked.connect(funcion)
+            return boton
 
-    # crea los botones de la interfaz
     def crear_botones(self):
         self.btn_buscar = self.crear_boton('Buscar', self.buscar_clicked)
         self.btn_Insertar_manual = self.crear_boton('Insertar Manual', self.Insertar_manual_clicked)
@@ -142,40 +104,55 @@ class DashboardApp(QMainWindow):
         self.btn_exportar = self.crear_boton('Exportar', self.exportar_clicked)
         self.btn_historico = self.crear_boton('Historico', self.historico_clicked)
 
-
-    # crea cada boton que se necesite
     def crear_boton(self, texto, funcion):
         boton = QPushButton(texto, self)
         boton.clicked.connect(funcion)
         return boton
-    # crea un boton con un icono
-    def crear_boton_con_icono(self, icono_path, funcion):
-        boton = QPushButton(self)
-        icono = QIcon()
-        boton.setIcon(icono)
-        boton.clicked.connect(funcion)
-        return boton
     
-    def update_dashboard(self):
-        # Esta función se llamará cuando se guarden los datos
-        self.label.setText("¡Panel Actualizado!")
-        
-    
-    def combo_box_changed(self, row, col, index):
-        # Aquí deberías escribir el código que se ejecutará cuando cambie el índice del combo box
-        pass
+    def configurar_leyenda_colores(self, layout):
+        # Círculo verde con texto
+        green_widget = self.crear_circulo_texto("rgb(46, 204, 113)", "Estampada y Notificada")
+        layout.addWidget(green_widget)
+
+        # Círculo amarillo con texto
+        yellow_widget = self.crear_circulo_texto("rgb(250, 193, 114)", "No estampada y Notificada")
+        layout.addWidget(yellow_widget)
+
+        # Círculo rojo con texto
+        red_widget = self.crear_circulo_texto("rgb(224, 92, 69)", "No Estampada y No Notificada")
+        layout.addWidget(red_widget)
+
+    def crear_circulo_texto(self, color, texto):
+        widget = QWidget()
+        layout = QHBoxLayout()
+        label = QLabel()
+        label.setFixedSize(20, 20)
+        label.setStyleSheet(f"background-color: {color}; border-radius: 10px;")
+        text = QLabel(texto)
+        text.setStyleSheet(f"color: {color}")
+        layout.addWidget(label)
+        layout.addWidget(text)
+        widget.setLayout(layout)
+        return widget
 
     # establece la conexion con la base de datos
     def establecer_conexion_base_de_datos(self):
-        self.db_connection = pymssql.connect(
-            server='vps-3697915-x.dattaweb.com',
-            user='daniel',
-            password='LOLxdsas--',
-            database='micau5a'
-        )
+        try:
+            self.db_connection = mysql.connector.connect(
+                host='causas.mysql.database.azure.com', 
+                user='admin_carlos',
+                password='F14tomcat',
+                database='matias1'
+            )
+            if self.db_connection.is_connected():
+                print("Conexión a la base de datos MySQL establecida.")
+        except mysql.connector.Error as e:
+            print(f"Error al conectar a la base de datos MySQL: {e}")
+            sys.exit(1)
+
     # cierra la conexion con la base de datos
     def cerrar_conexion_base_de_datos(self):
-        if self.db_connection:
+        if self.db_connection.is_connected():
             self.db_connection.close()
 
     def eliminar_y_respaldo(self):
@@ -189,11 +166,9 @@ class DashboardApp(QMainWindow):
 
             self.db_connection.commit()
 
-        except pymssql.Error as db_error:
+        except mysql.connector.Error as db_error:
             print(f"Error al ejecutar la consulta SQL: {db_error}")
             self.db_connection.rollback()
-        except Exception as e:
-            print(f"Error desconocido: {e}")
         finally:
             self.cerrar_conexion_base_de_datos()
 
@@ -201,41 +176,36 @@ class DashboardApp(QMainWindow):
     def acceder_base_de_datos(self, filtro_comuna=None, filtro_mandante=None):
         try:
             with self.db_connection.cursor() as cursor:
-                query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa,actu FROM notificacion"
+                query = "SELECT fechaNotificacion, numjui, nombTribunal, demandante, demandado, repre, mandante, domicilio, comuna, encargo, soli, arancel, estadoNoti, estadoCausa, actu FROM notificacion"
                 cursor.execute(query)
                 resultados = cursor.fetchall()
-           
+
             self.causas = []
             for fila in resultados:
-                if len(fila) > 0:
-                    fecha_formateada = fila[0].strftime("%d-%m-%Y")
-                else:
-                    # Manejar la situación donde la tupla está vacía
-                    fecha_formateada = "Fecha no disponible"
+                fecha_formateada = fila[0].strftime("%d-%m-%Y") if fila[0] else "Fecha no disponible"
                 causa = {
                     "Fecha notificacion": fecha_formateada,
-                        "Rol": fila[1],
-                        "Tribunal": fila[2],
-                        "demandante": fila[3],
-                        "demandado": fila[4],
-                        "repre": fila[5],
-                        "mandante": fila[6],
-                        "Domicilio": fila[7],
-                        "Comuna": fila[8],
-                        "Encargo": fila[9],
-                        "Resultado": fila[10],
-                        "Arancel1": fila[11],
-                        "actu":fila[14],
-                        'Arancel': 'Arancel',
-                        "Notificar": "Notificar",
-                        "Estampada": "Estampada",
-                        "Notificada": fila[12],
-                        "estadoCausa": fila[13],
+                    "Rol": fila[1],
+                    "Tribunal": fila[2],
+                    "demandante": fila[3],
+                    "demandado": fila[4],
+                    "repre": fila[5],
+                    "mandante": fila[6],
+                    "Domicilio": fila[7],
+                    "Comuna": fila[8],
+                    "Encargo": fila[9],
+                    "Resultado": fila[10],
+                    "Arancel1": fila[11],
+                    "actu": fila[14],
+                    'Arancel': 'Arancel',
+                    "Notificar": "Notificar",
+                    "Estampada": "Estampada",
+                    "Notificada": fila[12],
+                    "estadoCausa": fila[13],
                 }
-                
                 self.causas.append(causa)
             self.cerrar_conexion_base_de_datos()
-        except Exception as e:
+        except mysql.connector.Error as e:
             print(f"Error al acceder a la base de datos: {e}")
 # limpia la tabla
     def limpiar_tabla(self):
@@ -248,7 +218,6 @@ class DashboardApp(QMainWindow):
         # Formatear la fecha y hora
         formato_fecha = fecha_actual.toString('yyyy-MM-dd HH:mm:ss')
         return formato_fecha
-
 
     # muestra los datos en la tabla
     def mostrar_clicked(self):
@@ -389,7 +358,7 @@ class DashboardApp(QMainWindow):
                 query = "UPDATE notificacion SET estadoCausa = 1 WHERE numjui = %s"
                 cursor.execute(query, (causa['Rol'],))
             self.db_connection.commit()
-        except pymssql.Error as db_error:
+        except mysql.connector.Error as db_error:
             print(f"Error al ejecutar la consulta SQL: {db_error}")
             self.db_connection.rollback()
             raise  # Re-levanta la excepción para que el programa no continúe si hay un error grave en la base de datos
@@ -440,7 +409,7 @@ class DashboardApp(QMainWindow):
                 query = "UPDATE notificacion SET estadoNoti = 1 WHERE numjui = %s"
                 cursor.execute(query, (causa['Rol'],))
             self.db_connection.commit()
-        except pymssql.Error as db_error:
+        except mysql.connector.Error as db_error:
             print(f"Error al ejecutar la consulta SQL: {db_error}")
             self.db_connection.rollback()
             raise  # Re-levanta la excepción para que el programa no continúe si hay un error grave en la base de datos
