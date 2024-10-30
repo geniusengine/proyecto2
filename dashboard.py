@@ -40,7 +40,7 @@ class DashboardApp(QMainWindow):
         # Crea un temporizador para actualizar los datos cada 4 minutos
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.actualizar_datos)
-        self.timer.start(15000)  # 240000 milisegundos = 4 minutos
+        self.timer.start(30000)  # 240000 milisegundos = 4 minutos
         
         # Crea botones
         self.crear_botones()
@@ -195,7 +195,7 @@ class DashboardApp(QMainWindow):
                     "Comuna": fila[8],
                     "Encargo": fila[9],
                     "Resultado": fila[10],
-                    "Arancel1": fila[11],
+                    
                     "actu": fila[14],
                     'Arancel': 'Arancel',
                     "Notificar": "Notificar",
@@ -221,9 +221,9 @@ class DashboardApp(QMainWindow):
 
     # muestra los datos en la tabla
     def mostrar_clicked(self):
-        self.table.setColumnCount(16)
-        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'Demandante', 'Demandando', 'Mandante', 'Representante', 'Domicilio', 'Comuna', 'Resultado', 'Encargo', 'Arancel','Actuacion',
-                                             'Arancel','Notificar','Estampar'])
+        self.table.setColumnCount(15)
+        self.table.setHorizontalHeaderLabels(['Fecha notificacion',  'Rol', 'Tribunal', 'Demandante', 'Demandando', 'Mandante', 'Representante', 'Domicilio', 'Comuna', 'Resultado', 'Encargo','Actuacion',
+                                             'Elegir arancel','Notificar','Elegir estampado'])
         for row_index, causa in enumerate(self.causas):
             self.table.insertRow(row_index)
             notificada = causa["Notificada"]

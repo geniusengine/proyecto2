@@ -244,3 +244,26 @@ AttributeError: module 'bcrypt' has no attribute '__about__'
 2024-10-30 08:54:16,314 - INFO - Se notifico causa: 12
 2024-10-30 08:54:23,142 - INFO - Se estampo causa: 12
 2024-10-30 08:54:36,187 - INFO - A estamapado 12-compramos
+2024-10-30 09:58:01,143 - INFO - package: mysql.connector.plugins
+2024-10-30 09:58:01,144 - INFO - plugin_name: mysql_native_password
+2024-10-30 09:58:01,146 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-30 10:22:11,094 - INFO - package: mysql.connector.plugins
+2024-10-30 10:22:11,094 - INFO - plugin_name: mysql_native_password
+2024-10-30 10:22:11,096 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-30 10:23:34,976 - INFO - package: mysql.connector.plugins
+2024-10-30 10:23:34,977 - INFO - plugin_name: mysql_native_password
+2024-10-30 10:23:34,978 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-30 10:24:03,582 - INFO - Se notifico causa: 58
+2024-10-30 10:24:48,871 - INFO - package: mysql.connector.plugins
+2024-10-30 10:24:48,872 - INFO - plugin_name: mysql_native_password
+2024-10-30 10:24:48,874 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-30 10:25:11,283 - INFO - Se estampo causa: 58
+2024-10-30 10:25:30,188 - INFO - Se notifico causa: 1313
+2024-10-30 10:25:35,894 - INFO - Se estampo causa: 1313
+2024-10-30 10:26:03,869 - ERROR - Error al actualizar la tabla: 2003: Can't connect to MySQL server on 'vps-3697915-x.dattaweb.com:3306' (Errno 11001: getaddrinfo failed)
+2024-10-30 10:29:45,340 - INFO - package: mysql.connector.plugins
+2024-10-30 10:29:45,341 - INFO - plugin_name: mysql_native_password
+2024-10-30 10:29:45,342 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-30 10:31:32,766 - INFO - package: mysql.connector.plugins
+2024-10-30 10:31:32,767 - INFO - plugin_name: mysql_native_password
+2024-10-30 10:31:32,768 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
