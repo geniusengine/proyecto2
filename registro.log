@@ -267,3 +267,24 @@ AttributeError: module 'bcrypt' has no attribute '__about__'
 2024-10-30 10:31:32,766 - INFO - package: mysql.connector.plugins
 2024-10-30 10:31:32,767 - INFO - plugin_name: mysql_native_password
 2024-10-30 10:31:32,768 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-30 18:56:31,412 - INFO - package: mysql.connector.plugins
+2024-10-30 18:56:31,413 - INFO - plugin_name: mysql_native_password
+2024-10-30 18:56:31,424 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-30 18:56:38,400 - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\matit\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-10-30 18:56:40,286 - INFO - Inicio de sesión exitoso para el usuario: ty
+2024-10-30 18:58:55,253 - INFO - Insercion de causa 57-sas
+2024-10-30 19:01:10,279 - INFO - package: mysql.connector.plugins
+2024-10-30 19:01:10,279 - INFO - plugin_name: mysql_native_password
+2024-10-30 19:01:10,280 - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2024-10-30 19:01:17,342 - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\matit\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-10-30 19:01:19,150 - INFO - Inicio de sesión exitoso para el usuario: ty
